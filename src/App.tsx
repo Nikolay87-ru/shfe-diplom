@@ -1,12 +1,19 @@
-// import { useState } from 'react'
-import './index.css'
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from '../src/routes/AppRoutes';
+import { AuthProvider } from './pages/authorization/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  // const [count, setCount] = useState(0)
-
   return (
-<div></div>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+        <ToastContainer position='bottom-right' />
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
