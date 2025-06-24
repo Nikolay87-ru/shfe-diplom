@@ -1,117 +1,123 @@
 import { useState, useEffect } from 'react';
-import { Button, Table, Modal, Form } from 'react-bootstrap';
-import { fetchHalls, createHall, updateHall, deleteHall } from '../../../api/hallService';
+import { fetchHalls, createHall, deleteHall } from '../../../api/hallService';
+import AdminSection from '../../../components/ui/AdminSection';
+import HallConfig from './HallConfig';
+import HallPrices from './HallPrices';
 import { type Hall } from '../../../types/hall';
-import HallForm from '../../../components/admin/HallForm';
 
 const HallsPage = () => {
   const [halls, setHalls] = useState<Hall[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [editingHall, setEditingHall] = useState<Hall | null>(null);
+  const [selectedHall, setSelectedHall] = useState<Hall | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newHallName, setNewHallName] = useState('');
 
   useEffect(() => {
+    const loadHalls = async () => {
+      try {
+        const data = await fetchHalls();
+        setHalls(data.result.halls);
+        if (data.result.halls.length > 0) {
+          setSelectedHall(data.result.halls[0]);
+        }
+      } catch (error) {
+        console.error('Error loading halls:', error);
+      }
+    };
+
     loadHalls();
   }, []);
 
-  const loadHalls = async () => {
+  const handleAddHall = async () => {
+    if (!newHallName.trim()) return;
+    
     try {
-      const data = await fetchHalls();
+      const formData = new FormData();
+      formData.set('hallName', newHallName);
+      
+      const data = await createHall(formData);
       setHalls(data.result.halls);
+      setNewHallName('');
+      setShowAddForm(false);
     } catch (error) {
-      console.error('Error loading halls:', error);
+      console.error('Error adding hall:', error);
     }
   };
 
-  const handleSave = async (hallData: Omit<Hall, 'id'>) => {
+  const handleDeleteHall = async (id: number) => {
     try {
-      if (editingHall) {
-        await updateHall(editingHall.id, hallData);
-      } else {
-        await createHall(hallData);
+      const data = await deleteHall(id);
+      setHalls(data.result.halls);
+      if (selectedHall?.id === id) {
+        setSelectedHall(data.result.halls[0] || null);
       }
-      loadHalls();
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error saving hall:', error);
-    }
-  };
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteHall(id);
-      loadHalls();
     } catch (error) {
       console.error('Error deleting hall:', error);
     }
   };
 
   return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between mb-4">
-        <h2>Управление залами</h2>
-        <Button variant="primary" onClick={() => {
-          setEditingHall(null);
-          setShowModal(true);
-        }}>
-          Добавить зал
-        </Button>
-      </div>
-
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Название</th>
-            <th>Рядов</th>
-            <th>Мест</th>
-            <th>Статус</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {halls.map(hall => (
-            <tr key={hall.id}>
-              <td>{hall.hall_name}</td>
-              <td>{hall.hall_rows}</td>
-              <td>{hall.hall_places}</td>
-              <td>{hall.hall_open ? 'Открыт' : 'Закрыт'}</td>
-              <td>
-                <Button 
-                  variant="warning" 
-                  size="sm" 
-                  className="me-2"
-                  onClick={() => {
-                    setEditingHall(hall);
-                    setShowModal(true);
-                  }}
+    <>
+      <AdminSection title="Управление залами" defaultOpen>
+        <div className="admin__wrapper">
+          <p className="admin__info halls__info">Доступные залы:</p>
+          
+          <ul className="halls__list">
+            {halls.map(hall => (
+              <li key={hall.id} className="halls__list_item">
+                <span 
+                  className={`halls__list_name ${selectedHall?.id === hall.id ? 'hall_item-selected' : ''}`}
+                  onClick={() => setSelectedHall(hall)}
                 >
-                  Редактировать
-                </Button>
-                <Button 
-                  variant="danger" 
-                  size="sm"
-                  onClick={() => handleDelete(hall.id)}
-                >
-                  Удалить
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+                  {hall.hall_name}
+                </span>
+                <span 
+                  className="admin__button_remove hall_remove"
+                  onClick={() => handleDeleteHall(hall.id)}
+                ></span>
+              </li>
+            ))}
+          </ul>
+          
+          {showAddForm ? (
+            <div className="add-hall-form">
+              <input
+                type="text"
+                className="admin_input"
+                value={newHallName}
+                onChange={(e) => setNewHallName(e.target.value)}
+                placeholder="Название зала"
+              />
+              <button 
+                className="button"
+                onClick={handleAddHall}
+              >
+                Добавить
+              </button>
+              <button 
+                className="button"
+                onClick={() => setShowAddForm(false)}
+              >
+                Отмена
+              </button>
+            </div>
+          ) : (
+            <button 
+              className="admin__button_hall button"
+              onClick={() => setShowAddForm(true)}
+            >
+              Создать зал
+            </button>
+          )}
+        </div>
+      </AdminSection>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{editingHall ? 'Редактирование зала' : 'Добавление зала'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <HallForm 
-            initialData={editingHall} 
-            onSubmit={handleSave} 
-            onCancel={() => setShowModal(false)}
-          />
-        </Modal.Body>
-      </Modal>
-    </div>
+      {selectedHall && (
+        <>
+          <HallConfig hall={selectedHall} />
+          <HallPrices hall={selectedHall} />
+        </>
+      )}
+    </>
   );
 };
 

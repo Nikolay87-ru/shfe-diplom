@@ -3,5 +3,4 @@ export interface Seance {
   seance_filmid: number;
   seance_hallid: number;
   seance_time: string;
-  seance_date: string;
 }
