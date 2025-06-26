@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchHalls, createHall, deleteHall } from '../../../api/hallService';
 import AdminSection from '../../../components/ui/AdminSection';
 import HallConfig from './HallConfig';
-import HallPrices from './HallPrices';
+import HallPricesPage from './HallPricesPage';
 import { type Hall } from '../../../types/hall';
 
 const HallsPage = () => {
@@ -114,7 +114,7 @@ const HallsPage = () => {
       {selectedHall && (
         <>
           <HallConfig hall={selectedHall} />
-          <HallPrices hall={selectedHall} />
+          <HallPricesPage hall={selectedHall} />
         </>
       )}
     </>

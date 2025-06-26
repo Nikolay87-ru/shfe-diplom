@@ -16,7 +16,7 @@ const HallScheme = ({ rows, places, config, onConfigChange }: HallSchemeProps) =
   }, [config]);
 
   const handleSeatClick = (rowIndex: number, seatIndex: number) => {
-    const newConfig = [...localConfig];
+    const newConfig = localConfig.map(row => [...row]);
     const currentType = newConfig[rowIndex][seatIndex];
     
     if (currentType === 'standart') {

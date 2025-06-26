@@ -1,16 +1,16 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../pages/authorization/AuthContext';
-import ClientLayout from '../layouts/GuestLayout';
-import AdminLayout from '../layouts/AdminLayout';
+import { useAuth } from '../pages/authorization/hook/useAuth';
+import GuestLayout from '../pages/guest/GuestLayout';
+import AdminLayout from '../pages/admin/AdminLayout';
 import LoginPage from '../pages/authorization/LoginPage';
 import HomePage from '../pages/guest/HomePage';
 import HallPage from '../pages/admin/halls/HallsPage';
 import PaymentPage from '../pages/guest/PaymentPage';
 import TicketPage from '../pages/guest/TicketPage';
-import AdminHallsPage from '../pages/admin/halls/HallsPage';
+import HallsPage from '../pages/admin/halls/HallsPage';
 import AdminMoviesPage from '../pages/admin/movies/MoviesPage';
-import AdminPricesPage from '../pages/admin/prices/PricesPage';
-import AdminSchedulePage from '../pages/admin/schedule/SchedulePage';
+import HallPricesPage from '../pages/admin/halls/HallPricesPage';
+import TimeTablePage from '../pages/admin/timetable/TimeTablePage';
 
 const AppRoutes = () => {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -21,7 +21,7 @@ const AppRoutes = () => {
       <Route path='/login' element={<LoginPage />} />
 
       {/* Guest routes */}
-      <Route path='/' element={<ClientLayout />}>
+      <Route path='/' element={<GuestLayout />}>
         <Route index element={<HomePage />} />
         <Route path='hall/:seanceId' element={<HallPage />} />
         <Route path='payment' element={<PaymentPage />} />
@@ -32,10 +32,10 @@ const AppRoutes = () => {
       {isAuthenticated && isAdmin && (
         <Route path='/admin' element={<AdminLayout />}>
           <Route index element={<Navigate to='halls' replace />} />
-          <Route path='halls' element={<AdminHallsPage />} />
+          <Route path='halls' element={<HallsPage />} />
           <Route path='movies' element={<AdminMoviesPage />} />
-          <Route path='prices' element={<AdminPricesPage />} />
-          <Route path='schedule' element={<AdminSchedulePage />} />
+          <Route path='prices' element={<HallPricesPage />} />
+          <Route path='schedule' element={<TimeTablePage />} />
         </Route>
       )}
 

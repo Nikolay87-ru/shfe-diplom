@@ -3,6 +3,7 @@ import { updateHallConfig } from '../../../api/hallService';
 import HallScheme from '../../../components/admin/HallScheme';
 import AdminSection from '../../../components/ui/AdminSection';
 import { type Hall } from '../../../types/hall';
+import { toast } from 'react-toastify';
 
 interface HallConfigProps {
   hall: Hall;
@@ -47,9 +48,9 @@ const HallConfig = ({ hall }: HallConfigProps) => {
       
       await updateHallConfig(hall.id, formData);
       setIsChanged(false);
-      alert('Конфигурация зала сохранена!');
+      toast.success('Конфигурация зала сохранена!');
     } catch (error) {
-      console.error('Error saving hall config:', error);
+      toast.error('Ошибка сохранения конфигурации зала!');
     }
   };
 

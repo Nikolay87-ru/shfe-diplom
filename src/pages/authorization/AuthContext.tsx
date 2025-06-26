@@ -1,41 +1,41 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import apiClient from '../../api/apiClient';
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
+import { AuthContext } from './auth-context.const'; 
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
+    const authFlag = localStorage.getItem('isAuthenticated');
+    if (authFlag === 'true') {
       setIsAuthenticated(true);
-      setIsAdmin(true); 
+      setIsAdmin(true);
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (login: string, password: string) => {
+    const formData = new FormData();
+    formData.append('login', login);
+    formData.append('password', password);
+    
     try {
-      const response = await apiClient.post('/login', { email, password });
-      localStorage.setItem('authToken', response.data.token);
-      setIsAuthenticated(true);
-      setIsAdmin(response.data.isAdmin);
+      const response = await apiClient.post('/login', formData, { withCredentials: true });
+      
+      if (response.data.result?.includes('успешно')) {
+        setIsAuthenticated(true);
+        setIsAdmin(true);
+        localStorage.setItem('isAuthenticated', 'true');
+      } else {
+        throw new Error('Ошибка авторизации');
+      }
     } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+      throw new Error('Ошибка при выполнении запроса авторизации');
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('isAuthenticated');
     setIsAuthenticated(false);
     setIsAdmin(false);
   };
@@ -45,12 +45,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
 };

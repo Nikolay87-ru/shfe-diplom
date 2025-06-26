@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '../../pages/authorization/AuthContext';
+import { useAuth } from '../../pages/authorization/hook/useAuth';
 import { Navigate } from 'react-router-dom';
 
 const AdminLayout = () => {

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
 import './MovieForm.css';
 
 interface MovieFormProps {
@@ -18,7 +19,7 @@ const MovieForm = ({ onSave, onCancel }: MovieFormProps) => {
     e.preventDefault();
     
     if (!name || !duration || !description || !country || !poster) {
-      alert('Заполните все поля и загрузите постер');
+      toast.error('Заполните все поля и загрузите постер!');
       return;
     }
 
@@ -37,7 +38,7 @@ const MovieForm = ({ onSave, onCancel }: MovieFormProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       if (e.target.files[0].size > 3000000) {
-        alert('Размер файла должен быть не более 3 Mb');
+        toast.error('Размер файла должен быть не более 3 Mb');
         return;
       }
       setPoster(e.target.files[0]);
