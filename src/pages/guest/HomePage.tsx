@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchMovies } from '../../api/movieService';
 import { type Movie } from '../../types/movie';
-import MovieCard from '../../components/guest/MovieCard';
+// import MovieCard from '../../components/guest/MovieCard';
 import DateSelector from '../../pages/guest/DateSelector';
 
 const HomePage = () => {

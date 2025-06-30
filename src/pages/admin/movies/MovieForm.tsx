@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { toast } from 'react-toastify';
-import './MovieForm.css';
+// import './MovieForm.css';
 
 interface MovieFormProps {
   onSave: (formData: FormData) => void;

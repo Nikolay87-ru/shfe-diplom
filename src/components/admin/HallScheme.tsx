@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './HallScheme.css';
 
 interface HallSchemeProps {
   rows: number;
