@@ -1,6 +1,11 @@
 import AdminSection from '../../../components/ui/AdminSection';
+import { type Hall } from '../../../types/hall';
 
-const HallPricesPage = ({ hall }) => (
+interface Props {
+  hall: Hall;
+}
+
+const HallPricesPage = ({ hall }: Props) => (
   <AdminSection title="Конфигурация цен">
     <div className="admin__wrapper">
       <div className="price-config__wrapper">

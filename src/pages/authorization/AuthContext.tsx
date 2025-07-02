@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import apiClient from '../../api/apiClient';
-import { AuthContext } from './auth-context.const'; 
+import { AuthContext } from './auth-context.const';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -18,11 +18,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const formData = new FormData();
     formData.append('login', login);
     formData.append('password', password);
-    
+
     try {
-      const response = await apiClient.post('/login', formData, { withCredentials: true });
-      
-      if (response.data.result?.includes('успешно')) {
+      const response = await apiClient.post('/login', formData);
+
+      if (response.data && response.data.success === true) {
         setIsAuthenticated(true);
         setIsAdmin(true);
         localStorage.setItem('isAuthenticated', 'true');

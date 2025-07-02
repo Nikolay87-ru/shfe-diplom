@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 
 interface HallSchemeProps {
-  rows: number;
-  places: number;
   config: string[][];
   onConfigChange: (config: string[][]) => void;
 }
 
-const HallScheme = ({ rows, places, config, onConfigChange }: HallSchemeProps) => {
+const HallScheme = ({ config, onConfigChange }: HallSchemeProps) => {
   const [localConfig, setLocalConfig] = useState<string[][]>(config);
 
   useEffect(() => {

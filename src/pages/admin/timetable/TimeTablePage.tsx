@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+// import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 const TimeTablePage = ({ movies }) => {
   const [schedule, setSchedule] = useState([]);

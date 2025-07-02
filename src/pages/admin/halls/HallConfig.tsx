@@ -114,8 +114,6 @@ const HallConfig = ({ hall }: HallConfigProps) => {
           <p className="hall-config__hint">Чтобы изменить вид кресла, нажмите по нему</p>
 
           <HallScheme 
-            rows={rows}
-            places={places}
             config={config}
             onConfigChange={handleConfigChange}
           />

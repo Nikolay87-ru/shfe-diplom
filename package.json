@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
+    "date-fns": "^4.1.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@types/bootstrap": "^5.2.10",
+    "@types/date-fns": "^2.5.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.33.1",
