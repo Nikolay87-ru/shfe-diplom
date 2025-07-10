@@ -1,0 +1,41 @@
+.calendar-nav {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 0;
+  margin-bottom: 30px;
+  
+  .days-list {
+    display: flex;
+    gap: 1px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .day-item {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    flex-grow: 1;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.12);
+    
+    &.active {
+      padding: 11px;
+      font-weight: 700;
+      box-shadow: 0 0 2px rgba(0,0,0,0.24);
+    }
+    
+    .weekday {
+      display: block;
+      font-size: 12px;
+      
+      &.weekend {
+        color: #DE2121;
+      }
+    }
+    
+    .date {
+      font-size: 15px;
+    }
+  }
+}

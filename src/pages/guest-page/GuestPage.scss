@@ -1,0 +1,17 @@
+.guest-page {
+  background-image: url('../../../assets/guest.jpg');
+  background-color: #C97400;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  color: #000000;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  font-size: 24px;
+}

@@ -1,34 +1,30 @@
-import React, { JSX } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { GuestPage } from "./pages/GuestPage";
-import { AdminPanel } from "./pages/AdminPanel";
-import { SeatSelection } from "./pages/SeatSelection";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import { MoviesProvider } from "./context/MoviesContext";
-import { Login } from "./components/admin/Login/Login";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { GuestPage } from './pages/guest-page/GuestPage';
+import { HallPage } from './pages/guest-page/HallPage';
+import { PaymentPage } from './pages/PaymentPage';
+import { TicketPage } from './pages/TicketPage';
+// import { AdminPanel } from './pages/AdminPanel';
+import { Login } from './components/admin/Login/Login';
+import { AuthProvider } from './context/AuthContext';
+import { GuestProvider } from './context/GuestContext';
 
-function PrivateRoute({children}: {children: JSX.Element}) {
-  const {isAdmin} = useAuth();
-  return isAdmin ? children : <Navigate to="/admin/login" />;
-}
-
-export default function App() {
+function App() {
   return (
     <AuthProvider>
-      <MoviesProvider>
+      <GuestProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<GuestPage />} />
-            <Route path="/seats/:id" element={<SeatSelection />} />
+            <Route path="/hall/:id" element={<HallPage />} />
+            <Route path="/payment/:id" element={<PaymentPage />} />
+            <Route path="/ticket/:id" element={<TicketPage />} />
             <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin" element={
-              <PrivateRoute><AdminPanel /></PrivateRoute>
-            } />
-            {/* Добавьте другие маршруты по необходимости */}
-            <Route path="*" element={<Navigate to="/" />} />
+            {/* <Route path="/admin/*" element={<AdminPanel />} /> */}
           </Routes>
         </BrowserRouter>
-      </MoviesProvider>
+      </GuestProvider>
     </AuthProvider>
   );
 }
+
+export default App;

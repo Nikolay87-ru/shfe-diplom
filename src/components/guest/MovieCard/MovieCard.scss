@@ -1,0 +1,101 @@
+.movie-card {
+  background: rgba(241, 235, 230, 0.95);
+  padding: 15px;
+  margin-bottom: 30px;
+  border-radius: 2px;
+
+  .movie-info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .poster-container {
+    position: relative;
+    width: 125px;
+    height: 175px;
+    flex-shrink: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -7px;
+      border-top: 14.4px solid #772720;
+      border-left: 6.4px solid #772720;
+      width: 6px;
+      height: 14px;
+    }
+  }
+
+  .poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 11px;
+  }
+
+  .synopsis {
+    font-size: 14px;
+    margin-bottom: 11px;
+    line-height: 1.4;
+  }
+
+  .meta {
+    display: flex;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .hall-sessions {
+    margin-bottom: 25px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .hall-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+
+  .session-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .session-time {
+    width: 53px;
+    height: 33px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.12);
+    cursor: pointer;
+    font-size: 15px;
+
+    &:hover {
+      box-shadow: 0 0 2px rgba(0,0,0,0.24);
+    }
+
+    &.disabled {
+      background: #C4C4C4;
+      cursor: default;
+    }
+  }
+}
