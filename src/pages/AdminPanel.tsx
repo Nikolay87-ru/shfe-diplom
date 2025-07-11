@@ -1,7 +1,7 @@
 import { Tab, Tabs } from 'react-bootstrap';
-import { HallsManagement } from '@/components/admin/HallsManagement';
-import { MoviesManagement } from '@/components/admin/MoviesManagement';
-import { SeancesManagement } from '@/components/admin/SeancesManagement';
+import { HallsManagement } from '../components/admin/Halls/HallsManagement';
+import { MoviesManagement } from '../components/admin/Movies/MoviesManagement';
+import { SeancesManagement } from '../components/admin/Seances/SeancesManagement';
 
 export const AdminPanel = () => {
   return (
