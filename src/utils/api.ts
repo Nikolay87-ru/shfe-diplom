@@ -1,15 +1,40 @@
 import axios from 'axios';
+import { Film, Hall, Seance } from '../types';
 
-const API_URL = '/api'; 
+const API_URL = '/api';
 
-interface ApiResponse {
-  films(films: any): unknown;
+export interface ApiResponse {
   success: boolean;
-  result: unknown;
+  result: {
+    films: Film[];
+    halls: Hall[];
+    seances: Seance[];
+  };
   error?: string;
 }
 
 export const api = {
+    // Общие
+    getAllData: async (): Promise<ApiResponse> => {
+      try {
+        const response = await axios.get(`${API_URL}/alldata`);
+        return {
+          success: true,
+          result: {
+            films: response.data.result?.films || [],
+            halls: response.data.result?.halls || [],
+            seances: response.data.result?.seances || []
+          }
+        };
+      } catch (error) {
+        console.error('Error fetching all data:', error);
+        return {
+          success: false,
+          error: 'Failed to fetch data'
+        };
+      }
+    },
+    
   // Залы
   getHalls: async (): Promise<ApiResponse> => {
     try {
@@ -51,6 +76,44 @@ export const api = {
     }
   },
 
+  updateHallPrices: async (hallId: number, prices: {
+    standartPrice: number;
+    vipPrice: number;
+  }): Promise<ApiResponse> => {
+    const formData = new FormData();
+    formData.set('priceStandart', prices.standartPrice.toString());
+    formData.set('priceVip', prices.vipPrice.toString());
+    try {
+      const response = await axios.post(`${API_URL}/price/${hallId}`, formData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating hall prices:', error);
+      throw error;
+    }
+  },
+
+  updateHallStatus: async (hallId: number, status: number): Promise<ApiResponse> => {
+    const formData = new FormData();
+    formData.set('hallOpen', status.toString());
+    try {
+      const response = await axios.post(`${API_URL}/open/${hallId}`, formData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating hall status:', error);
+      throw error;
+    }
+  },
+  
+  deleteHall: async (hallId: number): Promise<ApiResponse> => {
+    try {
+      const response = await axios.delete(`${API_URL}/hall/${hallId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting hall:', error);
+      throw error;
+    }
+  },
+
   // Фильмы
   getMovies: async (): Promise<ApiResponse> => {
     try {
@@ -84,6 +147,16 @@ export const api = {
     }
   },
 
+  deleteMovie: async (movieId: number): Promise<ApiResponse> => {
+    try {
+      const response = await axios.delete(`${API_URL}/film/${movieId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+      throw error;
+    }
+  },
+
   // Сеансы
   getSeances: async (): Promise<ApiResponse> => {
     try {
@@ -112,14 +185,13 @@ export const api = {
       throw error;
     }
   },
-
-  // Общие
-  getAllData: async (): Promise<ApiResponse> => {
+  
+  deleteSeance: async (seanceId: number): Promise<ApiResponse> => {
     try {
-      const response = await axios.get(`${API_URL}/alldata`);
+      const response = await axios.delete(`${API_URL}/seance/${seanceId}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching all data:', error);
+      console.error('Error deleting seance:', error);
       throw error;
     }
   },

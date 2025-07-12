@@ -6,6 +6,7 @@ import { SeancesTimeline } from './SeancesTimeline';
 import { AddSeancePopup } from './AddSeancePopup';
 import { api } from '../../../utils/api';
 import { Film, Hall, Seance } from '../../../types/index';
+import { Button } from 'react-bootstrap';
 
 export const SeancesManagement = () => {
   const [movies, setMovies] = useState<Film[]>([]);
@@ -13,31 +14,59 @@ export const SeancesManagement = () => {
   const [seances, setSeances] = useState<Seance[]>([]);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Film | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await api.getAllData();
-      setMovies(data.films);
-      setHalls(data.halls);
-      setSeances(data.seances);
+      try {
+        setLoading(true);
+        const data = await api.getAllData();
+        if (data.success && data.result) {
+          setMovies(data.result.films || []);
+          setHalls(data.result.halls || []);
+          setSeances(data.result.seances || []);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
 
   const handleAddSeance = async (hallId: number, movieId: number, time: string) => {
-    const formData = new FormData();
-    formData.set('seanceHallid', hallId.toString());
-    formData.set('seanceFilmid', movieId.toString());
-    formData.set('seanceTime', time);
-    setShowAddPopup(false);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      // logic will be here in future
+    try {
+      const response = await api.addSeance({
+        hallId,
+        movieId,
+        time
+      });
+      if (response.success) {
+        setSeances(prev => [...prev, response.result.seance]);
+        setShowAddPopup(false);
+      }
+    } catch (error) {
+      console.error('Error adding seance:', error);
     }
   };
+
+  const handleSeanceMove = async (activeId: number, overId: number) => {
+    console.log(`Move seance ${activeId} to ${overId}`);
+  };
+
+  const handleDeleteSeance = async (id: number) => {
+    try {
+      await api.deleteSeance(id);
+      setSeances(prev => prev.filter(s => s.id !== id));
+    } catch (error) {
+      console.error('Error deleting seance:', error);
+    }
+  };
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
   return (
     <div className="seances-management">
@@ -62,16 +91,15 @@ export const SeancesManagement = () => {
       </div>
 
       <div className="timelines">
-        <DndContext onDragEnd={handleDragEnd}>
-          {halls.map(hall => (
-            <SeanceTimeline 
-              key={hall.id}
-              hall={hall}
+        {halls.map(hall => (
+          <div key={hall.id} className="timeline">
+            <h3 className="hall-title">{hall.hall_name}</h3>
+            <SeancesTimeline 
               seances={seances.filter(s => s.seance_hallid === hall.id)}
-              movies={movies}
+              onSeanceMove={handleSeanceMove}
             />
-          ))}
-        </DndContext>
+          </div>
+        ))}
       </div>
 
       <Button 

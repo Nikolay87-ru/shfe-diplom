@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { AddMoviePopup } from './AddMoviePopup';
 import { api } from '../../../utils/api';
-import { Film } from '../../../types/index';
+import { Film } from '../../../types';
 
 export const MoviesManagement = () => {
   const [movies, setMovies] = useState<Film[]>([]);
@@ -10,8 +10,17 @@ export const MoviesManagement = () => {
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const data = await api.getAllData();
-      setMovies(data.films);
+      try {
+        const data = await api.getAllData();
+        if (data.success && data.result?.films) {
+          setMovies(data.result.films);
+        } else {
+          setMovies([]);
+        }
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        setMovies([]);
+      }
     };
     fetchMovies();
   }, []);
@@ -23,16 +32,24 @@ export const MoviesManagement = () => {
     country: string;
     poster: File;
   }) => {
-    const formData = new FormData();
-    formData.set('filmName', movieData.name);
-    formData.set('filmDuration', movieData.duration.toString());
-    formData.set('filmDescription', movieData.description);
-    formData.set('filmOrigin', movieData.country);
-    formData.set('filePoster', movieData.poster);
-    setShowAddPopup(false);
+    try {
+      const response = await api.addMovie(movieData);
+      if (response.success) {
+        setMovies(prev => [...prev, response.result.film]);
+        setShowAddPopup(false);
+      }
+    } catch (error) {
+      console.error('Error adding movie:', error);
+    }
   };
 
   const handleDeleteMovie = async (id: number) => {
+    try {
+      await api.deleteMovie(id);
+      setMovies(prev => prev.filter(movie => movie.id !== id));
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+    }
   };
 
   return (

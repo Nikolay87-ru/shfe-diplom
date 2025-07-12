@@ -1,3 +1,14 @@
+export interface ApiResponse {
+  success: boolean;
+  result?: {
+    films?: Film[];
+    halls?: Hall[];
+    seances?: Seance[];
+    film?: Film;
+  };
+  error?: string;
+}
+
 export interface Film {
   id: number;
   film_name: string;
@@ -23,10 +34,4 @@ export interface Seance {
   seance_filmid: number;
   seance_hallid: number;
   seance_time: string;
-}
-
-export interface AllData {
-  films: Film[];
-  halls: Hall[];
-  seances: Seance[];
 }

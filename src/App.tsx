@@ -1,12 +1,18 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GuestPage } from './pages/guest-page/GuestPage';
 import { HallPage } from './pages/guest-page/HallPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { TicketPage } from './pages/TicketPage';
-// import { AdminPanel } from './pages/AdminPanel';
+import { AdminPanel } from './pages/AdminPanel';
 import { Login } from './components/admin/Login/Login';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { GuestProvider } from './context/GuestContext';
+import { JSX } from 'react';
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAdmin } = useAuth();
+  return isAdmin ? children : <Navigate to="/admin/login" replace />;
+};
 
 function App() {
   return (
@@ -19,7 +25,14 @@ function App() {
             <Route path="/payment/:id" element={<PaymentPage />} />
             <Route path="/ticket/:id" element={<TicketPage />} />
             <Route path="/admin/login" element={<Login />} />
-            {/* <Route path="/admin/*" element={<AdminPanel />} /> */}
+            <Route 
+              path="/admin/*" 
+              element={
+                <ProtectedRoute>
+                  <AdminPanel />
+                </ProtectedRoute>
+              } 
+            /> 
           </Routes>
         </BrowserRouter>
       </GuestProvider>

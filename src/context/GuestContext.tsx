@@ -1,5 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { api } from '../utils/api';
+import { Film } from '../types';
 
 interface Movie {
   id: number;
@@ -29,15 +30,17 @@ export const GuestProvider = ({ children }: { children: ReactNode }) => {
       try {
         setLoading(true);
         const data = await api.getAllData();
-        const films = data.films.map((film: any) => ({
-          id: film.id,
-          title: film.film_name,
-          description: film.film_description,
-          duration: film.film_duration,
-          country: film.film_origin,
-          poster: film.film_poster
-        }));
-        setMovies(films);
+        if (data.success && data.result) {
+          const films = data.result.films.map((film: Film) => ({
+            id: film.id,
+            title: film.film_name,
+            description: film.film_description,
+            duration: film.film_duration,
+            country: film.film_origin,
+            poster: film.film_poster
+          }));
+          setMovies(films);
+        }
       } catch (error) {
         console.error('Error fetching movies:', error);
       } finally {

@@ -4,49 +4,56 @@ import { Calendar } from '../../components/guest/Calendar/Calendar';
 import { MovieCard } from '../../components/guest/MovieCard/MovieCard';
 import { api } from '../../utils/api';
 import './GuestPage.scss';
+import { Hall, Seance } from '../../types';
 
 export const GuestPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const data = await api.getAllData();
-        const films = data.films;
-        const seances = data.seances;
-        
-        const moviesData = films.map(film => {
-          const filmSeances = seances.filter(s => s.seance_filmid === film.id);
+        if (data.success && data.result) {
+          const films = data.result.films;
+          const seances = data.result.seances;
+          const halls = data.result.halls;
           
-          const hallsMap = new Map();
-          filmSeances.forEach(seance => {
-            const hall = data.halls.find(h => h.id === seance.seance_hallid);
-            if (!hallsMap.has(hall.hall_name)) {
-              hallsMap.set(hall.hall_name, []);
-            }
-            hallsMap.get(hall.hall_name).push({
-              time: seance.seance_time,
-              disabled: false 
+          const moviesData = films.map(film => {
+            const filmSeances = seances.filter((s: Seance) => s.seance_filmid === film.id);
+            
+            const hallsMap = new Map();
+            filmSeances.forEach((seance: Seance) => {
+              const hall = halls.find((h: Hall) => h.id === seance.seance_hallid);
+              if (hall && !hallsMap.has(hall.hall_name)) {
+                hallsMap.set(hall.hall_name, []);
+              }
+              if (hall) {
+                hallsMap.get(hall.hall_name).push({
+                  time: seance.seance_time,
+                  disabled: false 
+                });
+              }
             });
+            
+            return {
+              id: film.id,
+              title: film.film_name,
+              description: film.film_description,
+              duration: film.film_duration,
+              country: film.film_origin,
+              poster: film.film_poster,
+              halls: Array.from(hallsMap.entries()).map(([name, sessions]) => ({
+                name,
+                sessions
+              }))
+            };
           });
           
-          return {
-            id: film.id,
-            title: film.film_name,
-            description: film.film_description,
-            duration: film.film_duration,
-            country: film.film_origin,
-            poster: film.film_poster,
-            halls: Array.from(hallsMap.entries()).map(([name, sessions]) => ({
-              name,
-              sessions
-            }))
-          };
-        });
-        
-        setMovies(moviesData);
+          setMovies(moviesData);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

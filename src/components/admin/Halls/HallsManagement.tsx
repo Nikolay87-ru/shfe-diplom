@@ -4,8 +4,8 @@ import { HallConfig } from './HallConfig';
 import { HallPrices } from './HallPrices';
 import { HallOpen } from './HallOpen';
 import { AddHallPopup } from './AddHallPopup';
-import { api } from '@/utils/api';
-import { Hall } from '@/types';
+import { api } from '../../../utils/api';
+import { Hall } from '../../../types/index';
 
 export const HallsManagement = () => {
   const [halls, setHalls] = useState<Hall[]>([]);
@@ -14,9 +14,15 @@ export const HallsManagement = () => {
 
   useEffect(() => {
     const fetchHalls = async () => {
-      const data = await api.getAllData();
-      setHalls(data.halls);
-      setSelectedHall(data.halls[0] || null);
+      try {
+        const data = await api.getAllData();
+        if (data.success && data.result) {
+          setHalls(data.result.halls);
+          setSelectedHall(data.result.halls[0] || null);
+        }
+      } catch (error) {
+        console.error('Error fetching halls:', error);
+      }
     };
     fetchHalls();
   }, []);
