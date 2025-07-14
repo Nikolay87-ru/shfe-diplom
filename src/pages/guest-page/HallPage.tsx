@@ -9,9 +9,9 @@ export const HallPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState<any>(null);
-  const [hall, setHall] = useState<any>(null);
-  const [seance, setSeance] = useState<any>(null);
+  const [movie, setMovie] = useState<unknown>(null);
+  const [hall, setHall] = useState<unknown>(null);
+  const [seance, setSeance] = useState<unknown>(null);
   const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
   
   useEffect(() => {

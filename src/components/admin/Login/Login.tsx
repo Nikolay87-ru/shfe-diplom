@@ -30,7 +30,7 @@ export const Login: React.FC = () => {
     <div className="admin__container">
       <header className="header login__header">
         <h1 className="header__logo">Идём<span className="header__logo_letter">в</span>кино</h1>
-        <p className="header__subtitle">Администраторррская</p>
+        <p className="header__subtitle">Администраторская</p>
       </header>
 
       <main className="login__main">

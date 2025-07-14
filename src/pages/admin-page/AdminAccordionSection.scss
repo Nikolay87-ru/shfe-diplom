@@ -1,0 +1,38 @@
+.admin__section {
+  margin-bottom: 28px;
+  border-radius: 2px;
+  background-color: rgba(234, 233, 235, 0.95);
+}
+.admin__header {
+  background: #63536C;
+  position: relative; 
+  padding: 20px 42px 20px 67px;
+  border-radius: 2px 2px 0 0;
+  cursor: pointer;
+  user-select: none;
+  display:flex; 
+  align-items:center;
+}
+.admin__header_text {
+  flex:1 1 auto; 
+  color: #fff; 
+  font-size: 22px; 
+  font-weight:700; 
+  text-transform:uppercase; 
+  margin:0;
+}
+.admin__header_arrow {
+  width: 44px;
+  height: 36px;
+  position: absolute;
+  top: 35px;
+  right: 36px;
+  cursor: pointer;
+  color: white;
+}
+
+.admin__header_arrow-hide {
+  transform: rotate(180deg);
+}
+.admin__wrapper { padding: 35px 31px 25px 31px; }
+.admin__wrapper-hide { display: none; }

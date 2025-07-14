@@ -1,0 +1,60 @@
+.halls-management {
+  background-color: rgba(234, 233, 235, 0.95);
+  padding: 35px 104px;
+
+  .halls-list {
+    ul {
+      list-style-type: none;
+      padding-left: 25px;
+      margin-top: 14px;
+      margin-bottom: 22px;
+
+      li {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 18px;
+        text-transform: uppercase;
+        position: relative;
+        display: flex;
+        margin-bottom: 10px;
+
+        &::before {
+          content: "–";
+          position: absolute;
+          left: -14px;
+        }
+
+        .btn-remove {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-left: 4px;
+          width: 20px;
+          height: 20px;
+          border-radius: 3px;
+          background-color: #FFFFFF;
+          box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+          cursor: pointer;
+          position: relative;
+
+          &::before {
+            content: "";
+            background: url('../../../assets/bin.png');
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            background-repeat: no-repeat;
+            background-position: 0px 0px;
+            background-size: auto 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .admin__button_hall {
+    padding: 12px 32px;
+    margin-bottom: 36px;
+    align-self: flex-start;
+  }
+}

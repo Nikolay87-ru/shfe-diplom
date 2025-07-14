@@ -1,162 +1,135 @@
-import { useState, useRef } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { api } from '../../../utils/api';
+import React, { useRef, useState } from "react";
+import "./AddMoviePopup.scss";
 
-interface AddMoviePopupProps {
+interface Props {
   show: boolean;
   onClose: () => void;
-  onSave: (movieData: {
+  onSave: (data: {
     name: string;
     duration: number;
     description: string;
     country: string;
     poster: File;
-  }) => void;
+  }) => Promise<void> | void;
 }
-
-export const AddMoviePopup = ({ show, onClose, onSave }: AddMoviePopupProps) => {
-  const [name, setName] = useState('');
-  const [duration, setDuration] = useState(0);
-  const [description, setDescription] = useState('');
-  const [country, setCountry] = useState('');
+export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
+  const [name, setName] = useState("");
+  const [duration, setDuration] = useState("");
+  const [description, setDescription] = useState("");
+  const [country, setCountry] = useState("");
   const [poster, setPoster] = useState<File | null>(null);
-  const [posterPreview, setPosterPreview] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState("");
+  const [posterPreview, setPosterPreview] = useState<string | undefined>();
+  const inputPosterRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      
-      if (file.size > 3 * 1024 * 1024) {
-        alert('Размер файла должен быть не более 3 MB');
-        return;
-      }
-      
-      setPoster(file);
-      setPosterPreview(URL.createObjectURL(file));
-    }
-  };
+  function handlePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files?.length) return;
+    const file = e.target.files[0];
+    if (file.size > 3*1024*1024) { setError("Размер файла не более 3 Mb!"); return;}
+    setPoster(file);
+    setPosterPreview(URL.createObjectURL(file));
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    
+    setError("");
     if (!name || !duration || !description || !country || !poster) {
-      alert('Заполните все поля');
+      setError("Заполните все обязательные поля!");
       return;
     }
-    
-    if (poster) {
-      onSave({
-        name,
-        duration,
-        description,
-        country,
-        poster
-      });
-    }
-    
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setName('');
-    setDuration(0);
-    setDescription('');
-    setCountry('');
-    setPoster(null);
-    setPosterPreview('');
+    onSave({
+      name: name.trim(),
+      duration: Number(duration),
+      description: description.trim(),
+      country: country.trim(),
+      poster
+    });
+    setName(""); setDuration(""); setDescription(""); setCountry(""); setPoster(null); setPosterPreview("");
     onClose();
-  };
+  }
+
+  if (!show) return null;
 
   return (
-    <Modal show={show} onHide={onClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Добавление фильма</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Название фильма</Form.Label>
-            <Form.Control
+    <div className="popup">
+      <div className="popup__container">
+        <div className="popup__header">
+          <div className="popup__header_text">Добавление фильма</div>
+          <div className="popup__close" onClick={onClose}>
+            <img src="/close.png" alt="Закрыть"/>
+          </div>
+        </div>
+        <form className="popup__form" onSubmit={handleSubmit} autoComplete="off">
+          <label className="admin_label">
+            Название фильма
+            <input
               type="text"
+              className="admin_input"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e=>setName(e.target.value)}
               placeholder="Например, «Гражданин Кейн»"
               required
             />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Продолжительность (мин)</Form.Label>
-            <Form.Control
+          </label>
+          <label className="admin_label">
+            Продолжительность фильма (мин.)
+            <input
               type="number"
+              className="admin_input"
+              min={1}
               value={duration}
-              onChange={(e) => setDuration(parseInt(e.target.value))}
-              min="1"
+              onChange={e=>setDuration(e.target.value)}
               required
             />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Описание</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
+          </label>
+          <label className="admin_label">
+            Описание фильма
+            <textarea
+              className="admin_input add-movie_synopsis_input"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e=>setDescription(e.target.value)}
               required
             />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Страна</Form.Label>
-            <Form.Control
+          </label>
+          <label className="admin_label">
+            Страна
+            <input
               type="text"
+              className="admin_input"
               value={country}
-              onChange={(e) => setCountry(e.target.value)}
+              onChange={e=>setCountry(e.target.value)}
               required
             />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Постер</Form.Label>
-            <div className="d-flex align-items-center">
-              {posterPreview && (
-                <img 
-                  src={posterPreview} 
-                  alt="Preview" 
-                  className="img-thumbnail me-3" 
-                  style={{ width: '50px', height: '70px' }}
-                />
-              )}
-              <Button 
-                variant="secondary"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {poster ? 'Изменить' : 'Загрузить постер'}
-              </Button>
+          </label>
+          <div style={{display: "flex", alignItems: "center", gap:10}}>
+            {posterPreview && (
+              <img className="popup__poster_preview" src={posterPreview} alt="preview"/>
+            )}
+            <label className="popup__add-poster_button">
+              {posterPreview ? "Изменить постер" : "Загрузить постер"}
               <input
                 type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
                 accept="image/*"
-                style={{ display: 'none' }}
+                ref={inputPosterRef}
+                onChange={handlePosterChange}
               />
-            </div>
-            <Form.Text className="text-muted">
-              Максимальный размер файла: 3MB
-            </Form.Text>
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={resetForm}>
-          Отменить
-        </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Добавить фильм
-        </Button>
-      </Modal.Footer>
-    </Modal>
+            </label>
+            <span style={{color:'#555', fontSize:11, marginLeft:4}}>
+              До 3MB
+            </span>
+          </div>
+          {error && <div style={{color:"red",textAlign:"center"}}>{error}</div>}
+
+          <div className="popup__buttons">
+            <button type="submit"
+              className={"button"+(!(name&&duration&&description&&country&&poster)?" button_disabled":"") }
+              disabled={!(name&&duration&&description&&country&&poster)}
+            >Добавить фильм</button>
+            <button type="button" className="button popup__button_cancel"
+              onClick={onClose}>Отменить</button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };

@@ -3,7 +3,7 @@ import { GuestPage } from './pages/guest-page/GuestPage';
 import { HallPage } from './pages/guest-page/HallPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { TicketPage } from './pages/TicketPage';
-import { AdminPanel } from './pages/AdminPanel';
+import { AdminPanel } from './pages/admin-page/AdminPanel';
 import { Login } from './components/admin/Login/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GuestProvider } from './context/GuestContext';

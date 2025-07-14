@@ -1,7 +1,4 @@
 import { useState, useEffect } from 'react';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { SeanceItem } from './SeanceItem';
 import { SeancesTimeline } from './SeancesTimeline';
 import { AddSeancePopup } from './AddSeancePopup';
 import { api } from '../../../utils/api';

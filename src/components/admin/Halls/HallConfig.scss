@@ -1,0 +1,128 @@
+@import "../../../styles/admin.scss";
+
+.hall-config {
+  .halls_choose {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    margin-bottom: 35px;
+    gap: 10px;
+    .hall__item {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 16px;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      background-color: rgba(255, 255, 255, 0.45);
+      border-radius: 3px;
+      box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.12), 
+        0px 2px 2px 0px rgba(0, 0, 0, 0.24), 
+        0px 6px 8px 0px rgba(0, 0, 0, 0.24);
+      cursor: pointer;
+      &.hall_item-selected {
+        font-size: 15px;
+        font-weight: 900;
+        background-color: #fff;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .hall-config__wrapper { }
+
+  .hall-config__size {
+    margin-top: 12px; margin-bottom: 36px;
+    display: flex; gap: 13px; align-items: center;
+    .admin_label {
+      color: #848484; font-size: 12px; font-weight: 400; line-height: 14px;
+      display: flex; flex-direction: column;
+    }
+    .admin_input {
+      margin-top: 1.6px; padding: 8px 9px 9px 9px;
+      color: #757575; font-size: 16px; font-weight: 400;
+      background: #fff; border: 1px solid #B7B7B7; width: 100px;
+      &:focus-visible { outline: #757575 auto 1px; }
+    }
+    .hall-size {
+      color: #848484; font-family: Consolas;
+      font-size: 18px; font-weight: 400; line-height: 21px; padding-top: 22px;
+    }
+  }
+
+  .hall-config__types {
+    margin-top: 11px;
+    margin-bottom: 11px;
+    display: flex; flex-wrap: wrap;
+    gap: 12px 23px;
+    .hall-config__type_place {
+      color: #848484; font-size: 14px; font-weight: 400; line-height: 16px;
+      display: flex; align-items: center; gap:4px;
+      span.place_standart, span.place_vip, span.place_block {
+        display: inline-block;
+        width: 26px; height: 26px; border-radius: 4px; vertical-align: middle;
+      }
+      span.place_standart {
+        background: #C4C4C4; border: 1px solid #393939;
+      }
+      span.place_vip {
+        background: #B0D6D8;
+        border: 1px solid #0A828A;
+        background-image: url('../../../assets/vip-background.png');
+        background-size: cover;
+      }
+      span.place_block { border: 1px solid #C4C4C4;}
+    }
+  }
+  .hall-config__hint {
+    color: #848484;
+    font-size: 14px; font-weight: 400; line-height: 16px;
+    margin-bottom: 8px;
+  }
+
+  .hall-config__hall {
+    margin-top: 11px;
+    margin-bottom: 5px;
+    padding-top: 64px; padding-bottom: 36px; width: 100%;
+    border: 1px solid #000;
+    position: relative;
+    display: flex; justify-content: center; align-items: center;
+    .hall-config__hall_screen {
+      position: absolute; left:50%; transform:translateX(-50%);
+      top: 25px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 18px;
+      text-transform: uppercase;
+      letter-spacing: 19px;
+      width:350px;text-align:center;
+    }
+
+    .hall-config__hall_wrapper {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .hall-config__hall_row { display: flex; gap: 10px;}
+    .hall-config__hall_chair {
+      width: 26px; height: 26px; border-radius: 4px; cursor: pointer;
+      border: 1px solid #C4C4C4;
+      background: none;
+      &.place_standart {
+        background-color: #C4C4C4;
+        border: 1px solid #393939;
+      }
+      &.place_vip {
+        background-color: #B0D6D8;
+        background-image: url('../../../assets/vip-background.png');
+        border: 1px solid #0A828A;
+      }
+      &.place_block {
+        background: none;
+        border: 1px solid #C4C4C4;
+      }
+    }
+  }
+  .hall-config__buttons {
+    display: flex; justify-content: center; padding-top: 17px; margin-bottom: 35px;
+    button.admin__button_cancel { margin-right: 15px; }
+  }
+}

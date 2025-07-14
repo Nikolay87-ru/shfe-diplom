@@ -1,88 +1,75 @@
-import { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
-import { Hall } from '../../../types';
-import { api } from '../../../utils/api';
+import React, { useEffect, useState } from "react";
+import { useHalls } from "../../../context/HallsContext";
+import { api } from "../../../utils/api";
+import { HallsChoose } from "./HallsChoose";
+import "./HallOpen.scss"; 
 
-interface HallOpenProps {
-  hall: Hall;
-}
+export const HallOpenSection: React.FC = () => {
+  const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
+  const hall = halls.find(h => h.id === selectedHallId);
 
-export const HallOpen = ({ hall }: HallOpenProps) => {
-  const [status, setStatus] = useState(hall.hall_open);
   const [hasSeances, setHasSeances] = useState(false);
+  const [status, setStatus] = useState<0|1>(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const checkSeances = async () => {
-      try {
-        setLoading(true);
-        const data = await api.getAllData();
-        const seancesCount = data.success && data.result?.seances 
-          ? data.result.seances.filter(s => s.seance_hallid === hall.id).length 
-          : 0;
-        setHasSeances(seancesCount > 0);
-      } catch (error) {
-        console.error('Error checking seances:', error);
-        setHasSeances(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    checkSeances();
-    setStatus(hall.hall_open);
+    async function check() {
+      setLoading(true);
+      if (!hall) return;
+      setStatus(hall.hall_open);
+      const res = await api.getAllData();
+      const seances = res.result?.seances.filter(s=>s.seance_hallid===hall.id) || [];
+      setHasSeances(seances.length>0);
+      setLoading(false);
+    }
+    check();
   }, [hall]);
 
-  const toggleStatus = async () => {
-    const newStatus = status === 1 ? 0 : 1;
-    
-    if (newStatus === 1 && !hasSeances) {
-      alert('Добавьте сеансы в зал для открытия продаж');
-      return;
-    }
-
-    try {
-      const response = await api.updateHallStatus(hall.id, newStatus);
-      
-      if (response.success) {
-        setStatus(newStatus);
-      }
-    } catch (error) {
-      console.error('Error updating hall status:', error);
-    }
-  };
-
-  if (loading) {
-    return <div>Проверка сеансов...</div>;
+  async function handleToggleSellStatus() {
+    if (!hall) return;
+    if (status === 0 && !hasSeances) return;
+    await api.updateHallStatus(hall.id, status===1?0:1);
+    await update();
+    setStatus(status===1?0:1);
   }
 
+  if (!hall) return <div style={{padding:"1em"}}>Нет залов</div>;
+
   return (
-    <div className="hall-open">
-      <div className="hall-status">
-        {status === 1 ? (
-          <>
-            <p>Зал открыт для продаж</p>
-            <Button variant="danger" onClick={toggleStatus}>
-              Приостановить продажи
-            </Button>
-          </>
-        ) : (
-          <>
-            <p>
-              {hasSeances 
-                ? 'Всё готово к открытию продаж' 
-                : 'Добавьте сеансы в зал для открытия продаж'}
-            </p>
-            <Button 
-              variant="success" 
-              onClick={toggleStatus}
-              disabled={!hasSeances}
-            >
-              Открыть продажи
-            </Button>
-          </>
-        )}
+    <section className="admin__section open">
+      <div className="admin__header">
+        <h2 className="admin__header_text admin__header_text-last">Открыть продажи</h2>
       </div>
-    </div>
+      <div className="admin__wrapper admin__wrapper-last">
+        <p className="admin__info">Выберите зал для открытия/закрытия продаж:</p>
+        <HallsChoose halls={halls} selectedId={hall.id} onSelect={setSelectedHallId} />
+        <div className="open__wrapper">
+          <div className="open__info">
+            {loading ? "Проверка сеансов..." :
+              hall.hall_open === 1
+                ? "Зал открыт для продаж"
+                  : (
+                  hasSeances
+                  ? "Всё готово к открытию"
+                  : "Добавьте сеансы в зал для открытия продаж"
+                )
+            }
+          </div>
+          <button
+            className={"admin__button_open button" +
+              (
+                (status===0 && !hasSeances)
+                  ? " button_disabled"
+                  : ""
+              )
+            }
+            disabled={!!(status===0 && !hasSeances)}
+            onClick={handleToggleSellStatus}
+          >{
+            status === 1 ? "Приостановить продажи" : "Открыть продажу билетов"
+          }</button>
+        </div>
+      </div>
+    </section>
   );
 };

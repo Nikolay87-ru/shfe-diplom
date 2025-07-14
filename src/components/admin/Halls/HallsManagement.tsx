@@ -1,76 +1,50 @@
-import { useState, useEffect } from 'react';
-import { Tab, Tabs, Button } from 'react-bootstrap';
-import { HallConfig } from './HallConfig';
-import { HallPrices } from './HallPrices';
-import { HallOpen } from './HallOpen';
+import React, { useState } from 'react';
 import { AddHallPopup } from './AddHallPopup';
+import { HallsList } from './HallsList';
+import { useHalls } from '../../../context/HallsContext';
 import { api } from '../../../utils/api';
-import { Hall } from '../../../types/index';
+import '../../../styles/admin.scss'; 
+import { MdDelete } from "react-icons/md";
 
-export const HallsManagement = () => {
-  const [halls, setHalls] = useState<Hall[]>([]);
-  const [selectedHall, setSelectedHall] = useState<Hall | null>(null);
+export const HallsManagement: React.FC = () => {
+  const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
   const [showAddPopup, setShowAddPopup] = useState(false);
 
-  useEffect(() => {
-    const fetchHalls = async () => {
-      try {
-        const data = await api.getAllData();
-        if (data.success && data.result) {
-          setHalls(data.result.halls);
-          setSelectedHall(data.result.halls[0] || null);
-        }
-      } catch (error) {
-        console.error('Error fetching halls:', error);
-      }
-    };
-    fetchHalls();
-  }, []);
-
-  const handleAddHall = async (name: string) => {
-    const formData = new FormData();
-    formData.set('hallName', name);
-    setShowAddPopup(false);
-  };
-
+  async function addHall(name: string) {
+    await api.addHall(name);
+    await update();
+  }
+  async function deleteHall(id: number) {
+    if(window.confirm('Удалить зал?')) {
+      await api.deleteHall(id);
+      await update();
+    }
+  }
   return (
-    <div className="admin-halls">
-      <div className="halls-list">
-        <h3>Доступные залы</h3>
-        <ul>
-          {halls.map(hall => (
-            <li 
-              key={hall.id}
-              className={selectedHall?.id === hall.id ? 'active' : ''}
-              onClick={() => setSelectedHall(hall)}
-            >
-              {hall.hall_name}
-              <button className="btn-remove">×</button>
-            </li>
-          ))}
-        </ul>
-        <Button onClick={() => setShowAddPopup(true)}>Создать зал</Button>
+    <section className="admin__section halls">
+      <div className="admin__header">
+        <h2 className="admin__header_text admin__header_text-first">Управление залами</h2>
+        
       </div>
-
-      {selectedHall && (
-        <Tabs defaultActiveKey="config" className="mt-3">
-          <Tab eventKey="config" title="Конфигурация зала">
-            <HallConfig hall={selectedHall} />
-          </Tab>
-          <Tab eventKey="prices" title="Конфигурация цен">
-            <HallPrices hall={selectedHall} />
-          </Tab>
-          <Tab eventKey="open" title="Открыть продажи">
-            <HallOpen hall={selectedHall} />
-          </Tab>
-        </Tabs>
-      )}
-
-      <AddHallPopup 
-        show={showAddPopup}
-        onClose={() => setShowAddPopup(false)}
-        onSave={handleAddHall}
-      />
-    </div>
+      <div className="admin__wrapper">
+        <p className="admin__info halls__info">Доступные залы:</p>
+        <HallsList
+          halls={halls}
+          selectedId={selectedHallId}
+          onSelect={setSelectedHallId}
+          onDelete= {deleteHall} 
+        />
+        <button
+          className="admin__button_hall button"
+          onClick={() => setShowAddPopup(true)}>
+          Создать зал
+        </button>
+        <AddHallPopup
+          show={showAddPopup}
+          onClose={() => setShowAddPopup(false)}
+          onSave={addHall}
+        />
+      </div>
+    </section>
   );
 };
