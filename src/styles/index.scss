@@ -1,5 +1,11 @@
 @import "./bootstrap-custom.scss";
 
+*,
+*::before,
+*::after {
+  box-sizing: content-box;
+}
+
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #faf9f6;

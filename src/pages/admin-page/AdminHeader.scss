@@ -1,7 +1,7 @@
 .admin-header {
   display: flex;
   justify-content: space-between;
-  color: #FFFFFF;
+  color: #ffffff;
   text-transform: uppercase;
   line-height: 39px;
   padding: 14px;
@@ -24,35 +24,40 @@
   }
 }
 
-.button {
-  color: #FFFFFF;
-  font-family: 'Roboto', Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 3px;
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
-  background-color: #16A6AF;
-  padding: 12px;
-  cursor: pointer;
+// .button {
+//   color: #ffffff;
+//   font-family: 'Roboto', Arial, sans-serif;
+//   font-size: 14px;
+//   font-weight: 500;
+//   text-transform: uppercase;
+//   border: none;
+//   border-radius: 3px;
+//   box-shadow:
+//     0px 0px 3px 0px rgba(0, 0, 0, 0.12),
+//     0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+//   background-color: #16a6af;
+//   padding: 12px;
+//   cursor: pointer;
 
-  &:hover {
-    box-shadow: 0px 0px 3px 0px rgba(255, 255, 255, 0.12), 0px 3px 3px 0px rgba(255, 255, 255, 0.24);
-  }
+//   &:hover {
+//     box-shadow:
+//       0px 0px 3px 0px rgba(255, 255, 255, 0.12),
+//       0px 3px 3px 0px rgba(255, 255, 255, 0.24);
+//   }
 
-  &:focus-visible {
-    outline: #757575 auto 1px;
-  }
+//   &:focus-visible {
+//     outline: #757575 auto 1px;
+//   }
 
-  &.button_disabled {
-    color: #FFFFFF;
-    background-color: #525252;
-    cursor: default;
+//   &.button_disabled {
+//     color: #ffffff;
+//     background-color: #525252;
+//     cursor: default;
 
-    &:hover {
-      box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
-    }
-  }
-}
-
+//     &:hover {
+//       box-shadow:
+//         0px 0px 3px 0px rgba(0, 0, 0, 0.12),
+//         0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+//     }
+//   }
+// }

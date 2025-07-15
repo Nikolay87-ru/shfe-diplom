@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   padding: 35px 104px;
-  color: #FFFFFF;
+  color: #ffffff;
 
   .header__logo {
     font-size: 34px;
@@ -30,12 +30,12 @@
   margin: 0 auto;
 
   &_header {
-    background-color: #63536C;
+    background-color: #63536c;
     padding: 16px;
     text-align: center;
 
     &-text {
-      color: #FFFFFF;
+      color: #ffffff;
       font-size: 22px;
       line-height: 25px;
       font-weight: 700;
@@ -46,7 +46,7 @@
 }
 
 .login__form {
-  background-color: #EAE9EB;
+  background-color: #eae9eb;
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -68,8 +68,8 @@
 
 .login__input {
   height: 36px;
-  background-color: #FFFFFF;
-  border: 1px solid #B7B7B7;
+  background-color: #ffffff;
+  border: 1px solid #b7b7b7;
   color: #757575;
   font-size: 16px;
   padding: 8px 9px;
@@ -82,19 +82,23 @@
 .login__button {
   width: 189px;
   height: 40px;
-  background-color: #16A6AF;
-  color: #FFFFFF;
+  background-color: #16a6af;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   border: none;
   border-radius: 3px;
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+  box-shadow:
+    0px 0px 3px 0px rgba(0, 0, 0, 0.12),
+    0px 3px 3px 0px rgba(0, 0, 0, 0.24);
   cursor: pointer;
   align-self: center;
 
   &:hover {
-    box-shadow: 0px 0px 3px 0px rgba(255, 255, 255, 0.12), 0px 3px 3px 0px rgba(255, 255, 255, 0.24);
+    box-shadow:
+      0px 0px 3px 0px rgba(255, 255, 255, 0.12),
+      0px 3px 3px 0px rgba(255, 255, 255, 0.24);
   }
 }
 

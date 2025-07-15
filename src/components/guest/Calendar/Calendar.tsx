@@ -8,13 +8,15 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ selectedDate, onChange }: CalendarProps) => {
-  const days = Array.from({ length: 7 }, (_, i) => addDays(selectedDate, i - selectedDate.getDay()));
+  const days = Array.from({ length: 7 }, (_, i) =>
+    addDays(selectedDate, i - selectedDate.getDay()),
+  );
 
   return (
     <nav className="calendar-nav">
       <div className="container">
         <ul className="days-list">
-          {days.map(day => (
+          {days.map((day) => (
             <li
               key={day.toString()}
               className={`day-item ${isToday(day) ? 'active' : ''}`}

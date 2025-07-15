@@ -1,11 +1,11 @@
 import React from 'react';
 import { AdminHeader } from './AdminHeader';
-import { HallsManagement } from '../../components/admin/Halls/HallsManagement';
-import { HallConfig } from '../../components/admin/Halls/HallConfig';
-import { HallPrices } from '../../components/admin/Halls/HallPrices';
-import { SeancesGridSection } from '../../components/admin/Seances/SeancesGridSection';
+import { HallsManagement } from '../../components/admin/Halls/Section---Управление_залами---/HallsManagement';
+import { HallConfig } from '../../components/admin/Halls/Section---Конфигурация_залов---/HallConfig';
+import { HallPrices } from '../../components/admin/Halls/Section---Конфигурация_цен---/HallPrices';
+import { SeancesGridSection } from '../../components/admin/Halls/Section---Сетка_сеансов---/SeancesGridSection';
 import { HallsProvider } from '../../context/HallsContext';
-import { HallOpenSection } from '../../components/admin/Halls/HallOpen';
+import { HallOpenSection } from '../../components/admin/Halls/Section---Открыть_продажи---/HallOpen';
 import '../../styles/admin.scss';
 
 import { AdminAccordionSection } from './AdminAccordionSection';

@@ -20,10 +20,10 @@ export const GuestPage = () => {
           const films = data.result.films;
           const seances = data.result.seances;
           const halls = data.result.halls;
-          
-          const moviesData = films.map(film => {
+
+          const moviesData = films.map((film) => {
             const filmSeances = seances.filter((s: Seance) => s.seance_filmid === film.id);
-            
+
             const hallsMap = new Map();
             filmSeances.forEach((seance: Seance) => {
               const hall = halls.find((h: Hall) => h.id === seance.seance_hallid);
@@ -33,11 +33,11 @@ export const GuestPage = () => {
               if (hall) {
                 hallsMap.get(hall.hall_name).push({
                   time: seance.seance_time,
-                  disabled: false 
+                  disabled: false,
                 });
               }
             });
-            
+
             return {
               id: film.id,
               title: film.film_name,
@@ -47,11 +47,11 @@ export const GuestPage = () => {
               poster: film.film_poster,
               halls: Array.from(hallsMap.entries()).map(([name, sessions]) => ({
                 name,
-                sessions
-              }))
+                sessions,
+              })),
             };
           });
-          
+
           setMovies(moviesData);
         }
       } catch (error) {
@@ -60,7 +60,7 @@ export const GuestPage = () => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [selectedDate]);
 
@@ -72,9 +72,9 @@ export const GuestPage = () => {
     <div className="guest-page">
       <Header />
       <Calendar selectedDate={selectedDate} onChange={setSelectedDate} />
-      
+
       <div className="container">
-        {movies.map(movie => (
+        {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>

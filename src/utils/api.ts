@@ -14,27 +14,27 @@ export interface ApiResponse {
 }
 
 export const api = {
-    // Общие
-    getAllData: async (): Promise<ApiResponse> => {
-      try {
-        const response = await axios.get(`${API_URL}/alldata`);
-        return {
-          success: true,
-          result: {
-            films: response.data.result?.films || [],
-            halls: response.data.result?.halls || [],
-            seances: response.data.result?.seances || []
-          }
-        };
-      } catch (error) {
-        console.error('Error fetching all data:', error);
-        return {
-          success: false,
-          error: 'Failed to fetch data'
-        };
-      }
-    },
-    
+  // Общие
+  getAllData: async (): Promise<ApiResponse> => {
+    try {
+      const response = await axios.get(`${API_URL}/alldata`);
+      return {
+        success: true,
+        result: {
+          films: response.data.result?.films || [],
+          halls: response.data.result?.halls || [],
+          seances: response.data.result?.seances || [],
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching all data:', error);
+      return {
+        success: false,
+        error: 'Failed to fetch data',
+      };
+    }
+  },
+
   // Залы
   getHalls: async (): Promise<ApiResponse> => {
     try {
@@ -58,11 +58,14 @@ export const api = {
     }
   },
 
-  updateHallConfig: async (hallId: number, config: {
-    rowCount: number;
-    placeCount: number;
-    config: string[][];
-  }): Promise<ApiResponse> => {
+  updateHallConfig: async (
+    hallId: number,
+    config: {
+      rowCount: number;
+      placeCount: number;
+      config: string[][];
+    },
+  ): Promise<ApiResponse> => {
     const formData = new FormData();
     formData.set('rowCount', config.rowCount.toString());
     formData.set('placeCount', config.placeCount.toString());
@@ -76,10 +79,13 @@ export const api = {
     }
   },
 
-  updateHallPrices: async (hallId: number, prices: {
-    standartPrice: number;
-    vipPrice: number;
-  }): Promise<ApiResponse> => {
+  updateHallPrices: async (
+    hallId: number,
+    prices: {
+      standartPrice: number;
+      vipPrice: number;
+    },
+  ): Promise<ApiResponse> => {
     const formData = new FormData();
     formData.set('priceStandart', prices.standartPrice.toString());
     formData.set('priceVip', prices.vipPrice.toString());
@@ -103,7 +109,7 @@ export const api = {
       throw error;
     }
   },
-  
+
   deleteHall: async (hallId: number): Promise<ApiResponse> => {
     try {
       const response = await axios.delete(`${API_URL}/hall/${hallId}`);
@@ -185,7 +191,7 @@ export const api = {
       throw error;
     }
   },
-  
+
   deleteSeance: async (seanceId: number): Promise<ApiResponse> => {
     try {
       const response = await axios.delete(`${API_URL}/seance/${seanceId}`);

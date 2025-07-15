@@ -17,7 +17,7 @@
     flex-shrink: 0;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       right: -7px;
@@ -85,16 +85,16 @@
     background: white;
     border: none;
     border-radius: 2px;
-    box-shadow: 0 0 2px rgba(0,0,0,0.12);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12);
     cursor: pointer;
     font-size: 15px;
 
     &:hover {
-      box-shadow: 0 0 2px rgba(0,0,0,0.24);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.24);
     }
 
     &.disabled {
-      background: #C4C4C4;
+      background: #c4c4c4;
       cursor: default;
     }
   }

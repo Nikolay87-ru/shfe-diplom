@@ -7,13 +7,9 @@ interface SeanceItemProps {
 }
 
 export const SeanceItem = ({ seance }: SeanceItemProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: seance.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: seance.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -21,13 +17,7 @@ export const SeanceItem = ({ seance }: SeanceItemProps) => {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="seance-item"
-    >
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="seance-item">
       <div className="seance-content">
         <div className="seance-title">{seance.seance_time}</div>
       </div>

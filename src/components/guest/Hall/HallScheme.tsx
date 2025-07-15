@@ -19,7 +19,7 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
   return (
     <div className="hall-scheme">
       <div className="screen">Экран</div>
-      
+
       <div className="rows">
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="row">
@@ -34,7 +34,7 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
           </div>
         ))}
       </div>
-      
+
       <div className="legend">
         <div className="legend-item">
           <div className="seat standart"></div>
@@ -53,7 +53,7 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
           <span>Выбрано</span>
         </div>
       </div>
-      
+
       <button className="buy-button">Забронировать</button>
     </div>
   );

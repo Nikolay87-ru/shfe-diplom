@@ -2,14 +2,14 @@
   background: rgba(241, 235, 230, 0.95);
   padding: 15px;
   margin-bottom: 30px;
-  
+
   .poster-container {
     position: relative;
     width: 125px;
     height: 175px;
-    
+
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       right: -7px;
@@ -19,18 +19,18 @@
       height: 14px;
     }
   }
-  
+
   .session-time {
     width: 53px;
     height: 33px;
     background: #fff;
     border-radius: 2px;
-    box-shadow: 0px 0px 2px rgba(0,0,0,0.12);
-    
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12);
+
     &:hover {
-      box-shadow: 0px 0px 2px rgba(0,0,0,0.24);
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.24);
     }
-    
+
     &[disabled] {
       background: #c4c4c4;
     }

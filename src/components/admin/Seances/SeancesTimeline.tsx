@@ -18,8 +18,8 @@ export const SeancesTimeline = ({ seances, onSeanceMove }: SeancesTimelineProps)
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <SortableContext items={seances.map(s => s.id)}>
-        {seances.map(seance => (
+      <SortableContext items={seances.map((s) => s.id)}>
+        {seances.map((seance) => (
           <SeanceItem key={seance.id} seance={seance} />
         ))}
       </SortableContext>

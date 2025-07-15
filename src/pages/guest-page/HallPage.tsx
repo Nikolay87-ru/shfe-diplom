@@ -13,22 +13,22 @@ export const HallPage = () => {
   const [hall, setHall] = useState<unknown>(null);
   const [seance, setSeance] = useState<unknown>(null);
   const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const data = await api.getAllData();
-        
+
         const currentSeance = data.seances.find((s: any) => s.id === Number(id));
         if (!currentSeance) {
           navigate('/');
           return;
         }
-        
+
         const film = data.films.find((f: any) => f.id === currentSeance.seance_filmid);
         const hallData = data.halls.find((h: any) => h.id === currentSeance.seance_hallid);
-        
+
         setMovie(film);
         setHall(hallData);
         setSeance(currentSeance);
@@ -39,12 +39,12 @@ export const HallPage = () => {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [id, navigate]);
 
   const handleSeatSelect = (rowIndex: number, seatIndex: number) => {
-    setSelectedSeats(prev => {
+    setSelectedSeats((prev) => {
       const existingIndex = prev.findIndex(([r, s]) => r === rowIndex && s === seatIndex);
       if (existingIndex >= 0) {
         return prev.filter((_, i) => i !== existingIndex);
@@ -72,17 +72,16 @@ export const HallPage = () => {
 
   const rows = hall.hall_config.map((row: string[], rowIndex: number) => ({
     seats: row.map((seatType, seatIndex) => ({
-      type: seatType === 'disabled' ? 'disabled' : 
-            seatType === 'vip' ? 'vip' : 'standart',
+      type: seatType === 'disabled' ? 'disabled' : seatType === 'vip' ? 'vip' : 'standart',
       selected: selectedSeats.some(([r, s]) => r === rowIndex && s === seatIndex),
-      occupied: false 
-    }))
+      occupied: false,
+    })),
   }));
 
   return (
     <div className="hall-page">
       <Header />
-      
+
       <div className="buying-info">
         <div className="container">
           <div className="movie-info">
@@ -92,12 +91,8 @@ export const HallPage = () => {
           </div>
         </div>
       </div>
-      
-      <HallScheme 
-        rows={rows} 
-        onSeatSelect={handleSeatSelect}
-        onBuy={handleBuy}
-      />
+
+      <HallScheme rows={rows} onSeatSelect={handleSeatSelect} onBuy={handleBuy} />
     </div>
   );
 };

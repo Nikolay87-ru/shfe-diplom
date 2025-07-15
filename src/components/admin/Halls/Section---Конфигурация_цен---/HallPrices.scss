@@ -1,0 +1,70 @@
+.price-config {
+  .halls_choose {
+    margin-bottom: 35px;
+  }
+
+  .price-config__legend {
+    margin-top: 12px;
+    display: flex;
+    align-items: flex-end;
+
+    &:last-child {
+      margin-bottom: 12px;
+    }
+
+    .admin_label.price-config__label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin_input.price-config__input_standart,
+    .admin_input.price-config__input_vip {
+      width: 100px;
+      margin-right: 8px;
+    }
+
+    .price-config__legend_text {
+      color: #848484;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      margin-left: 4px;
+      margin-bottom: 6px;
+    }
+
+    .place_standart,
+    .place_vip {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-right: 3px;
+    }
+
+    .place_standart {
+      background: #c4c4c4;
+      border: 1px solid #393939;
+    }
+
+    .place_vip {
+      background-color: #B0D6D8;
+      border: 1px solid #0A828A;
+    }
+  }
+  .price-config__buttons {
+    display: flex;
+    justify-content: center;
+    padding-top: 17px;
+    margin-top: 12px;
+    padding-bottom: 35px;
+
+    .button {
+      min-width: 130px;
+    }
+
+    .price-config__batton_cancel {
+      margin-right: 12px;
+    }
+  }
+}

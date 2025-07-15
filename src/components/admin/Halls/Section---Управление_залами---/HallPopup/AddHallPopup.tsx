@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import "./AddHallPopup.scss"; 
+import React, { useEffect, useRef, useState } from 'react';
+import { IoClose } from "react-icons/io5";
+import './AddHallPopup.scss';
 
 interface Props {
   show: boolean;
@@ -7,25 +8,25 @@ interface Props {
   onSave: (name: string) => Promise<void> | void;
 }
 export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
-  const [hallName, setHallName] = useState("");
-  const [error, setError] = useState("");
+  const [hallName, setHallName] = useState('');
+  const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (show) setTimeout(() => inputRef.current?.focus(), 100);
-    if (!show) setHallName("");
+    if (!show) setHallName('');
   }, [show]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!hallName.trim()) {
-      setError("Введите название зала");
+      setError('Введите название зала');
       return;
     }
     Promise.resolve(onSave(hallName.trim()))
-      .then(() => setHallName(""))
+      .then(() => setHallName(''))
       .then(onClose)
-      .catch(() => setError("Ошибка при добавлении зала"));
+      .catch(() => setError('Ошибка при добавлении зала'));
   }
 
   if (!show) return null;
@@ -35,7 +36,7 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
         <div className="popup__header">
           <div className="popup__header_text">Добавление зала</div>
           <div className="popup__close" onClick={onClose}>
-            <img src="/close.png" alt="Закрыть" />
+            <IoClose size={22} />
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit} autoComplete="off">
@@ -47,8 +48,8 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               placeholder="Например, «Зал 1»"
               ref={inputRef}
               value={hallName}
-              onChange={e => {
-                setError("");
+              onChange={(e) => {
+                setError('');
                 setHallName(e.target.value);
               }}
               required
@@ -57,9 +58,11 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
           {error && <div className="popup__error">{error}</div>}
 
           <div className="popup__buttons">
-            <button type="submit"
-              className={"button" + (hallName.trim() ? "" : " button_disabled")}
-              disabled={!hallName.trim()}>
+            <button
+              type="submit"
+              className={'button' + (hallName.trim() ? '' : ' button_disabled')}
+              disabled={!hallName.trim()}
+            >
               Добавить зал
             </button>
             <button type="button" className="button popup__button_cancel" onClick={onClose}>

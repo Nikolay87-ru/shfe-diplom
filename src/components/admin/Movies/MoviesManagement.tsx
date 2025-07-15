@@ -35,7 +35,7 @@ export const MoviesManagement = () => {
     try {
       const response = await api.addMovie(movieData);
       if (response.success) {
-        setMovies(prev => [...prev, response.result.film]);
+        setMovies((prev) => [...prev, response.result.film]);
         setShowAddPopup(false);
       }
     } catch (error) {
@@ -46,7 +46,7 @@ export const MoviesManagement = () => {
   const handleDeleteMovie = async (id: number) => {
     try {
       await api.deleteMovie(id);
-      setMovies(prev => prev.filter(movie => movie.id !== id));
+      setMovies((prev) => prev.filter((movie) => movie.id !== id));
     } catch (error) {
       console.error('Error deleting movie:', error);
     }
@@ -54,16 +54,12 @@ export const MoviesManagement = () => {
 
   return (
     <div className="movies-management">
-      <Button 
-        variant="primary" 
-        onClick={() => setShowAddPopup(true)}
-        className="mb-3"
-      >
+      <Button variant="primary" onClick={() => setShowAddPopup(true)} className="mb-3">
         Добавить фильм
       </Button>
 
       <div className="movies-grid">
-        {movies.map(movie => (
+        {movies.map((movie) => (
           <Card key={movie.id} className="movie-card">
             <Card.Img variant="top" src={movie.film_poster} />
             <Card.Body>
@@ -71,10 +67,7 @@ export const MoviesManagement = () => {
               <Card.Text>
                 {movie.film_duration} мин • {movie.film_origin}
               </Card.Text>
-              <Button 
-                variant="danger"
-                onClick={() => handleDeleteMovie(movie.id)}
-              >
+              <Button variant="danger" onClick={() => handleDeleteMovie(movie.id)}>
                 Удалить
               </Button>
             </Card.Body>

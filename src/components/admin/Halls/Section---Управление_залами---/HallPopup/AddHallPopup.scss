@@ -1,0 +1,138 @@
+.popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: url('../../../assets/admin.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.popup::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.popup__hidden {
+  display: none;
+}
+.popup__container {
+  background: rgba(234, 233, 235, 0.95);
+  display: flex;
+  flex-direction: column;
+  min-width: 350px;
+  max-width: 400px;
+  border-radius: 2px;
+}
+
+.popup__header {
+  position: relative;
+  background: #63536c;
+  padding: 16px 42px 14px;
+  margin-bottom: 16px;
+}
+
+.popup__header_text {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 25px;
+  text-transform: uppercase;
+}
+
+.popup__close {
+  position: absolute;
+  top: 16px;
+  right: 42px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.popup__close img {
+  width: 100%;
+}
+.popup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 24px 10px 24px;
+}
+
+.admin_label {
+  color: #848484;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.admin_input {
+  margin-top: 2px;
+  padding: 8px 9px;
+  color: #757575;
+  font-size: 16px;
+  background: #fff;
+  border: 1px solid #b7b7b7;
+  border-radius: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.popup__buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.button {
+  color: #fff;
+  background: #16a6af;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 3px;
+  box-shadow:
+    0 0 3px 0 rgba(0, 0, 0, 0.12),
+    0 3px 3px 0 rgba(0, 0, 0, 0.24);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.button:focus-visible {
+  outline: #757575 auto 1px;
+}
+.button:hover {
+  box-shadow:
+    0 0 3px rgba(255, 255, 255, 0.12),
+    0 3px 3px rgba(255, 255, 255, 0.24);
+}
+.button_disabled,
+.button[disabled] {
+  background: #525252 !important;
+  color: #fff !important;
+  cursor: default !important;
+  box-shadow:
+    0 0 3px 0 rgba(0, 0, 0, 0.12),
+    0 3px 3px 0 rgba(0, 0, 0, 0.24) !important;
+}
+.popup__button_cancel {
+  background: #fff !important;
+  color: #63536c !important;
+}

@@ -37,15 +37,15 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           </div>
         </div>
       </div>
-      
+
       <div className="sessions">
-        {movie.halls.map(hall => (
+        {movie.halls.map((hall) => (
           <div key={hall.name} className="hall-sessions">
             <h4 className="hall-name">{hall.name}</h4>
             <ul className="session-list">
               {hall.sessions.map((session, index) => (
                 <li key={index}>
-                  <button 
+                  <button
                     className={`session-time ${session.disabled ? 'disabled' : ''}`}
                     disabled={session.disabled}
                   >

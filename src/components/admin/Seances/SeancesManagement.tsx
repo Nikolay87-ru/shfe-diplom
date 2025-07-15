@@ -37,10 +37,10 @@ export const SeancesManagement = () => {
       const response = await api.addSeance({
         hallId,
         movieId,
-        time
+        time,
       });
       if (response.success) {
-        setSeances(prev => [...prev, response.result.seance]);
+        setSeances((prev) => [...prev, response.result.seance]);
         setShowAddPopup(false);
       }
     } catch (error) {
@@ -55,7 +55,7 @@ export const SeancesManagement = () => {
   const handleDeleteSeance = async (id: number) => {
     try {
       await api.deleteSeance(id);
-      setSeances(prev => prev.filter(s => s.id !== id));
+      setSeances((prev) => prev.filter((s) => s.id !== id));
     } catch (error) {
       console.error('Error deleting seance:', error);
     }
@@ -70,7 +70,7 @@ export const SeancesManagement = () => {
       <div className="movies-list">
         <h3>Фильмы</h3>
         <div className="movies-grid">
-          {movies.map(movie => (
+          {movies.map((movie) => (
             <div
               key={movie.id}
               className={`movie-card ${selectedMovie?.id === movie.id ? 'selected' : ''}`}
@@ -88,22 +88,18 @@ export const SeancesManagement = () => {
       </div>
 
       <div className="timelines">
-        {halls.map(hall => (
+        {halls.map((hall) => (
           <div key={hall.id} className="timeline">
             <h3 className="hall-title">{hall.hall_name}</h3>
-            <SeancesTimeline 
-              seances={seances.filter(s => s.seance_hallid === hall.id)}
+            <SeancesTimeline
+              seances={seances.filter((s) => s.seance_hallid === hall.id)}
               onSeanceMove={handleSeanceMove}
             />
           </div>
         ))}
       </div>
 
-      <Button 
-        variant="primary"
-        onClick={() => setShowAddPopup(true)}
-        className="add-seance-btn"
-      >
+      <Button variant="primary" onClick={() => setShowAddPopup(true)} className="add-seance-btn">
         Добавить сеанс
       </Button>
 

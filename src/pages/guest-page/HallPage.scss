@@ -1,6 +1,6 @@
 .hall-page {
   background-image: url('../../../assets/guest.jpg');
-  background-color: #C97400;
+  background-color: #c97400;
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -10,23 +10,23 @@
 .buying-info {
   background: rgba(241, 235, 230, 0.95);
   padding: 15px 0;
-  
+
   .movie-info {
     display: flex;
     flex-direction: column;
-    
+
     .title {
       font-size: 16px;
       font-weight: 700;
       margin-bottom: 9px;
     }
-    
+
     .start {
       font-size: 14px;
       font-weight: 300;
       margin-bottom: 7px;
     }
-    
+
     .hall-name {
       font-size: 16px;
       font-weight: 700;

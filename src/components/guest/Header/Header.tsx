@@ -14,10 +14,7 @@ export const Header = () => {
         <a href="/" className="logo">
           Идём<span className="logo-letter">в</span>кино
         </a>
-        <button 
-          className="login-button"
-          onClick={handleLoginClick}
-        >
+        <button className="login-button" onClick={handleLoginClick}>
           Войти
         </button>
       </div>

@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
-import "./AddMoviePopup.scss";
+import React, { useRef, useState } from 'react';
+import { IoClose } from 'react-icons/io5';
+import './AddMoviePopup.scss';
 
 interface Props {
   show: boolean;
@@ -13,28 +14,31 @@ interface Props {
   }) => Promise<void> | void;
 }
 export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
-  const [name, setName] = useState("");
-  const [duration, setDuration] = useState("");
-  const [description, setDescription] = useState("");
-  const [country, setCountry] = useState("");
+  const [name, setName] = useState('');
+  const [duration, setDuration] = useState('');
+  const [description, setDescription] = useState('');
+  const [country, setCountry] = useState('');
   const [poster, setPoster] = useState<File | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [posterPreview, setPosterPreview] = useState<string | undefined>();
   const inputPosterRef = useRef<HTMLInputElement>(null);
 
   function handlePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files?.length) return;
     const file = e.target.files[0];
-    if (file.size > 3*1024*1024) { setError("Размер файла не более 3 Mb!"); return;}
+    if (file.size > 3 * 1024 * 1024) {
+      setError('Размер файла не более 3 Mb!');
+      return;
+    }
     setPoster(file);
     setPosterPreview(URL.createObjectURL(file));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    setError('');
     if (!name || !duration || !description || !country || !poster) {
-      setError("Заполните все обязательные поля!");
+      setError('Заполните все обязательные поля!');
       return;
     }
     onSave({
@@ -42,9 +46,14 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
       duration: Number(duration),
       description: description.trim(),
       country: country.trim(),
-      poster
+      poster,
     });
-    setName(""); setDuration(""); setDescription(""); setCountry(""); setPoster(null); setPosterPreview("");
+    setName('');
+    setDuration('');
+    setDescription('');
+    setCountry('');
+    setPoster(null);
+    setPosterPreview('');
     onClose();
   }
 
@@ -56,7 +65,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
         <div className="popup__header">
           <div className="popup__header_text">Добавление фильма</div>
           <div className="popup__close" onClick={onClose}>
-            <img src="/close.png" alt="Закрыть"/>
+            <IoClose size={22} />
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit} autoComplete="off">
@@ -66,7 +75,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               type="text"
               className="admin_input"
               value={name}
-              onChange={e=>setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Например, «Гражданин Кейн»"
               required
             />
@@ -78,7 +87,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               className="admin_input"
               min={1}
               value={duration}
-              onChange={e=>setDuration(e.target.value)}
+              onChange={(e) => setDuration(e.target.value)}
               required
             />
           </label>
@@ -87,7 +96,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
             <textarea
               className="admin_input add-movie_synopsis_input"
               value={description}
-              onChange={e=>setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               required
             />
           </label>
@@ -97,16 +106,16 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               type="text"
               className="admin_input"
               value={country}
-              onChange={e=>setCountry(e.target.value)}
+              onChange={(e) => setCountry(e.target.value)}
               required
             />
           </label>
-          <div style={{display: "flex", alignItems: "center", gap:10}}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {posterPreview && (
-              <img className="popup__poster_preview" src={posterPreview} alt="preview"/>
+              <img className="popup__poster_preview" src={posterPreview} alt="preview" />
             )}
             <label className="popup__add-poster_button">
-              {posterPreview ? "Изменить постер" : "Загрузить постер"}
+              {posterPreview ? 'Изменить постер' : 'Загрузить постер'}
               <input
                 type="file"
                 accept="image/*"
@@ -114,19 +123,24 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
                 onChange={handlePosterChange}
               />
             </label>
-            <span style={{color:'#555', fontSize:11, marginLeft:4}}>
-              До 3MB
-            </span>
+            <span style={{ color: '#555', fontSize: 11, marginLeft: 4 }}>До 3MB</span>
           </div>
-          {error && <div style={{color:"red",textAlign:"center"}}>{error}</div>}
+          {error && <div style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
 
           <div className="popup__buttons">
-            <button type="submit"
-              className={"button"+(!(name&&duration&&description&&country&&poster)?" button_disabled":"") }
-              disabled={!(name&&duration&&description&&country&&poster)}
-            >Добавить фильм</button>
-            <button type="button" className="button popup__button_cancel"
-              onClick={onClose}>Отменить</button>
+            <button
+              type="submit"
+              className={
+                'button' +
+                (!(name && duration && description && country && poster) ? ' button_disabled' : '')
+              }
+              disabled={!(name && duration && description && country && poster)}
+            >
+              Добавить фильм
+            </button>
+            <button type="button" className="button popup__button_cancel" onClick={onClose}>
+              Отменить
+            </button>
           </div>
         </form>
       </div>
