@@ -139,13 +139,23 @@ export const api = {
     poster: File;
   }): Promise<ApiResponse> => {
     const formData = new FormData();
-    formData.set('filmName', movieData.name);
-    formData.set('filmDuration', movieData.duration.toString());
-    formData.set('filmDescription', movieData.description);
-    formData.set('filmOrigin', movieData.country);
-    formData.set('filePoster', movieData.poster);
+    formData.append('filmName', movieData.name);
+    formData.append('filmDuration', movieData.duration.toString());
+    formData.append('filmDescription', movieData.description);
+    formData.append('filmOrigin', movieData.country);
+    formData.append('filePoster', movieData.poster);
+
+    console.log('--- FormData содержимое перед отправкой ---');
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value instanceof File ? `File: ${value.name}` : `Text: ${value}`);
+    }
+
     try {
-      const response = await axios.post(`${API_URL}/film`, formData);
+      const response = await axios.post(`${API_URL}/film`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' 
+        }
+      });
       return response.data;
     } catch (error) {
       console.error('Error adding movie:', error);

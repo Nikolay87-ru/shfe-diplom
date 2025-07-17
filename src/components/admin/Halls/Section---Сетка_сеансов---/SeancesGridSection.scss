@@ -33,7 +33,20 @@
   bottom: 2px;
   width: 20px;
   height: 20px;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 
+    0px 0px 3px 0px rgba(0, 0, 0, 0.12),
+    0px 3px 3px 0px rgba(0, 0, 0, 0.24);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
 }
 
 .background_1 {
@@ -67,6 +80,20 @@
   position: relative;
 }
 
+.movie-seances__buttons {
+  display: flex;
+  justify-content: center;
+  padding-top: 17px;
+  margin-top: 12px;
+  padding-bottom: 35px;
+
+  .movie-seances__batton_cancel {
+    margin-right: 12px;
+    background-color: #ffffff;
+    color:#63536C;
+  }
+}
+
 .timeline__hall_title {
   font-size: 16px;
   font-weight: 500;
@@ -79,10 +106,9 @@
   padding-top: 10px;
   padding-bottom: 10px;
   min-width: 328px;
-  height: 60px;
+  height: 40px;
   position: relative;
   display: flex;
-  background: #fff;
   overflow-x: auto;
 }
 
@@ -138,7 +164,9 @@
 }
 
 .timeline__delete_image {
+  position: relative;
   width: 30px;
+  top: 15px;
   cursor: pointer;
 }
 

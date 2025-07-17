@@ -1,13 +1,16 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '../utils/api';
 import { Hall } from '../types';
+
 type Ctx = {
   halls: Hall[];
   selectedHallId: number | undefined;
   setSelectedHallId: (id: number) => void;
   update: () => Promise<void>;
 };
+
 const ctx = createContext<Ctx | undefined>(undefined);
+
 export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
   const [halls, setHalls] = useState<Hall[]>([]);
   const [selectedHallId, setSelectedHallId] = useState<number | undefined>();
@@ -20,6 +23,7 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
   }
+  
   useEffect(() => {
     update();
   }, []);
@@ -29,6 +33,7 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
     </ctx.Provider>
   );
 };
+
 export const useHalls = () => {
   const c = useContext(ctx);
   if (!c) throw new Error();

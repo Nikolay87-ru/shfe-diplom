@@ -13,6 +13,7 @@ interface Props {
     poster: File;
   }) => Promise<void> | void;
 }
+
 export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
   const [name, setName] = useState('');
   const [duration, setDuration] = useState('');
@@ -26,10 +27,18 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
   function handlePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files?.length) return;
     const file = e.target.files[0];
+    console.log('Selected file:', file);
+
     if (file.size > 3 * 1024 * 1024) {
       setError('Размер файла не более 3 Mb!');
       return;
     }
+    
+    if (file.type !== 'image/png') {
+      setError('Только PNG файлы разрешены!');
+      return;
+    }
+    
     setPoster(file);
     setPosterPreview(URL.createObjectURL(file));
   }

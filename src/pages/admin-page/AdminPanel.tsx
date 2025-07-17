@@ -4,18 +4,20 @@ import { HallsManagement } from '../../components/admin/Halls/Section---Упра
 import { HallConfig } from '../../components/admin/Halls/Section---Конфигурация_залов---/HallConfig';
 import { HallPrices } from '../../components/admin/Halls/Section---Конфигурация_цен---/HallPrices';
 import { SeancesGridSection } from '../../components/admin/Halls/Section---Сетка_сеансов---/SeancesGridSection';
-import { HallsProvider } from '../../context/HallsContext';
 import { HallOpenSection } from '../../components/admin/Halls/Section---Открыть_продажи---/HallOpen';
+import { AdminAccordionSection } from './AdminAccordionSection';
+import { HallsProvider } from '../../context/HallsContext';
+
 import '../../styles/admin.scss';
 
-import { AdminAccordionSection } from './AdminAccordionSection';
+
 
 export const AdminPanel: React.FC = () => (
   <HallsProvider>
     <div className="admin__container">
       <AdminHeader />
       <main className="admin__main">
-        <AdminAccordionSection title="Управление залами" defaultOpen>
+        <AdminAccordionSection title="Управление залами" defaultOpen isFirst>
           <HallsManagement />
         </AdminAccordionSection>
         <AdminAccordionSection title="Конфигурация залов">
@@ -27,9 +29,8 @@ export const AdminPanel: React.FC = () => (
         <AdminAccordionSection title="Сетка сеансов">
           <SeancesGridSection />
         </AdminAccordionSection>
-        <AdminAccordionSection title="Открыть продажи">
-          {' '}
-          <HallOpenSection />{' '}
+        <AdminAccordionSection title="Открыть продажи" isLast>
+          <HallOpenSection />
         </AdminAccordionSection>
       </main>
     </div>

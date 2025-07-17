@@ -4,6 +4,7 @@ import { Film, Hall, Seance } from '../../../../types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
 import './SeancesGridSection.scss';
+import { MdDelete } from 'react-icons/md';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
 function getColorIdx(i: number) {
@@ -38,6 +39,21 @@ export const SeancesGridSection: React.FC = () => {
     });
   }, []);
 
+  async function handleDeleteMovie(movieId: number) {
+    if (window.confirm('Удалить фильм? Все связанные сеансы также будут удалены.')) {
+      try {
+        await api.deleteMovie(movieId);
+        const res = await api.getAllData();
+        setMovies(res.result?.films || []);
+        setSeances(res.result?.seances || []);
+        setLocalSeances(res.result?.seances || []);
+        setHasChanges(false);
+      } catch (error) {
+        console.error('Error deleting movie:', error);
+      }
+    }
+  }
+
   function onDragMovieStart(movieId: number) {
     setDraggedMovieId(movieId);
   }
@@ -55,7 +71,7 @@ export const SeancesGridSection: React.FC = () => {
 
   async function addSeance(hallId: number, movieId: number, time: string) {
     const newSeance: Seance = {
-      id: Date.now(), // temp
+      id: Date.now(),
       seance_hallid: hallId,
       seance_filmid: movieId,
       seance_time: time,
@@ -90,6 +106,7 @@ export const SeancesGridSection: React.FC = () => {
     setLocalSeances(seances);
     setHasChanges(false);
   }
+  
   async function handleSave() {
     for (const s of localSeances) {
       if (!seances.some((ss) => ss.id === s.id)) {
@@ -115,6 +132,13 @@ export const SeancesGridSection: React.FC = () => {
 
   return (
     <div>
+      <button
+        className="admin__button_movie button"
+        onClick={() => setShowMoviePopup(true)}
+        style={{ alignSelf: 'center' }}
+      >
+        Добавить фильм
+      </button>
       <div className="movie-seances__wrapper">
         {movies.map((movie, i) => (
           <div
@@ -132,17 +156,18 @@ export const SeancesGridSection: React.FC = () => {
               </div>
               <div className="movie_info-length">{movie.film_duration} мин</div>
             </div>
-            {/* Кнопка удаления фильма */}
+            <div
+              className="movie-seances__movie_delete"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteMovie(movie.id);
+              }}
+              title="Удалить фильм"
+            >
+              <MdDelete size={18} />
+            </div>
           </div>
         ))}
-
-        <button
-          className="admin__button_movie button"
-          onClick={() => setShowMoviePopup(true)}
-          style={{ height: 50, minWidth: 130, marginLeft: 14, alignSelf: 'center' }}
-        >
-          Добавить фильм
-        </button>
       </div>
 
       <div className="movie-seances__timelines">
@@ -157,7 +182,11 @@ export const SeancesGridSection: React.FC = () => {
                 }}
                 onDrop={onDropSeanceToTrash}
               >
-                <img src="/delete.png" className="timeline__delete_image" alt="Удалить сеанс" />
+                <img
+                  src="../../../../../assets/delete.png"
+                  className="timeline__delete_image"
+                  alt="Удалить сеанс"
+                />
               </div>
               <div className="timeline__hall_title">{hall.hall_name}</div>
               <div
@@ -231,12 +260,21 @@ export const SeancesGridSection: React.FC = () => {
         show={showMoviePopup}
         onClose={() => setShowMoviePopup(false)}
         onSave={async (movie) => {
-          await api.addMovie(movie);
+          console.log('Adding movie:', movie); 
+          const addResponse = await api.addMovie(movie);
+          console.log('Add movie response:', addResponse);
+          
           const res = await api.getAllData();
-          setMovies(res.result?.films || []);
-          setSeances(res.result?.seances || []);
-          setLocalSeances(res.result?.seances || []);
-          setHasChanges(false);
+          console.log('Updated data:', res.result); 
+          
+          if (res.result?.films) {
+            setMovies(res.result.films);
+            setSeances(res.result.seances || []);
+            setLocalSeances(res.result.seances || []);
+            setHasChanges(false);
+          } else {
+            console.error('No films in response:', res);
+          }
         }}
       />
       <AddSeancePopup

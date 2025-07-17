@@ -39,7 +39,7 @@ export const HallsList: React.FC<Props> = ({
             title="Удалить"
           >
             <MdDelete size={18} />
-            </span>
+          </span>
         )}
       </li>
     ))}

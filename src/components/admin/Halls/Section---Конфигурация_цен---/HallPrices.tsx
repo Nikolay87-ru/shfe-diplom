@@ -25,12 +25,29 @@ export const HallPrices: React.FC = () => {
     }
   }, [hall]);
 
-  function handleChange(val: number, which: 'st' | 'vip') {
-    if (which === 'st') setPriceSt(val);
-    else setPriceVip(val);
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>, which: 'st' | 'vip') {
+    const value = e.target.value;
+    
+    if (value === '') {
+      if (which === 'st') setPriceSt(0);
+      else setPriceVip(0);
+      setChanged(
+        (which === 'st' ? 0 : priceSt) !== (initial?.standart ?? 0) ||
+          (which === 'vip' ? 0 : priceVip) !== (initial?.vip ?? 0),
+      );
+      return;
+    }
+
+
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue)) return;
+
+    if (which === 'st') setPriceSt(numValue);
+    else setPriceVip(numValue);
+
     setChanged(
-      (which === 'st' ? val : priceSt) !== (initial?.standart ?? 0) ||
-        (which === 'vip' ? val : priceVip) !== (initial?.vip ?? 0),
+      (which === 'st' ? numValue : priceSt) !== (initial?.standart ?? 0) ||
+        (which === 'vip' ? numValue : priceVip) !== (initial?.vip ?? 0),
     );
   }
 
@@ -66,8 +83,8 @@ export const HallPrices: React.FC = () => {
                 type="number"
                 min={0}
                 className="admin_input price-config__input_standart"
-                value={priceSt}
-                onChange={(e) => handleChange(Number(e.target.value), 'st')}
+                value={priceSt === 0 ? '' : priceSt} 
+                onChange={(e) => handleChange(e, 'st')}
                 required
               />
             </label>
@@ -82,8 +99,8 @@ export const HallPrices: React.FC = () => {
                 type="number"
                 min={0}
                 className="admin_input price-config__input_vip"
-                value={priceVip}
-                onChange={(e) => handleChange(Number(e.target.value), 'vip')}
+                value={priceVip === 0 ? '' : priceVip} 
+                onChange={(e) => handleChange(e, 'vip')}
                 required
               />
             </label>

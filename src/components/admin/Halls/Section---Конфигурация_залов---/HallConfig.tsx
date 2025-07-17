@@ -13,8 +13,8 @@ export const HallConfig: React.FC = () => {
   const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
-  const [rows, setRows] = useState(0);
-  const [places, setPlaces] = useState(0);
+  const [rows, setRows] = useState<number | ''>('');
+  const [places, setPlaces] = useState<number | ''>('');
   const [config, setConfig] = useState<string[][]>([]);
   const [initial, setInitial] = useState<{
     rows: number;
@@ -37,12 +37,51 @@ export const HallConfig: React.FC = () => {
     }
   }, [hall]);
 
-  function handleSizeApply(e: React.FormEvent) {
-    e.preventDefault();
-    if (rows < ROWS_MIN || rows > ROWS_MAX || places < PLACES_MIN || places > PLACES_MAX) return;
-    setConfig(
-      Array.from({ length: rows }, () => Array.from({ length: places }, (_) => 'standart')),
-    );
+  function handleRowsChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    if (value === '') {
+      setRows('');
+      setConfig([]);
+      setChanged(true);
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue)) return;
+
+    setRows(numValue);
+    
+    if (places !== '') {
+      setConfig(Array.from({ length: numValue }, () => 
+        Array.from({ length: places }, () => 'standart')
+      ));
+    } else {
+      setConfig([]);
+    }
+    setChanged(true);
+  }
+
+  function handlePlacesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    if (value === '') {
+      setPlaces('');
+      setConfig([]);
+      setChanged(true);
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue)) return;
+
+    setPlaces(numValue);
+    
+    if (rows !== '') {
+      setConfig(Array.from({ length: rows }, () => 
+        Array.from({ length: numValue }, () => 'standart')
+      ));
+    } else {
+      setConfig([]);
+    }
     setChanged(true);
   }
 
@@ -68,7 +107,7 @@ export const HallConfig: React.FC = () => {
 
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
-    if (!hall) return;
+    if (!hall || rows === '' || places === '') return;
     await api.updateHallConfig(hall.id, {
       rowCount: rows,
       placeCount: places,
@@ -83,12 +122,12 @@ export const HallConfig: React.FC = () => {
   return (
     <section className="admin__section hall-config">
       <p className="admin__info">Выберите зал для конфигурации:</p>
-      <HallsList halls={halls} selectedId={hall.id} onSelect={setSelectedHallId} />
+      <HallsList halls={halls} selectedId={selectedHallId} onSelect={setSelectedHallId} />
       <div className="hall-config__wrapper">
         <p className="admin__info">
           Укажите количество рядов и максимальное количество кресел в ряду:
         </p>
-        <form className="hall-config__size" onSubmit={handleSizeApply}>
+        <div className="hall-config__size">
           <label className="admin_label">
             Рядов, шт
             <input
@@ -97,7 +136,7 @@ export const HallConfig: React.FC = () => {
               max={ROWS_MAX}
               className="admin_input hall-config__rows"
               value={rows}
-              onChange={(e) => setRows(Number(e.target.value))}
+              onChange={handleRowsChange}
             />
           </label>
           <p className="hall-size">x</p>
@@ -109,13 +148,10 @@ export const HallConfig: React.FC = () => {
               max={PLACES_MAX}
               className="admin_input hall-config__places"
               value={places}
-              onChange={(e) => setPlaces(Number(e.target.value))}
+              onChange={handlePlacesChange}
             />
           </label>
-          <button type="submit" className="button" style={{ marginLeft: 12 }}>
-            Применить
-          </button>
-        </form>
+        </div>
 
         <p className="admin__info">Теперь вы можете указать типы кресел на схеме зала:</p>
         <div className="hall-config__types">
@@ -134,21 +170,25 @@ export const HallConfig: React.FC = () => {
         <div className="hall-config__hall">
           <div className="hall-config__hall_screen">экран</div>
           <div className="hall-config__hall_wrapper">
-            {config.map((row, rowIdx) => (
-              <div key={rowIdx} className="hall-config__hall_row">
-                {row.map((place, pIdx) => (
-                  <span
-                    key={pIdx}
-                    className={`hall-config__hall_chair place_${place}`}
-                    onClick={() => handleChairClick(rowIdx, pIdx)}
-                    tabIndex={0}
-                    title={
-                      place === 'standart' ? 'Обычный' : place === 'vip' ? 'VIP' : 'Нет кресла'
-                    }
-                  ></span>
-                ))}
-              </div>
-            ))}
+            {config.length > 0 ? (
+              config.map((row, rowIdx) => (
+                <div key={rowIdx} className="hall-config__hall_row">
+                  {row.map((place, pIdx) => (
+                    <span
+                      key={pIdx}
+                      className={`hall-config__hall_chair place_${place}`}
+                      onClick={() => handleChairClick(rowIdx, pIdx)}
+                      tabIndex={0}
+                      title={
+                        place === 'standart' ? 'Обычный' : place === 'vip' ? 'VIP' : 'Нет кресла'
+                      }
+                    ></span>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <div className="hall-config__empty">Укажите количество рядов и мест</div>
+            )}
           </div>
         </div>
 
@@ -169,7 +209,7 @@ export const HallConfig: React.FC = () => {
               (!changed ? ' button_disabled' : '')
             }
             onClick={handleSave}
-            disabled={!changed}
+            disabled={!changed || rows === '' || places === ''}
           >
             Сохранить
           </button>

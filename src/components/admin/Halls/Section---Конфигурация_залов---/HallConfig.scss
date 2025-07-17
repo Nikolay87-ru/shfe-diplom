@@ -188,7 +188,16 @@
     padding-bottom: 35px;
     
     .admin__button_cancel {
-      margin-right: 15px;
+      margin-right: 12px;
+      background-color: #ffffff;
+      color:#63536C;
     }
+  }
+
+  .hall-config__empty {
+    color: #848484;
+    font-size: 14px;
+    padding: 20px;
+    text-align: center;
   }
 }
