@@ -1,2 +1,4 @@
-$primary: #6c63ff;
-@import "bootstrap/scss/bootstrap";
+// @use "bootstrap/scss/bootstrap" with (
+//   $primary: #6c63ff,
+//   $font-family-base: 'Roboto'
+// );

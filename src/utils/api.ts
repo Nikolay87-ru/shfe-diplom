@@ -5,10 +5,11 @@ const API_URL = '/api';
 
 export interface ApiResponse {
   success: boolean;
-  result: {
-    films: Film[];
-    halls: Hall[];
-    seances: Seance[];
+  result?: { 
+    films?: Film[];
+    halls?: Hall[];
+    seances?: Seance[];
+    film?: Film;
   };
   error?: string;
 }
@@ -153,8 +154,8 @@ export const api = {
     try {
       const response = await axios.post(`${API_URL}/film`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data' 
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       return response.data;
     } catch (error) {
@@ -165,11 +166,31 @@ export const api = {
 
   deleteMovie: async (movieId: number): Promise<ApiResponse> => {
     try {
+      console.log(`Отправка запроса на удаление фильма с ID: ${movieId}`); 
       const response = await axios.delete(`${API_URL}/film/${movieId}`);
-      return response.data;
+      console.log('Ответ сервера:', response.data); 
+      
+      if (response.data.success) {
+        return {
+          success: true,
+          result: {
+            films: response.data.result?.films || [],
+            seances: response.data.result?.seances || [],
+            halls: response.data.result?.halls || []
+          }
+        };
+      }
+      
+      return {
+        success: false,
+        error: response.data.error || 'Failed to delete movie'
+      };
     } catch (error) {
-      console.error('Error deleting movie:', error);
-      throw error;
+      console.error('Ошибка при удалении фильма:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error while deleting movie'
+      };
     }
   },
 
@@ -205,10 +226,24 @@ export const api = {
   deleteSeance: async (seanceId: number): Promise<ApiResponse> => {
     try {
       const response = await axios.delete(`${API_URL}/seance/${seanceId}`);
-      return response.data;
+      if (!response.data?.success) {
+        return {
+          success: false,
+          error: response.data?.error || 'Failed to delete seance'
+        };
+      }
+      return {
+        success: true,
+        result: {
+          seances: response.data.result?.seances || []
+        }
+      };
     } catch (error) {
       console.error('Error deleting seance:', error);
-      throw error;
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error'
+      };
     }
-  },
-};
+  }
+}
