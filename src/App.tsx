@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GuestPage } from './pages/guest-page/GuestPage';
 import { HallPage } from './pages/guest-page/HallPage';
-import { PaymentPage } from './pages/PaymentPage';
-import { TicketPage } from './pages/TicketPage';
+import { TicketPage } from './pages/guest-page/TicketPage';
 import { AdminPanel } from './pages/admin-page/AdminPanel';
 import { Login } from './components/admin/Login/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -22,7 +21,6 @@ function App() {
           <Routes>
             <Route path="/" element={<GuestPage />} />
             <Route path="/hall/:id" element={<HallPage />} />
-            <Route path="/payment/:id" element={<PaymentPage />} />
             <Route path="/ticket/:id" element={<TicketPage />} />
             <Route path="/admin/login" element={<Login />} />
             <Route 

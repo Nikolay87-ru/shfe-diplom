@@ -96,32 +96,33 @@ export const HallScheme = () => {
     });
   };
 
-  const handleBuy = async () => {
+  async function handleBuy() {
     if (selectedSeats.length === 0) {
       alert('Выберите хотя бы одно место!');
       return;
     }
-
+  
     try {
       const tickets = selectedSeats.map(([row, seat]) => ({
         row: row + 1,
         place: seat + 1,
-        coast:
-          rows[row].seats[seat].type === 'vip' ? hall?.hall_price_vip : hall?.hall_price_standart,
+        coast: rows[row].seats[seat].type === 'vip' 
+          ? hall?.hall_price_vip 
+          : hall?.hall_price_standart,
       }));
-
+  
       localStorage.setItem('tickets', JSON.stringify(tickets));
       localStorage.setItem('seanceId', id || '');
       localStorage.setItem('movie', JSON.stringify(movie));
       localStorage.setItem('hall', JSON.stringify(hall));
       localStorage.setItem('seance', JSON.stringify(seance));
-
-      navigate(`/payment/${id}`);
+  
+      navigate(`/ticket/${id}`);
     } catch (error) {
       console.error('Error booking seats:', error);
       alert('Произошла ошибка при бронировании мест');
     }
-  };
+  }
 
   if (loading) {
     return <div className="loading">Загрузка...</div>;
