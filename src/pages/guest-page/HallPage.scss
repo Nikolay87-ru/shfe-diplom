@@ -5,6 +5,20 @@
   background-position: center;
   min-height: 100vh;
   color: #000000;
+  transition: transform 0.3s ease;
+  
+  &--zoomed {
+    transform: scale(1.2);
+    transform-origin: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: #000;
+  }
 }
 
 .buying-container {
@@ -83,5 +97,21 @@
 
   .hall-scheme {
     padding-top: 15px;
+  }
+
+  .click-info {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hall-page--zoomed {
+    transform: scale(1.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .hall-page--zoomed {
+    transform: scale(2);
   }
 }

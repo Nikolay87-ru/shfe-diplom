@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import './Header.scss';
 
-export const Header = () => {
+interface HeaderProps {
+  showLoginButton?: boolean;
+}
+
+export const Header = ({ showLoginButton = true }: HeaderProps) => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -14,10 +18,13 @@ export const Header = () => {
         <a href="/" className="logo">
           Идём<span className="logo-letter">в</span>кино
         </a>
-        <button className="login-button" onClick={handleLoginClick}>
-          Войти
-        </button>
+        {showLoginButton && (
+          <button className="login-button" onClick={handleLoginClick}>
+            Войти
+          </button>
+        )}
       </div>
     </header>
   );
 };
+

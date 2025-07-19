@@ -12,6 +12,7 @@ export const HallPage = () => {
   const [movie, setMovie] = useState<unknown>(null);
   const [hall, setHall] = useState<unknown>(null);
   const [seance, setSeance] = useState<unknown>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +43,12 @@ export const HallPage = () => {
     fetchData();
   }, [id, navigate]);
 
+  const handleDoubleClick = () => {
+    if (window.innerWidth <= 1200) {
+      setIsZoomed(!isZoomed);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Загрузка...</div>;
   }
@@ -51,8 +58,8 @@ export const HallPage = () => {
   }
 
   return (
-    <div className="hall-page">
-      <Header />
+    <div className={`hall-page ${isZoomed ? 'hall-page--zoomed' : ''}`} onDoubleClick={handleDoubleClick}>
+      <Header showLoginButton={false} />
 
       <div className="buying-info">
         <div className="buying-container">
