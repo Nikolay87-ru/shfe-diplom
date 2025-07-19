@@ -1,41 +1,87 @@
 .calendar-nav {
-  background: rgba(255, 255, 255, 0.9);
+  background: transparent;
   padding: 10px 0;
   margin-bottom: 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-  .days-list {
-    display: flex;
-    gap: 1px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.days-list {
+  display: flex;
+  gap: 1px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-height: 58px;
+  align-items: center;
+}
+
+.day-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: 10px;
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0px 0px 2px 0px rgba(0, 0, 0, 0.12),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  text-align: center;
+  align-content: center;
+
+  &:hover {
+    box-shadow: 
+      0px 0px 2px 0px rgba(0, 0, 0, 0.12),
+      0px 2px 2px 0px rgba(0, 0, 0, 0.24);
   }
 
-  .day-item {
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    flex-grow: 1;
-    border-radius: 2px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12);
+  &.nav__day_today {
+    display: block;
+    min-width: 66px;
+  }
 
-    &.active {
-      padding: 11px;
-      font-weight: 700;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.24);
-    }
+  &.nav__day-checked {
+    min-width: 240px;
+    padding: 2px 10px;
+    margin-top: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 14px;
+  }
 
-    .weekday {
-      display: block;
-      font-size: 12px;
+  &.nav__arrow {
+    align-items: center;
+    font-family: Consolas;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    min-width: 40px;
+    flex-grow: 0;
+  }
 
-      &.weekend {
-        color: #de2121;
-      }
-    }
-
-    .date {
-      font-size: 15px;
+  .nav__text-week,
+  .nav__text-date {
+    &.nav__day_weekend {
+      color: #DE2121;
     }
   }
+
+  .nav__text-today {
+    font-weight: 700;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }

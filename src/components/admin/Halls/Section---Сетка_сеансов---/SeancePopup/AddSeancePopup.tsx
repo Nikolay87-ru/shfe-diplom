@@ -71,7 +71,7 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
         <div className="popup__header">
           <div className="popup__header_text">Добавление сеанса</div>
           <div className="popup__close" onClick={onClose}>
-            <IoClose size={22} />
+            <IoClose size={35} style={{ strokeWidth: 40 }}/>
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit}>

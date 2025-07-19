@@ -350,13 +350,13 @@ export const SeancesGridSection: React.FC = () => {
             <div className="popup__header">
               <div className="popup__header_text">Удаление сеанса</div>
               <div className="popup__close" onClick={cancelDeleteSeance}>
-                <IoClose size={22} />
+                <IoClose size={35} style={{ strokeWidth: 40 }}/>
               </div>
             </div>
-            <div style={{ padding: '22px 28px', textAlign: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
               Вы действительно хотите удалить сеанс?
             </div>
-            <div className="popup__buttons" style={{ marginTop: 20 }}>
+            <div className="popup__buttons" style={{ marginBlock: 20 }}>
               <button
                 className="button"
                 onClick={confirmDeleteSeance} 
