@@ -9,9 +9,16 @@ export const HallPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState<unknown>(null);
-  const [hall, setHall] = useState<unknown>(null);
-  const [seance, setSeance] = useState<unknown>(null);
+  const [movie, setMovie] = useState<{
+    film_name: string;
+    film_poster: string;
+  } | null>(null);
+  const [hall, setHall] = useState<{
+    hall_name: string;
+  } | null>(null);
+  const [seance, setSeance] = useState<{
+    seance_time: string;
+  } | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
@@ -20,14 +27,14 @@ export const HallPage = () => {
         setLoading(true);
         const data = await api.getAllData();
 
-        const currentSeance = data.result?.seances?.find((s: unknown) => s.id === Number(id));
+        const currentSeance = data.result?.seances?.find((s: any) => s.id === Number(id));
         if (!currentSeance) {
           navigate('/');
           return;
         }
 
-        const film = data.result?.films?.find((f: unknown) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result?.halls?.find((h: unknown) => h.id === currentSeance.seance_hallid);
+        const film = data.result?.films?.find((f: any) => f.id === currentSeance?.seance_filmid);
+        const hallData = data.result?.halls?.find((h: any) => h.id === currentSeance?.seance_hallid);
 
         setMovie(film);
         setHall(hallData);
@@ -58,7 +65,10 @@ export const HallPage = () => {
   }
 
   return (
-    <div className={`hall-page ${isZoomed ? 'hall-page--zoomed' : ''}`} onDoubleClick={handleDoubleClick}>
+    <div
+      className={`hall-page ${isZoomed ? 'hall-page--zoomed' : ''}`}
+      onDoubleClick={handleDoubleClick}
+    >
       <Header showLoginButton={false} />
 
       <div className="buying-info">

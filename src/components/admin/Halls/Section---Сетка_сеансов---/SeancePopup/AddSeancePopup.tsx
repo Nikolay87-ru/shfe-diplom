@@ -10,7 +10,10 @@ interface Props {
   onSave: (hallId: number, movieId: number, time: string) => Promise<void> | void;
   halls: Hall[];
   movies: Film[];
+  initialHall?: Hall; 
+  initialMovie?: Film; 
 }
+
 export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, movies }) => {
   const [selectedHall, setSelectedHall] = useState<number | undefined>();
   const [selectedMovie, setSelectedMovie] = useState<number | undefined>();
@@ -29,7 +32,7 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
   async function checkConflicts(): Promise<string[]> {
     if (!selectedHall || !selectedMovie) return [];
     const data = await api.getAllData();
-    const hallSeances = data.result?.seances.filter((s) => s.seance_hallid === selectedHall) || [];
+    const hallSeances = (data.result?.seances || []).filter((s) => s.seance_hallid === selectedHall);
     const movie = movies.find((m) => m.id === selectedMovie);
     if (!movie) return [];
     const [h, m] = time.split(':').map(Number);

@@ -27,7 +27,7 @@ export const HallConfig: React.FC = () => {
     if (hall) {
       setRows(hall.hall_rows);
       setPlaces(hall.hall_places);
-      setConfig([...hall.hall_config]); 
+      setConfig([...hall.hall_config]);
       setInitial({
         rows: hall.hall_rows,
         places: hall.hall_places,
@@ -50,11 +50,11 @@ export const HallConfig: React.FC = () => {
     if (isNaN(numValue)) return;
 
     setRows(numValue);
-    
+
     if (places !== '') {
-      setConfig(Array.from({ length: numValue }, () => 
-        Array.from({ length: places }, () => 'standart')
-      ));
+      setConfig(
+        Array.from({ length: numValue }, () => Array.from({ length: places }, () => 'standart')),
+      );
     } else {
       setConfig([]);
     }
@@ -74,11 +74,11 @@ export const HallConfig: React.FC = () => {
     if (isNaN(numValue)) return;
 
     setPlaces(numValue);
-    
+
     if (rows !== '') {
-      setConfig(Array.from({ length: rows }, () => 
-        Array.from({ length: numValue }, () => 'standart')
-      ));
+      setConfig(
+        Array.from({ length: rows }, () => Array.from({ length: numValue }, () => 'standart')),
+      );
     } else {
       setConfig([]);
     }
@@ -90,7 +90,8 @@ export const HallConfig: React.FC = () => {
     const next = { standart: 'vip', vip: 'disabled', disabled: 'standart' };
     setConfig((prev) => {
       const c = prev.map((row) => [...row]);
-      c[rowIdx][placeIdx] = next[c[rowIdx][placeIdx]] || 'standart';
+      const currentType = c[rowIdx][placeIdx] as keyof typeof next;
+      c[rowIdx][placeIdx] = next[currentType] || 'standart';
       return c;
     });
     setChanged(true);

@@ -18,7 +18,7 @@ export const HallOpenSection: React.FC = () => {
       if (!hall) return;
       setStatus(hall.hall_open);
       const res = await api.getAllData();
-      const seances = res.result?.seances.filter((s) => s.seance_hallid === hall.id) || [];
+      const seances = (res.result?.seances || []).filter((s) => s.seance_hallid === hall.id);
       setHasSeances(seances.length > 0);
       setLoading(false);
     }

@@ -31,7 +31,7 @@ export const GuestProvider = ({ children }: { children: ReactNode }) => {
         setLoading(true);
         const data = await api.getAllData();
         if (data.success && data.result) {
-          const films = data.result.films.map((film: Film) => ({
+          const films = (data.result?.films || []).map((film: Film) => ({
             id: film.id,
             title: film.film_name,
             description: film.film_description,

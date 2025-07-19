@@ -39,11 +39,14 @@ export const HallScheme = () => {
         const film = data.result?.films?.find((f: any) => f.id === currentSeance.seance_filmid);
         const hallData = data.result?.halls?.find((h: any) => h.id === currentSeance.seance_hallid);
   
-        setMovie(film);
-        setHall(hallData);
+        setMovie(film || null);
+        setHall(hallData || null);
         setSeance(currentSeance);
   
-        const rowsData = hallData.hall_config.map((row: string[], rowIndex: number) => ({
+        const rowsData = hallData?.hall_config.map((row: string[], rowIndex: number) => ({
+          if (hallData) {
+            setRows(rowsData || []);
+          }
           seats: row.map((seatType, seatIndex) => ({
             type: seatType === 'disabled' ? 'disabled' : 
                  seatType === 'vip' ? 'vip' : 'standart',
@@ -102,12 +105,13 @@ export const HallScheme = () => {
           : hall?.hall_price_standart,
       }));
   
+      if (!hall) return;
+
       const currentConfig = [...hall.hall_config];
-      
-      selectedSeats.forEach(([row, seat]) => {
-        if (currentConfig[row] && currentConfig[row][seat]) {
-          currentConfig[row][seat] = 'disabled';
-        }
+      await api.updateHallConfig(hall.id, {
+        rowCount: hall.hall_rows,
+        placeCount: hall.hall_places,
+        config: currentConfig
       });
   
       await api.updateHallConfig(hall.id, {

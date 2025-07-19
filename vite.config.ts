@@ -18,5 +18,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
+  },
+  build: {
+    outDir: path.resolve(__dirname, 'dist'), 
+    emptyOutDir: true,
   }
 });
