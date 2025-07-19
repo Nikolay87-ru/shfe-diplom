@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { format, addDays, isToday, isSameDay, isWeekend } from 'date-fns';
+import { format, addDays, isToday, isSameDay, isBefore, isWeekend } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import './Calendar.scss';
+
 
 interface CalendarProps {
   selectedDate: Date;
@@ -11,83 +12,85 @@ interface CalendarProps {
 export const Calendar = ({ selectedDate, onChange }: CalendarProps) => {
   const [daysOffset, setDaysOffset] = useState(0);
   
-  const days = Array.from({ length: 7 }, (_, i) => 
-    addDays(selectedDate, i - selectedDate.getDay() + daysOffset)
-  );
+  const today = new Date();
+  const days = Array.from({ length: 7 }, (_, i) => addDays(today, i + daysOffset));
 
   const handlePrevClick = () => {
-    setDaysOffset(prev => prev - 7);
+    if (daysOffset + 7 > 0) {
+      setDaysOffset(prev => Math.max(prev - 7, -6));
+    }
   };
 
   const handleNextClick = () => {
     setDaysOffset(prev => prev + 7);
   };
 
-  const isCurrentWeek = days.some(day => isToday(day));
+  const hasPastDays = days.some(day => isBefore(day, today));
+  const isCurrentWeek = daysOffset === 0;
 
   return (
     <nav className="calendar-nav">
       <div className="container">
         <ul className="days-list">
-          {isCurrentWeek ? (
+          {hasPastDays && (
             <li 
               className="day-item nav__arrow left"
               onClick={handlePrevClick}
             >
               <span className="nav__arrow-text">&lt;</span>
             </li>
-          ) : (
-            <>
-              <li 
-                className="day-item nav__arrow left"
-                onClick={handlePrevClick}
-              >
-                <span className="nav__arrow-text">&lt;</span>
-              </li>
-              <li 
-                className="day-item"
-                onClick={() => {
-                  setDaysOffset(0);
-                  onChange(new Date());
-                }}
-              >
-                <span className="nav__text-today">Сегодня</span>
-              </li>
-            </>
           )}
 
-          {days.map((day) => (
-            <li
-              key={day.toString()}
-              className={`day-item ${isToday(day) ? 'nav__day_today' : ''} ${
-                isSameDay(day, selectedDate) ? 'nav__day-checked' : ''
-              }`}
-              onClick={() => onChange(day)}
-              data-date={day.toISOString().split('T')[0]}
+          {!isCurrentWeek && (
+            <li 
+              className="day-item"
+              onClick={() => {
+                setDaysOffset(0);
+                onChange(today);
+              }}
             >
-              {isToday(day) ? (
-                <>
-                  <span className="nav__text-today">Сегодня</span>
-                  <br />
-                  <span className={`nav__text-week ${isWeekend(day) ? 'nav__day_weekend' : ''}`}>
-                    {format(day, 'EEE', { locale: ru })},
-                  </span>{' '}
-                  <span className={`nav__text-date ${isWeekend(day) ? 'nav__day_weekend' : ''}`}>
-                    {format(day, 'd')}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className={`nav__text-week ${isWeekend(day) ? 'nav__day_weekend' : ''}`}>
-                    {format(day, 'EEE', { locale: ru })},
-                  </span>
-                  <span className={`nav__text-date ${isWeekend(day) ? 'nav__day_weekend' : ''}`}>
-                    {format(day, 'd')}
-                  </span>
-                </>
-              )}
+              <span className="nav__text-today">Вернуться в начало</span>
             </li>
-          ))}
+          )}
+
+          {days.map((day) => {
+            const isDayWeekend = isWeekend(day);
+            const isDayToday = isToday(day);
+            const isDaySelected = isSameDay(day, selectedDate);
+
+            return (
+              <li
+                key={day.toString()}
+                className={`day-item ${isDayToday ? 'nav__day_today' : ''} ${
+                  isDaySelected ? 'nav__day-checked' : ''
+                }`}
+                onClick={() => onChange(day)}
+                data-date={day.toISOString().split('T')[0]}
+              >
+                {isDayToday ? (
+                  <>
+                    <span className="nav__text-today">Сегодня</span>
+                    <br />
+                    <span className={`nav__text-week ${isDayWeekend ? 'nav__day_weekend' : ''}`}>
+                      {format(day, 'EEE', { locale: ru })},
+                    </span>{' '}
+                    <span className={`nav__text-date ${isDayWeekend ? 'nav__day_weekend' : ''}`}>
+                      {format(day, 'd')}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className={`nav__text-week ${isDayWeekend ? 'nav__day_weekend' : ''}`}>
+                      {format(day, 'EEE', { locale: ru })},
+                    </span>
+                    <span className={`nav__text-date ${isDayWeekend ? 'nav__day_weekend' : ''}`}>
+                      {format(day, 'd')}
+                    </span>
+                  </>
+                )}
+              </li>
+            );
+          })}
 
           <li 
             className="day-item nav__arrow right"

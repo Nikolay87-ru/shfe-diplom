@@ -157,6 +157,7 @@ export const TicketPage = () => {
             <div className="ticket-qr">
               <QRCodeSVG value={qrCode} size={200} />
               <p className="ticket-code">Код бронирования: {bookingCode}</p>
+              <p className="ticket-code">Билет действителен строго на свой сеанс!</p>
             </div>
           )}
 
