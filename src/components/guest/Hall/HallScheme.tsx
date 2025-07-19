@@ -29,38 +29,29 @@ export const HallScheme = () => {
       try {
         setLoading(true);
         const data = await api.getAllData();
-
-        if (!data.success || !data.result) {
-          throw new Error('Failed to fetch data');
-        }
-
-        const currentSeance = data.result.seances?.find((s) => s.id === Number(id));
+        
+        const currentSeance = data.result?.seances?.find((s: any) => s.id === Number(id));
         if (!currentSeance) {
           navigate('/');
           return;
         }
-
-        const film = data.result.films?.find((f) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result.halls?.find((h) => h.id === currentSeance.seance_hallid);
-
-        if (!film || !hallData) {
-          navigate('/');
-          return;
-        }
-
+  
+        const film = data.result?.films?.find((f: any) => f.id === currentSeance.seance_filmid);
+        const hallData = data.result?.halls?.find((h: any) => h.id === currentSeance.seance_hallid);
+  
         setMovie(film);
         setHall(hallData);
         setSeance(currentSeance);
-
-        const hallConfig = hallData.hall_config;
-        const rowsData = hallConfig.map((row: string[], rowIndex: number) => ({
+  
+        const rowsData = hallData.hall_config.map((row: string[], rowIndex: number) => ({
           seats: row.map((seatType, seatIndex) => ({
-            type: seatType === 'disabled' ? 'disabled' : seatType === 'vip' ? 'vip' : 'standart',
+            type: seatType === 'disabled' ? 'disabled' : 
+                 seatType === 'vip' ? 'vip' : 'standart',
             selected: false,
-            occupied: false,
+            occupied: seatType === 'disabled' 
           })),
         }));
-
+  
         setRows(rowsData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -69,7 +60,7 @@ export const HallScheme = () => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [id, navigate]);
 
@@ -110,6 +101,20 @@ export const HallScheme = () => {
           ? hall?.hall_price_vip 
           : hall?.hall_price_standart,
       }));
+  
+      const currentConfig = [...hall.hall_config];
+      
+      selectedSeats.forEach(([row, seat]) => {
+        if (currentConfig[row] && currentConfig[row][seat]) {
+          currentConfig[row][seat] = 'disabled';
+        }
+      });
+  
+      await api.updateHallConfig(hall.id, {
+        rowCount: hall.hall_rows,
+        placeCount: hall.hall_places,
+        config: currentConfig
+      });
   
       localStorage.setItem('tickets', JSON.stringify(tickets));
       localStorage.setItem('seanceId', id || '');
