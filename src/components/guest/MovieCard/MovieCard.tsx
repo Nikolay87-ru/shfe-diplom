@@ -1,17 +1,23 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MovieCard.scss';
 
 interface Session {
   time: string;
+  seanceId: number;
+  hallId: number;
   disabled: boolean;
 }
 
 interface Hall {
   name: string;
+  open: boolean;
   sessions: Session[];
 }
 
 interface MovieCardProps {
   movie: {
+    id: number;
     title: string;
     description: string;
     duration: number;
@@ -22,6 +28,19 @@ interface MovieCardProps {
 }
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
+  const navigate = useNavigate();
+
+  const handleSessionClick = (session: Session) => {
+    if (!session.disabled) {
+      localStorage.setItem('seanceId', session.seanceId.toString());
+      navigate(`/hall/${session.seanceId}`);
+    }
+  };
+
+  const hasOpenHalls = movie.halls.some(hall => 
+    hall.open && hall.sessions.some(session => !session.disabled)
+  );
+
   return (
     <div className="movie-card">
       <div className="movie-info">
@@ -41,13 +60,14 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       <div className="sessions">
         {movie.halls.map((hall) => (
           <div key={hall.name} className="hall-sessions">
-            <h4 className="hall-name">{hall.name}</h4>
+            <h4 className="hall-name">{hall.name} {!hall.open && '(продажи закрыты)'}</h4>
             <ul className="session-list">
               {hall.sessions.map((session, index) => (
                 <li key={index}>
                   <button
-                    className={`session-time ${session.disabled ? 'disabled' : ''}`}
-                    disabled={session.disabled}
+                    className={`session-time ${session.disabled || !hall.open ? 'disabled' : ''}`}
+                    onClick={() => handleSessionClick(session)}
+                    disabled={session.disabled || !hall.open}
                   >
                     {session.time}
                   </button>

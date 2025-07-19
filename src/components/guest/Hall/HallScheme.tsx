@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { api } from '../../../utils/api';
+import { Hall, Seance, Film } from '../../../types/index';
 import './HallScheme.scss';
 
 interface Seat {
@@ -10,15 +14,126 @@ interface Row {
   seats: Seat[];
 }
 
-interface HallSchemeProps {
-  rows: Row[];
-  onSeatSelect: (rowIndex: number, seatIndex: number) => void;
-}
+export const HallScheme = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [movie, setMovie] = useState<Film | null>(null);
+  const [hall, setHall] = useState<Hall | null>(null);
+  const [seance, setSeance] = useState<Seance | null>(null);
+  const [rows, setRows] = useState<Row[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
 
-export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await api.getAllData();
+
+        if (!data.success || !data.result) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const currentSeance = data.result.seances?.find((s) => s.id === Number(id));
+        if (!currentSeance) {
+          navigate('/');
+          return;
+        }
+
+        const film = data.result.films?.find((f) => f.id === currentSeance.seance_filmid);
+        const hallData = data.result.halls?.find((h) => h.id === currentSeance.seance_hallid);
+
+        if (!film || !hallData) {
+          navigate('/');
+          return;
+        }
+
+        setMovie(film);
+        setHall(hallData);
+        setSeance(currentSeance);
+
+        const hallConfig = hallData.hall_config;
+        const rowsData = hallConfig.map((row: string[], rowIndex: number) => ({
+          seats: row.map((seatType, seatIndex) => ({
+            type: seatType === 'disabled' ? 'disabled' : seatType === 'vip' ? 'vip' : 'standart',
+            selected: false,
+            occupied: false,
+          })),
+        }));
+
+        setRows(rowsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id, navigate]);
+
+  const handleSeatSelect = (rowIndex: number, seatIndex: number) => {
+    if (rows[rowIndex]?.seats[seatIndex]?.occupied) return;
+
+    setSelectedSeats((prev) => {
+      const existingIndex = prev.findIndex(([r, s]) => r === rowIndex && s === seatIndex);
+      if (existingIndex >= 0) {
+        return prev.filter((_, i) => i !== existingIndex);
+      } else {
+        return [...prev, [rowIndex, seatIndex]];
+      }
+    });
+
+    setRows((prev) => {
+      const newRows = [...prev];
+      const seat = newRows[rowIndex].seats[seatIndex];
+      newRows[rowIndex].seats[seatIndex] = {
+        ...seat,
+        selected: !seat.selected,
+      };
+      return newRows;
+    });
+  };
+
+  const handleBuy = async () => {
+    if (selectedSeats.length === 0) {
+      alert('Выберите хотя бы одно место!');
+      return;
+    }
+
+    try {
+      const tickets = selectedSeats.map(([row, seat]) => ({
+        row: row + 1,
+        place: seat + 1,
+        coast:
+          rows[row].seats[seat].type === 'vip' ? hall?.hall_price_vip : hall?.hall_price_standart,
+      }));
+
+      localStorage.setItem('tickets', JSON.stringify(tickets));
+      localStorage.setItem('seanceId', id || '');
+      localStorage.setItem('movie', JSON.stringify(movie));
+      localStorage.setItem('hall', JSON.stringify(hall));
+      localStorage.setItem('seance', JSON.stringify(seance));
+
+      navigate(`/payment/${id}`);
+    } catch (error) {
+      console.error('Error booking seats:', error);
+      alert('Произошла ошибка при бронировании мест');
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Загрузка...</div>;
+  }
+
+  if (!movie || !hall || !seance) {
+    return null;
+  }
+
   return (
     <div className="hall-scheme">
-      <div className="screen">Экран</div>
+      <div className="screen"></div>
 
       <div className="rows">
         {rows.map((row, rowIndex) => (
@@ -27,8 +142,8 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
               <button
                 key={seatIndex}
                 className={`seat ${seat.type} ${seat.selected ? 'selected' : ''} ${seat.occupied ? 'occupied' : ''}`}
-                onClick={() => !seat.occupied && onSeatSelect(rowIndex, seatIndex)}
-                disabled={seat.occupied}
+                onClick={() => handleSeatSelect(rowIndex, seatIndex)}
+                disabled={seat.occupied || seat.type === 'disabled'}
               />
             ))}
           </div>
@@ -38,11 +153,11 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
       <div className="legend">
         <div className="legend-item">
           <div className="seat standart"></div>
-          <span>Обычные</span>
+          <span>Обычные ({hall.hall_price_standart} руб)</span>
         </div>
         <div className="legend-item">
           <div className="seat vip"></div>
-          <span>VIP</span>
+          <span>VIP ({hall.hall_price_vip} руб)</span>
         </div>
         <div className="legend-item">
           <div className="seat occupied"></div>
@@ -54,7 +169,12 @@ export const HallScheme = ({ rows, onSeatSelect }: HallSchemeProps) => {
         </div>
       </div>
 
-      <button className="buy-button">Забронировать</button>
+      <div className="container-button">
+        {' '}
+        <button className="buy-button" onClick={handleBuy}>
+          Забронировать ({selectedSeats.length})
+        </button>
+      </div>
     </div>
   );
 };

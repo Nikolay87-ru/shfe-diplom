@@ -1,6 +1,5 @@
 .hall-scheme {
   background: #171d24;
-  padding: 15px 30px;
   color: white;
 
   .screen {
@@ -19,7 +18,7 @@
       transform: translateX(-50%);
       width: 284px;
       height: 30px;
-      background-image: url('@/assets/screen.png');
+      background-image: url('../../../../assets/screen.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
@@ -41,20 +40,28 @@
     width: 20px;
     height: 20px;
     border-radius: 4px;
-    border: 1px solid #525252;
-    cursor: pointer;
     transition: all 0.2s;
+    background: #171d24;
+    padding-right: calc(var(--bs-gutter-x) * 0);
+    padding-left: calc(var(--bs-gutter-x) * 0);
 
     &.standart {
       background: white;
+      border: 1px solid #525252;
     }
 
     &.vip {
       background: #f9953a;
+      border: 1px solid #525252;
     }
 
     &.occupied {
-      background: #525252;
+      border: 1px solid #525252;
+      cursor: default;
+    }
+
+    &.disabled {
+      border: 1px solid #171d24;
       cursor: default;
     }
 
@@ -62,10 +69,6 @@
       transform: scale(1.2);
       background: #25c4ce;
       box-shadow: 0 0 4px #16a6af;
-    }
-
-    &:hover:not(.occupied) {
-      box-shadow: 0 0 4px white;
     }
   }
 
@@ -84,9 +87,14 @@
     gap: 5px;
   }
 
+  .container-button {
+    background: rgba(241, 235, 230, 0.95);
+    padding-block: 30px;
+  }
+
   .buy-button {
     display: block;
-    margin: 30px auto 0;
+    margin-inline: auto;
     padding: 0 57px;
     height: 40px;
     background: #16a6af;
