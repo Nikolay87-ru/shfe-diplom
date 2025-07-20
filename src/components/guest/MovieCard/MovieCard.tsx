@@ -37,10 +37,6 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     }
   };
 
-  const hasOpenHalls = movie.halls.some(hall => 
-    hall.open && hall.sessions.some(session => !session.disabled)
-  );
-
   return (
     <div className="movie-card">
       <div className="movie-info">
@@ -51,23 +47,30 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <h3 className="title">{movie.title}</h3>
           <p className="synopsis">{movie.description}</p>
           <div className="meta">
-            <span className="duration">{movie.duration} мин</span>
-            <span className="country">{movie.country}</span>
+            <span className="duration" key="duration">
+              {movie.duration} мин
+            </span>
+            <span className="country" key="country">
+              {movie.country}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="sessions">
         {movie.halls.map((hall) => (
-          <div key={hall.name} className="hall-sessions">
-            <h4 className="hall-name">{hall.name} {!hall.open && '(продажи закрыты)'}</h4>
-            <ul className="session-list">
-              {hall.sessions.map((session, index) => (
-                <li key={index}>
+          <div key={`hall-${hall.name}-${hall.sessions[0]?.hallId}`} className="hall-sessions">
+            <h4 className="hall-name" key={`hall-name-${hall.name}`}>
+              {hall.name} {!hall.open && '(продажи закрыты)'}
+            </h4>
+            <ul className="session-list" key={`session-list-${hall.name}`}>
+              {hall.sessions.map((session) => (
+                <li key={`session-${session.seanceId}`}>
                   <button
                     className={`session-time ${session.disabled || !hall.open ? 'disabled' : ''}`}
                     onClick={() => handleSessionClick(session)}
                     disabled={session.disabled || !hall.open}
+                    key={`btn-${session.seanceId}`}
                   >
                     {session.time}
                   </button>

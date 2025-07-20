@@ -46,7 +46,7 @@ export const HallScheme = () => {
         const rowsData = hallData?.hall_config.map((row: string[], rowIndex: number) => ({
           if (hallData) {
             setRows(rowsData || []);
-          }
+          },
           seats: row.map((seatType, seatIndex) => ({
             type: seatType === 'disabled' ? 'disabled' : 
                  seatType === 'vip' ? 'vip' : 'standart',
