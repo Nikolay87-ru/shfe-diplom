@@ -4,6 +4,10 @@
   margin-bottom: 30px;
   border-radius: 2px;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   .movie-info {
     display: flex;
     gap: 15px;

@@ -3,6 +3,7 @@ import { api } from '../../../../utils/api';
 import { Film, Hall, Seance } from '../../../../types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
+import { useHalls } from '../../../../context/HallsContext';
 import './SeancesGridSection.scss';
 import { MdDelete } from 'react-icons/md';
 import { IoClose } from 'react-icons/io5';
@@ -13,7 +14,7 @@ function getColorIdx(i: number) {
 }
 
 export const SeancesGridSection: React.FC = () => {
-  const [halls, setHalls] = useState<Hall[]>([]);
+  const { halls } = useHalls(); 
   const [movies, setMovies] = useState<Film[]>([]);
   const [seances, setSeances] = useState<Seance[]>([]);
   const [showMoviePopup, setShowMoviePopup] = useState(false);
@@ -32,14 +33,20 @@ export const SeancesGridSection: React.FC = () => {
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
-    api.getAllData().then((res) => {
-      setHalls(res.result?.halls || []);
-      setMovies(res.result?.films || []);
-      setSeances(res.result?.seances || []);
-      setLocalSeances(res.result?.seances || []);
-      setHasChanges(false);
-    });
-  }, []);
+    const fetchData = async () => {
+      try {
+        const res = await api.getAllData();
+        setMovies(res.result?.films || []);
+        setSeances(res.result?.seances || []);
+        setLocalSeances(res.result?.seances || []);
+        setHasChanges(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [halls]); 
 
   async function handleDeleteMovie(movieId: number) {
     if (window.confirm('Удалить фильм? Все связанные сеансы также будут удалены.')) {
