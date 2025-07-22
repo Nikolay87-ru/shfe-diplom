@@ -5,20 +5,31 @@ import { HallScheme } from '../../components/guest/Hall/HallScheme';
 import { api } from '../../utils/api';
 import './HallPage.scss';
 
+interface Film {
+  id: number;
+  film_name: string;
+  film_poster: string;
+}
+
+interface Hall {
+  id: number;
+  hall_name: string;
+}
+
+interface Seance {
+  id: number;
+  seance_time: string;
+  seance_filmid: number;
+  seance_hallid: number;
+}
+
 export const HallPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState<{
-    film_name: string;
-    film_poster: string;
-  } | null>(null);
-  const [hall, setHall] = useState<{
-    hall_name: string;
-  } | null>(null);
-  const [seance, setSeance] = useState<{
-    seance_time: string;
-  } | null>(null);
+  const [movie, setMovie] = useState<Film | null>(null);
+  const [hall, setHall] = useState<Hall | null>(null);
+  const [seance, setSeance] = useState<Seance | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
@@ -27,17 +38,17 @@ export const HallPage = () => {
         setLoading(true);
         const data = await api.getAllData();
 
-        const currentSeance = data.result?.seances?.find((s: any) => s.id === Number(id));
+        const currentSeance = data.result?.seances?.find((s: Seance) => s.id === Number(id));
         if (!currentSeance) {
           navigate('/');
           return;
         }
 
-        const film = data.result?.films?.find((f: any) => f.id === currentSeance?.seance_filmid);
-        const hallData = data.result?.halls?.find((h: any) => h.id === currentSeance?.seance_hallid);
+        const film = data.result?.films?.find((f: Film) => f.id === currentSeance.seance_filmid);
+        const hallData = data.result?.halls?.find((h: Hall) => h.id === currentSeance.seance_hallid);
 
-        setMovie(film);
-        setHall(hallData);
+        setMovie(film || null);
+        setHall(hallData || null);
         setSeance(currentSeance);
       } catch (error) {
         console.error('Error fetching data:', error);

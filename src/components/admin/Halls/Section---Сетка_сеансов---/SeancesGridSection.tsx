@@ -16,7 +16,7 @@ function getColorIdx(i: number) {
 }
 
 export const SeancesGridSection: React.FC = () => {
-  const { halls } = useHalls(); 
+  const { halls, update } = useHalls();
   const [movies, setMovies] = useState<Film[]>([]);
   const [seances, setSeances] = useState<Seance[]>([]);
   const [showMoviePopup, setShowMoviePopup] = useState(false);
@@ -48,7 +48,7 @@ export const SeancesGridSection: React.FC = () => {
     };
 
     fetchData();
-  }, [halls]); 
+  }, [halls]);
 
   async function handleDeleteMovie(movieId: number) {
     if (window.confirm('Удалить фильм? Все связанные сеансы также будут удалены.')) {
@@ -70,7 +70,7 @@ export const SeancesGridSection: React.FC = () => {
         } else {
           console.error('Ошибка сервера:', response.error);
           toast.error('Не удалось удалить фильм: ' + (response.error || 'Неизвестная ошибка'), {
-            position: "top-center",
+            position: 'top-center',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -82,7 +82,7 @@ export const SeancesGridSection: React.FC = () => {
       } catch (error) {
         console.error('Ошибка при удалении:', error);
         toast.error('Ошибка при удалении фильма', {
-          position: "top-center",
+          position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -155,35 +155,38 @@ export const SeancesGridSection: React.FC = () => {
       console.error('ID сеанса не указан');
       return;
     }
-  
+
     try {
       console.log('Отправка запроса на удаление сеанса ID:', deleteTargetSeanceId);
       const response = await api.deleteSeance(deleteTargetSeanceId);
       console.log('Ответ сервера:', response);
-  
+
       if (!response.success) {
         throw new Error(response.error || 'Ошибка сервера');
       }
-  
-      setLocalSeances(prev => prev.filter(s => s.id !== deleteTargetSeanceId));
+
+      setLocalSeances((prev) => prev.filter((s) => s.id !== deleteTargetSeanceId));
       setHasChanges(true);
-  
+
       setShowDeletePopup(false);
       setDeleteTargetSeanceId(undefined);
       setActiveTrashHallId(null);
-  
+
       console.log('Сеанс успешно удалён');
     } catch (error) {
       console.error('Ошибка:', error);
-      toast.error('Не удалось удалить сеанс: ' + (error instanceof Error ? error.message : 'Ошибка сервера'), {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(
+        'Не удалось удалить сеанс: ' + (error instanceof Error ? error.message : 'Ошибка сервера'),
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        },
+      );
     }
   }
 
@@ -199,26 +202,52 @@ export const SeancesGridSection: React.FC = () => {
   }
 
   async function handleSave() {
-    for (const s of localSeances) {
-      if (!seances.some((ss) => ss.id === s.id)) {
-        await api.addSeance({
-          hallId: s.seance_hallid,
-          movieId: s.seance_filmid,
-          time: s.seance_time,
-        });
+    try {
+      for (const s of localSeances) {
+        if (!seances.some((ss) => ss.id === s.id)) {
+          await api.addSeance({
+            hallId: s.seance_hallid,
+            movieId: s.seance_filmid,
+            time: s.seance_time,
+          });
+        }
       }
-    }
 
-    for (const s of seances) {
-      if (!localSeances.some((ss) => ss.id === s.id)) {
-        await api.deleteSeance(s.id);
+      for (const s of seances) {
+        if (!localSeances.some((ss) => ss.id === s.id)) {
+          await api.deleteSeance(s.id);
+        }
       }
-    }
 
-    const res = await api.getAllData();
-    setSeances(res.result?.seances || []);
-    setLocalSeances(res.result?.seances || []);
-    setHasChanges(false);
+      await update();
+      const res = await api.getAllData();
+
+      setMovies(res.result?.films || []);
+      setSeances(res.result?.seances || []);
+      setLocalSeances(res.result?.seances || []);
+      setHasChanges(false);
+
+      toast.success('Изменения успешно сохранены!', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      console.error('Ошибка при сохранении:', error);
+      toast.error('Ошибка при сохранении изменений', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   }
 
   function getMinutesFromTime(time: string): number {
@@ -383,17 +412,12 @@ export const SeancesGridSection: React.FC = () => {
             <div className="popup__header">
               <div className="popup__header_text">Удаление сеанса</div>
               <div className="popup__close" onClick={cancelDeleteSeance}>
-                <IoClose size={35} style={{ strokeWidth: 40 }}/>
+                <IoClose size={35} style={{ strokeWidth: 40 }} />
               </div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              Вы действительно хотите удалить сеанс?
-            </div>
+            <div style={{ textAlign: 'center' }}>Вы действительно хотите удалить сеанс?</div>
             <div className="popup__buttons" style={{ marginBlock: 20 }}>
-              <button
-                className="button"
-                onClick={confirmDeleteSeance} 
-              >
+              <button className="button" onClick={confirmDeleteSeance}>
                 Удалить
               </button>
               <button className="button popup__button_cancel" onClick={cancelDeleteSeance}>

@@ -27,11 +27,14 @@ export const HallConfig: React.FC = () => {
     if (hall) {
       setRows(hall.hall_rows);
       setPlaces(hall.hall_places);
-      setConfig([...hall.hall_config]);
+      
+      const updatedConfig = hall.hall_config.map(row => [...row]);
+      setConfig(updatedConfig);
+      
       setInitial({
         rows: hall.hall_rows,
         places: hall.hall_places,
-        config: [...hall.hall_config],
+        config: updatedConfig,
       });
       setChanged(false);
     }

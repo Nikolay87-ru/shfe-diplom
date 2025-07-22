@@ -82,9 +82,21 @@ export const TicketPage = () => {
       });
   
       const data = await response.json();
-      console.log('Server response:', data); 
-  
+      
       if (data.success) {
+        const storedHall = localStorage.getItem('hall');
+        if (storedHall) {
+          const hall = JSON.parse(storedHall);
+          const updatedConfig = [...hall.hall_config];
+          tickets.forEach(ticket => {
+            updatedConfig[ticket.row - 1][ticket.place - 1] = 'disabled';
+          });
+          localStorage.setItem('hall', JSON.stringify({
+            ...hall,
+            hall_config: updatedConfig
+          }));
+        }
+  
         setQrCode(data.qrCode || 'booking-code:' + Math.random().toString(36).substring(2, 10));
         setBookingCode(data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase());
       } else {
@@ -100,7 +112,7 @@ export const TicketPage = () => {
       }
     } catch (error) {
       console.error('Booking error:', error);
-      toast.error('Ошибка соединения с сервером', {
+      toast.error('Ошибка соединения с сервера', {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,

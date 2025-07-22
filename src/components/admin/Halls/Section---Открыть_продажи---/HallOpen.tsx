@@ -12,6 +12,8 @@ export const HallOpenSection: React.FC = () => {
   const [status, setStatus] = useState<0 | 1>(0);
   const [loading, setLoading] = useState(false);
 
+  const [dataVersion, setDataVersion] = useState(0);
+
   useEffect(() => {
     async function check() {
       setLoading(true);
@@ -23,13 +25,18 @@ export const HallOpenSection: React.FC = () => {
       setLoading(false);
     }
     check();
-  }, [hall]);
+  }, [hall, dataVersion]); 
+
+  const refreshData = async () => {
+    await update();
+    setDataVersion(v => v + 1); 
+  };
 
   async function handleToggleSellStatus() {
     if (!hall) return;
     if (status === 0 && !hasSeances) return;
     await api.updateHallStatus(hall.id, status === 1 ? 0 : 1);
-    await update();
+    await refreshData(); 
     setStatus(status === 1 ? 0 : 1);
   }
 
