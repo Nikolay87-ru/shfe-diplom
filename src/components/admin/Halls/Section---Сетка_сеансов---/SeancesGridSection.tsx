@@ -4,9 +4,11 @@ import { Film, Hall, Seance } from '../../../../types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
 import { useHalls } from '../../../../context/HallsContext';
-import './SeancesGridSection.scss';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { MdDelete } from 'react-icons/md';
 import { IoClose } from 'react-icons/io5';
+import './SeancesGridSection.scss';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
 function getColorIdx(i: number) {
@@ -67,11 +69,27 @@ export const SeancesGridSection: React.FC = () => {
           setHasChanges(false);
         } else {
           console.error('Ошибка сервера:', response.error);
-          alert('Не удалось удалить фильм: ' + (response.error || 'Неизвестная ошибка'));
+          toast.error('Не удалось удалить фильм: ' + (response.error || 'Неизвестная ошибка'), {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       } catch (error) {
         console.error('Ошибка при удалении:', error);
-        alert('Ошибка при удалении фильма');
+        toast.error('Ошибка при удалении фильма', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     }
   }
@@ -157,7 +175,15 @@ export const SeancesGridSection: React.FC = () => {
       console.log('Сеанс успешно удалён');
     } catch (error) {
       console.error('Ошибка:', error);
-      alert('Не удалось удалить сеанс: ' + (error instanceof Error ? error.message : 'Ошибка сервера'));
+      toast.error('Не удалось удалить сеанс: ' + (error instanceof Error ? error.message : 'Ошибка сервера'), {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 

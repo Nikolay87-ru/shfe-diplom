@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Header } from '../../components/guest/Header/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './TicketPage.scss';
 
 interface Ticket {
@@ -86,11 +88,27 @@ export const TicketPage = () => {
         setQrCode(data.qrCode || 'booking-code:' + Math.random().toString(36).substring(2, 10));
         setBookingCode(data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase());
       } else {
-        alert(data.error || 'Места недоступны для бронирования!');
+        toast.error(data.error || 'Места недоступны для бронирования!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error('Booking error:', error);
-      alert('Ошибка соединения с сервером');
+      toast.error('Ошибка соединения с сервером', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 

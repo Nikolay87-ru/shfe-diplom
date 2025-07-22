@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../../utils/api';
 import { Hall, Seance, Film } from '../../../types/index';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './HallScheme.scss';
 
 interface Seat {
@@ -92,7 +94,15 @@ export const HallScheme = () => {
 
   async function handleBuy() {
     if (selectedSeats.length === 0) {
-      alert('Выберите хотя бы одно место!');
+      toast.info('Выберите хотя бы одно место!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
   
@@ -129,7 +139,15 @@ export const HallScheme = () => {
       navigate(`/ticket/${id}`);
     } catch (error) {
       console.error('Error booking seats:', error);
-      alert('Произошла ошибка при бронировании мест');
+      toast.error('Произошла ошибка при бронировании мест', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 

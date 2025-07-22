@@ -9,7 +9,7 @@ interface Session {
   disabled: boolean;
 }
 
-interface Hall {
+interface HallData {
   name: string;
   open: boolean;
   sessions: Session[];
@@ -23,7 +23,7 @@ interface MovieCardProps {
     duration: number;
     country: string;
     poster: string;
-    halls: Hall[];
+    halls: HallData[];
   };
 }
 

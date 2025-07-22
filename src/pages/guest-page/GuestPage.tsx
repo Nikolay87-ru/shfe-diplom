@@ -16,7 +16,15 @@ export const GuestPage = () => {
       duration: number;
       country: string;
       poster: string;
-      halls: Hall[];
+      halls: {
+        hall: Hall;
+        sessions: {
+          time: string;
+          seanceId: number;
+          hallId: number;
+          disabled: boolean;
+        }[];
+      }[];
     }[]
   >([]);
   const [loading, setLoading] = useState(true);
@@ -41,10 +49,9 @@ export const GuestPage = () => {
           const moviesData = films.map((film: Film) => {
             const filmSeances = seances.filter((s: Seance) => s.seance_filmid === film.id);
 
-            const hallsMap = new Map<string, Hall>();
-
-            halls.forEach((hall: Hall) => {
-              if (hall.hall_open === 1) {
+            const hallsData = halls
+              .filter((hall: Hall) => hall.hall_open === 1)
+              .map((hall: Hall) => {
                 const hallSeances = filmSeances
                   .filter((s: Seance) => s.seance_hallid === hall.id)
                   .map((seance: Seance) => {
@@ -68,14 +75,12 @@ export const GuestPage = () => {
                   })
                   .sort((a, b) => a.time.localeCompare(b.time));
 
-                if (hallSeances.length > 0) {
-                  hallsMap.set(hall.hall_name, {
-                    open: hall.hall_open === 1,
-                    sessions: hallSeances,
-                  });
-                }
-              }
-            });
+                return {
+                  hall,
+                  sessions: hallSeances,
+                };
+              })
+              .filter((hallData) => hallData.sessions.length > 0);
 
             return {
               id: film.id,
@@ -84,7 +89,7 @@ export const GuestPage = () => {
               duration: film.film_duration,
               country: film.film_origin,
               poster: film.film_poster,
-              halls: Array.from(hallsMap.values()),
+              halls: hallsData,
             };
           });
 
@@ -111,7 +116,17 @@ export const GuestPage = () => {
 
       <div className="container">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard 
+            key={movie.id} 
+            movie={{
+              ...movie,
+              halls: movie.halls.map(hallData => ({
+                name: hallData.hall.hall_name,
+                open: hallData.hall.hall_open === 1,
+                sessions: hallData.sessions
+              }))
+            }} 
+          />
         ))}
       </div>
     </div>

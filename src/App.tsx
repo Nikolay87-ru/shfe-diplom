@@ -6,6 +6,8 @@ import { AdminPanel } from './pages/admin-page/AdminPanel';
 import { Login } from './components/admin/Login/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GuestProvider } from './context/GuestContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { JSX } from 'react';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -18,6 +20,17 @@ function App() {
     <AuthProvider>
       <GuestProvider>
         <BrowserRouter>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Routes>
             <Route path="/" element={<GuestPage />} />
             <Route path="/hall/:id" element={<HallPage />} />
