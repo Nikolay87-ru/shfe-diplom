@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Header } from '../../components/guest/Header/Header';
-import { HallScheme } from '../../components/guest/Hall/HallScheme';
-import { api } from '../../utils/api';
+import { Header } from '../../../components/guest/Header/Header';
+import { HallScheme } from './HallScheme';
+import { api } from '../../../utils/api';
 import './HallPage.scss';
 
 interface Film {

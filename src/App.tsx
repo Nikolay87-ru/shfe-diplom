@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GuestPage } from './pages/guest-page/GuestPage';
-import { HallPage } from './pages/guest-page/HallPage';
-import { TicketPage } from './pages/guest-page/TicketPage';
+import { HallPage } from './pages/guest-page/HallSchemePage/HallPage';
+import { TicketPage } from './pages/guest-page/TicketPage/TicketPage';
 import { AdminPanel } from './pages/admin-page/AdminPanel';
-import { Login } from './components/admin/Login/Login';
+import { Login } from '../src/pages/admin-page/Login/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GuestProvider } from './context/GuestContext';
 import { ToastContainer } from 'react-toastify';

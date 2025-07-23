@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Header } from '../../components/guest/Header/Header';
+import { Header } from '../../../components/guest/Header/Header';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'react-toastify';
