@@ -3,7 +3,7 @@ import { GuestPage } from './pages/guest-page/GuestPage';
 import { HallPage } from './pages/guest-page/HallSchemePage/HallPage';
 import { TicketPage } from './pages/guest-page/TicketPage/TicketPage';
 import { AdminPanel } from './pages/admin-page/AdminPanel';
-import { Login } from '../src/pages/admin-page/Login/Login';
+import { Login } from '../src/pages/admin-page/Login/LoginPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GuestProvider } from './context/GuestContext';
 import { ToastContainer } from 'react-toastify';

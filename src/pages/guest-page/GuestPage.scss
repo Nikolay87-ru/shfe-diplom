@@ -15,3 +15,52 @@
   color: white;
   font-size: 24px;
 }
+
+@media (max-width: 1200px) {
+  .days-list {
+    width: 935px;
+  }
+}
+
+@media (max-width: 991px) {
+  .days-list {
+    width: 695px;
+  }
+}
+
+@media (max-width: 768px) {
+  .guest-header .container {
+    margin-inline: 8px;
+    width: auto;
+  }
+
+  .container,
+  .container-sm,
+  .container-md {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .days-list {
+    width: 100%;
+  }
+
+  .day-item {
+    &.nav__day_today {
+      display: block;
+      align-content: center;
+    }
+
+    &.nav__day-checked {
+      padding: 12px 30px;
+    }
+  }
+
+  .movie-card {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}

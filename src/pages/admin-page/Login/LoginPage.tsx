@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import './Login.scss';
+import './LoginPage.scss';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +21,7 @@ export const Login: React.FC = () => {
       } else {
         setError('Неверный логин/пароль!');
       }
-    } catch (error) {
+    } catch {
       setError('Ошибка соединения с сервером');
     }
   };

@@ -1,6 +1,5 @@
 .calendar-nav {
   background: transparent;
-  padding: 10px 0;
   margin-bottom: 30px;
   position: sticky;
   top: 0;
@@ -12,9 +11,10 @@
   gap: 1px;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin-inline: auto;
   min-height: 58px;
   align-items: center;
+  width: 990px;
 }
 
 .day-item {
@@ -31,32 +31,32 @@
   line-height: 14px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 
+  box-shadow:
     0px 0px 2px 0px rgba(0, 0, 0, 0.12),
     0px 2px 2px 0px rgba(0, 0, 0, 0.24);
   cursor: pointer;
   text-align: center;
 
   &:hover {
-    box-shadow: 
+    box-shadow:
       0px 0px 2px 0px rgba(0, 0, 0, 0.12),
       0px 2px 2px 0px rgba(0, 0, 0, 0.24);
   }
 
   &.nav__day_today {
     display: block;
-    min-width: 66px;
     align-content: center;
   }
 
   &.nav__day-checked {
-    padding: 2px 60px;
+    padding: 12px 60px;
     margin-top: 0;
     font-size: 15px;
     font-weight: 700;
     line-height: 14px;
     align-content: center;
     flex-wrap: wrap;
+    background: rgb(255, 255, 255);
   }
 
   &.nav__arrow {
@@ -72,7 +72,7 @@
   .nav__text-week,
   .nav__text-date {
     &.nav__day_weekend {
-      color: #DE2121;
+      color: #de2121;
     }
   }
 
