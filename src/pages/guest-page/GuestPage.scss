@@ -47,11 +47,6 @@
   }
 
   .day-item {
-    &.nav__day_today {
-      display: block;
-      align-content: center;
-    }
-
     &.nav__day-checked {
       padding: 12px 30px;
     }

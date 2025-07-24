@@ -335,7 +335,10 @@ export const SeancesGridSection: React.FC = () => {
                         className={`timeline__seances_movie ${getColorIdx(
                           movies.findIndex((m) => m.id === movie.id),
                         )}`}
-                        style={{ left: `${leftPercent}%` }}
+                        style={{
+                          '--left-percent': `${leftPercent}%`,
+                          '--time-value': `"${seance.seance_time}"`
+                        } as React.CSSProperties}
                         data-time={seance.seance_time}
                         draggable
                         onDragStart={() => onDragSeanceStart(seance.id, hall.id)}

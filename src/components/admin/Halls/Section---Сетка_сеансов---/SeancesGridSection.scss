@@ -35,7 +35,7 @@
   height: 20px;
   border-radius: 3px;
   background: #fff;
-  box-shadow: 
+  box-shadow:
     0px 0px 3px 0px rgba(0, 0, 0, 0.12),
     0px 3px 3px 0px rgba(0, 0, 0, 0.24);
   display: flex;
@@ -89,7 +89,7 @@
   .movie-seances__batton_cancel {
     margin-right: 12px;
     background-color: #ffffff;
-    color:#63536C;
+    color: #63536c;
   }
 }
 
@@ -108,6 +108,7 @@
   height: 40px;
   position: relative;
   margin-inline: 20px;
+  background-size: 4.166% 100%;
 }
 
 .timeline__external-elements {
@@ -121,13 +122,13 @@
 
 .timeline__seances-container {
   position: relative;
-  margin-bottom: 30px; 
+  margin-bottom: 30px;
 }
-
 
 .timeline__seances_movie {
   position: absolute;
   top: 10px;
+  left: var(--left-percent);
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.3);
@@ -135,28 +136,31 @@
   cursor: grab;
   box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.04);
   align-items: flex-start;
-  
+
   &::after {
     content: '';
     position: absolute;
-    left: 0;
+    left: 0%;
     bottom: -17px;
     width: 1px;
     height: 5px;
     background: #848484;
-    transform: translateX(-50%);
   }
-  
+
   &::before {
-    content: attr(data-time);
+    content: var(--time-value);
     position: absolute;
-    left: 0;
+    left: 0%;
     bottom: -35px;
     transform: translateX(-50%);
     color: #848484;
     font-size: 12px;
     white-space: nowrap;
   }
+}
+
+.timeline__seances_title {
+  line-height: 10px;
 }
 
 .timeline__marker {
@@ -188,7 +192,7 @@
   opacity: 0;
   transform: translateX(0px);
   transition: all 0.3s ease;
-  
+
   &.active {
     opacity: 1;
     transform: translateX(0);
@@ -202,7 +206,7 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   pointer-events: auto;
-  
+
   &:hover {
     transform: scale(1.1);
   }
@@ -211,3 +215,13 @@
 .timeline__delete.drop-target {
   background: rgba(255, 50, 50, 0.15);
 }
+
+// @media (max-width: 1080px) {
+//   .timeline__seances_movie {
+//     // position: relative; // Измените на relative для tablet
+//     // left: auto !important; // Отключите absolute позиционирование
+//     // top: auto;
+//     // margin-bottom: 10px; // Добавьте отступ между элементами
+//     // width: 100%; // Занимайте всю ширину
+//   }
+// }

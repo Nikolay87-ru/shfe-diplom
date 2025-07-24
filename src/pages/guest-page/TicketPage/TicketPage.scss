@@ -10,7 +10,8 @@
   background-position: center;
   min-height: 100vh;
   color: #000000;
-  padding: 20px;
+  padding-inline: 20px;
+  padding-block: 20px;
 }
 
 .loading {
@@ -77,21 +78,27 @@
   position: relative;
   margin-bottom: 4px;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
     height: 10px;
-    background: 
-      radial-gradient(circle at 10px 5px, rgba(241, 235, 230, 0.95) 4px, rgba(241, 235, 230, 0.95) 5px, rgba(241, 235, 230, 0.95) 6px, transparent 7px) 
+    background: radial-gradient(
+        circle at 10px 5px,
+        rgba(241, 235, 230, 0.95) 4px,
+        rgba(241, 235, 230, 0.95) 5px,
+        rgba(241, 235, 230, 0.95) 6px,
+        transparent 7px
+      )
       0 0 / 20px 9px repeat-x;
   }
-  
+
   &::before {
     top: -5px;
   }
-  
+
   &::after {
     bottom: -5px;
   }
@@ -113,21 +120,27 @@
   padding: 19px 0px 15px;
   position: relative;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
     height: 10px;
-    background: 
-      radial-gradient(circle at 10px 5px, rgba(241, 235, 230, 0.95) 4px, rgba(241, 235, 230, 0.95) 5px, rgba(241, 235, 230, 0.95) 6px, transparent 7px) 
+    background: radial-gradient(
+        circle at 10px 5px,
+        rgba(241, 235, 230, 0.95) 4px,
+        rgba(241, 235, 230, 0.95) 5px,
+        rgba(241, 235, 230, 0.95) 6px,
+        transparent 7px
+      )
       0 0 / 20px 9px repeat-x;
   }
-  
+
   &::before {
     top: -5px;
   }
-  
+
   &::after {
     bottom: -5px;
   }
@@ -198,7 +211,17 @@
 
 @media (min-width: 1200px) {
   .ticket-main {
-      max-width: 1028px;
-      margin: 0 auto;
+    max-width: 1028px;
+    margin: 0 auto;
+  }
+
+  .ticket-page {
+    padding-inline: 0px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .ticket-page {
+    padding-inline: 0px;
   }
 }

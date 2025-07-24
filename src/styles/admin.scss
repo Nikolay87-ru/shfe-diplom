@@ -1,3 +1,15 @@
+:root {
+  --admin-box-sizing: content-box;
+}
+
+.admin__container {
+  *,
+  *::before,
+  *::after {
+    box-sizing: var(--admin-box-sizing);
+  }
+}
+
 .admin__main {
   max-width: 1100px;
   margin: 0 auto;
@@ -127,4 +139,10 @@
 .admin__wrapper-last {
   margin-left: 67px;
   border-left: none !important;
+}
+
+@media (max-width: 768px) {
+  .admin__main {
+    padding: 0px;
+  }
 }

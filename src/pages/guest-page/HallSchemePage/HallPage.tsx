@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../../../components/guest/Header/Header';
-import { HallScheme } from './HallScheme';
+import { HallScheme } from './HallPage-component/HallScheme';
 import { api } from '../../../utils/api';
 import './HallPage.scss';
 
