@@ -27,10 +27,10 @@ export const HallConfig: React.FC = () => {
     if (hall) {
       setRows(hall.hall_rows);
       setPlaces(hall.hall_places);
-      
-      const updatedConfig = hall.hall_config.map(row => [...row]);
+
+      const updatedConfig = hall.hall_config.map((row) => [...row]);
       setConfig(updatedConfig);
-      
+
       setInitial({
         rows: hall.hall_rows,
         places: hall.hall_places,
@@ -139,6 +139,7 @@ export const HallConfig: React.FC = () => {
               min={ROWS_MIN}
               max={ROWS_MAX}
               className="admin_input hall-config__rows"
+              style={{ width: '100%' }}
               value={rows}
               onChange={handleRowsChange}
             />
@@ -151,6 +152,7 @@ export const HallConfig: React.FC = () => {
               min={PLACES_MIN}
               max={PLACES_MAX}
               className="admin_input hall-config__places"
+              style={{ width: '100%' }}
               value={places}
               onChange={handlePlacesChange}
             />

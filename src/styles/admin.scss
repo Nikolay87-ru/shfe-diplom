@@ -145,4 +145,42 @@
   .admin__main {
     padding: 0px;
   }
+
+  .admin__wrapper {
+    margin-left: 0;
+    border-left: none;
+  }
+
+  .admin__header {
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    &::before {
+      width: 22px;
+      height: 22px;
+      top: 18px;
+      left: 20px;
+    }
+
+    .admin__header_text {
+      margin-left: 64px;
+  
+      &::before {
+        display: none;
+      }
+  
+      &.admin__header_text-first::before {
+        display: none;
+      }
+    
+      &.admin__header_text-last::before {
+        display: none;
+      }
+    }
+
+    .admin__header_arrow {
+      top: 18px;
+      right: 2px;
+    }
+  }
 }

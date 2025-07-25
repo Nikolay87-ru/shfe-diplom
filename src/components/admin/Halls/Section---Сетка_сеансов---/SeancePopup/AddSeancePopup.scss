@@ -1,5 +1,5 @@
 .select__add-seance {
-  width: 100%;
+  width: 730px;
   height: 36px;
   padding-left: 12px;
   font-size: 16px;
@@ -12,4 +12,22 @@
 
 .select__add-seance:focus-visible {
   outline: #757575 auto 1px;
+}
+
+.admin_input {
+  padding: 8px 6px;
+}
+
+@media (max-width: 1000px) {
+  .select__add-seance {
+    width: 100%;
+  }
+
+  .admin_input {
+    margin-left: 12px;
+  }
+
+  .popup__form {
+    padding: 0 32px 30px 22px;
+  }
 }

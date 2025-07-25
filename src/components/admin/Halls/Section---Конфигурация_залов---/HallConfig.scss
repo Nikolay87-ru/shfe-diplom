@@ -46,6 +46,7 @@
       line-height: 14px;
       display: flex;
       flex-direction: column;
+      align-self: center;
     }
 
     .admin_input {
@@ -56,7 +57,7 @@
       font-weight: 400;
       background: #fff;
       border: 1px solid #b7b7b7;
-      width: 100px;
+
       &:focus-visible {
         outline: #757575 auto 1px;
       }
@@ -103,8 +104,8 @@
       }
 
       span.place_vip {
-        background-color: #B0D6D8;
-        border: 1px solid #0A828A;
+        background-color: #b0d6d8;
+        border: 1px solid #0a828a;
       }
 
       span.place_block {
@@ -157,6 +158,7 @@
       display: flex;
       gap: 10px;
     }
+
     .hall-config__hall_chair {
       width: 26px;
       height: 26px;
@@ -164,6 +166,7 @@
       cursor: pointer;
       border: 1px solid #c4c4c4;
       background: none;
+
       &.place_standart {
         background-color: #c4c4c4;
         border: 1px solid #393939;
@@ -186,11 +189,11 @@
     justify-content: center;
     padding-top: 17px;
     padding-bottom: 35px;
-    
+
     .admin__button_cancel {
       margin-right: 12px;
       background-color: #ffffff;
-      color:#63536C;
+      color: #63536c;
     }
   }
 
@@ -199,5 +202,16 @@
     font-size: 14px;
     padding: 20px;
     text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hall-config {
+    .hall-config__hall {
+      .hall-config__hall_chair {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 }

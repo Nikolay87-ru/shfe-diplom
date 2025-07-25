@@ -25,12 +25,13 @@
 .popup__hidden {
   display: none;
 }
+
 .popup__container {
   background: rgba(234, 233, 235, 0.95);
   display: flex;
   flex-direction: column;
   min-width: 350px;
-  max-width: 400px;
+  width: 960px;
   border-radius: 2px;
 }
 
@@ -63,7 +64,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 0 24px 10px 24px;
+  padding: 0 24px 30px 24px;
 }
 
 .admin_label {
@@ -74,6 +75,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
+  align-self: anchor-center;
 }
 
 .admin_input {
@@ -85,6 +87,8 @@
   border: 1px solid #b7b7b7;
   border-radius: 0;
   font-family: 'Roboto', Arial, sans-serif;
+  width: 730px;
+  align-self: center;
 }
 
 .popup__buttons {
@@ -94,6 +98,7 @@
   justify-content: center;
   align-items: flex-start;
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .button {
@@ -133,4 +138,18 @@
 .popup__button_cancel {
   background: #fff !important;
   color: #63536c !important;
+}
+
+@media (max-width: 1000px) {
+  .popup__container {
+    width: -webkit-fill-available;
+
+    .popup__form {
+      display: block;
+    }
+  }
+
+  .admin_input {
+    width: 100%;
+  }
 }

@@ -10,8 +10,8 @@ interface Props {
   onSave: (hallId: number, movieId: number, time: string) => Promise<void> | void;
   halls: Hall[];
   movies: Film[];
-  initialHall?: Hall; 
-  initialMovie?: Film; 
+  initialHall?: Hall;
+  initialMovie?: Film;
 }
 
 export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, movies }) => {
@@ -32,7 +32,9 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
   async function checkConflicts(): Promise<string[]> {
     if (!selectedHall || !selectedMovie) return [];
     const data = await api.getAllData();
-    const hallSeances = (data.result?.seances || []).filter((s) => s.seance_hallid === selectedHall);
+    const hallSeances = (data.result?.seances || []).filter(
+      (s) => s.seance_hallid === selectedHall,
+    );
     const movie = movies.find((m) => m.id === selectedMovie);
     if (!movie) return [];
     const [h, m] = time.split(':').map(Number);
@@ -74,7 +76,7 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
         <div className="popup__header">
           <div className="popup__header_text">Добавление сеанса</div>
           <div className="popup__close" onClick={onClose}>
-            <IoClose size={35} style={{ strokeWidth: 40 }}/>
+            <IoClose size={35} style={{ strokeWidth: 40 }} />
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit}>
@@ -130,9 +132,6 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
           )}
 
           <div className="popup__buttons">
-            <button type="button" className="button popup__button_cancel" onClick={onClose}>
-              Отменить
-            </button>
             <button
               type="submit"
               className={
@@ -141,6 +140,9 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
               disabled={!(selectedHall && selectedMovie && time)}
             >
               Добавить сеанс
+            </button>
+            <button type="button" className="button popup__button_cancel" onClick={onClose}>
+              Отменить
             </button>
           </div>
         </form>

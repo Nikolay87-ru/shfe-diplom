@@ -104,11 +104,9 @@
   border: 1px solid #848484;
   padding-top: 10px;
   padding-bottom: 10px;
-  min-width: 328px;
-  height: 40px;
+  min-width: 280px;
+  height: 45px;
   position: relative;
-  margin-inline: 20px;
-  background-size: 4.166% 100%;
 }
 
 .timeline__external-elements {
@@ -127,21 +125,21 @@
 
 .timeline__seances_movie {
   position: absolute;
-  top: 10px;
   left: var(--left-percent);
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  padding: 7px 10px;
+  padding: 7px 5px;
   cursor: grab;
-  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.04);
-  align-items: flex-start;
+  max-width: 80px;
+  min-height: 32px;
+  justify-content: center;
 
   &::after {
     content: '';
     position: absolute;
     left: 0%;
-    bottom: -17px;
+    bottom: -14px;
     width: 1px;
     height: 5px;
     background: #848484;
@@ -151,7 +149,7 @@
     content: var(--time-value);
     position: absolute;
     left: 0%;
-    bottom: -35px;
+    bottom: -32px;
     transform: translateX(-50%);
     color: #848484;
     font-size: 12px;
@@ -160,7 +158,7 @@
 }
 
 .timeline__seances_title {
-  line-height: 10px;
+  line-height: 16px;
 }
 
 .timeline__marker {
@@ -215,13 +213,3 @@
 .timeline__delete.drop-target {
   background: rgba(255, 50, 50, 0.15);
 }
-
-// @media (max-width: 1080px) {
-//   .timeline__seances_movie {
-//     // position: relative; // Измените на relative для tablet
-//     // left: auto !important; // Отключите absolute позиционирование
-//     // top: auto;
-//     // margin-bottom: 10px; // Добавьте отступ между элементами
-//     // width: 100%; // Занимайте всю ширину
-//   }
-// }
