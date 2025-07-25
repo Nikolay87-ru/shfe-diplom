@@ -45,7 +45,9 @@ export const HallPage = () => {
         }
 
         const film = data.result?.films?.find((f: Film) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result?.halls?.find((h: Hall) => h.id === currentSeance.seance_hallid);
+        const hallData = data.result?.halls?.find(
+          (h: Hall) => h.id === currentSeance.seance_hallid,
+        );
 
         setMovie(film || null);
         setHall(hallData || null);

@@ -33,12 +33,12 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
       setError('Размер файла не более 3 Mb!');
       return;
     }
-    
+
     if (file.type !== 'image/png') {
       setError('Только PNG файлы разрешены!');
       return;
     }
-    
+
     setPoster(file);
     setPosterPreview(URL.createObjectURL(file));
   }
@@ -74,7 +74,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
         <div className="popup__header">
           <div className="popup__header_text">Добавление фильма</div>
           <div className="popup__close" onClick={onClose}>
-            <IoClose size={35} style={{ strokeWidth: 40 }}/>
+            <IoClose size={35} style={{ strokeWidth: 40 }} />
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit} autoComplete="off">

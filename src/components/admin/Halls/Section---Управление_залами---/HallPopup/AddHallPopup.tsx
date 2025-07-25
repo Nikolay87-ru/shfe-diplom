@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IoClose } from "react-icons/io5";
+import { IoClose } from 'react-icons/io5';
 import './AddHallPopup.scss';
 
 interface Props {
@@ -36,7 +36,7 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
         <div className="popup__header">
           <div className="popup__header_text">Добавление зала</div>
           <div className="popup__close" onClick={onClose}>
-            <IoClose size={35} style={{ strokeWidth: 40 }}/>
+            <IoClose size={35} style={{ strokeWidth: 40 }} />
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit} autoComplete="off">

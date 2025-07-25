@@ -31,29 +31,31 @@ export const HallScheme = () => {
       try {
         setLoading(true);
         const data = await api.getAllData();
-        
+
         const currentSeance = data.result?.seances?.find((s: Seance) => s.id === Number(id));
         if (!currentSeance) {
           navigate('/');
           return;
         }
-  
+
         const film = data.result?.films?.find((f: Film) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result?.halls?.find((h: Hall) => h.id === currentSeance.seance_hallid);
-  
+        const hallData = data.result?.halls?.find(
+          (h: Hall) => h.id === currentSeance.seance_hallid,
+        );
+
         setMovie(film || null);
         setHall(hallData || null);
         setSeance(currentSeance);
-  
+
         if (hallData) {
           const rowsData = hallData.hall_config.map((row: string[]) => ({
             seats: row.map((seatType) => {
-              const type = seatType === 'disabled' ? 'disabled' : 
-                         seatType === 'vip' ? 'vip' : 'standart';
+              const type =
+                seatType === 'disabled' ? 'disabled' : seatType === 'vip' ? 'vip' : 'standart';
               return {
                 type: type as 'standart' | 'vip' | 'disabled',
                 selected: false,
-                occupied: seatType === 'disabled'
+                occupied: seatType === 'disabled',
               };
             }),
           }));
@@ -66,7 +68,7 @@ export const HallScheme = () => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [id, navigate]);
 
@@ -96,7 +98,7 @@ export const HallScheme = () => {
   async function handleBuy() {
     if (selectedSeats.length === 0) {
       toast.info('Выберите хотя бы одно место!', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -106,43 +108,45 @@ export const HallScheme = () => {
       });
       return;
     }
-  
+
     try {
       const tickets = selectedSeats.map(([row, seat]) => ({
         row: row + 1,
         place: seat + 1,
-        coast: rows[row].seats[seat].type === 'vip' 
-          ? hall?.hall_price_vip 
-          : hall?.hall_price_standart,
+        coast:
+          rows[row].seats[seat].type === 'vip' ? hall?.hall_price_vip : hall?.hall_price_standart,
       }));
-  
+
       if (!hall) return;
-  
+
       const updatedConfig = [...hall.hall_config];
       selectedSeats.forEach(([row, seat]) => {
-        updatedConfig[row][seat] = 'disabled'; 
+        updatedConfig[row][seat] = 'disabled';
       });
-  
+
       await api.updateHallConfig(hall.id, {
         rowCount: hall.hall_rows,
         placeCount: hall.hall_places,
-        config: updatedConfig
+        config: updatedConfig,
       });
-  
+
       localStorage.setItem('tickets', JSON.stringify(tickets));
       localStorage.setItem('seanceId', id || '');
       localStorage.setItem('movie', JSON.stringify(movie));
-      localStorage.setItem('hall', JSON.stringify({
-        ...hall,
-        hall_config: updatedConfig 
-      }));
+      localStorage.setItem(
+        'hall',
+        JSON.stringify({
+          ...hall,
+          hall_config: updatedConfig,
+        }),
+      );
       localStorage.setItem('seance', JSON.stringify(seance));
-  
+
       navigate(`/ticket/${id}`);
     } catch (error) {
       console.error('Error booking seats:', error);
       toast.error('Произошла ошибка при бронировании мест', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

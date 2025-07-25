@@ -11,6 +11,7 @@ import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
+
 function getColorIdx(i: number) {
   return colors[i % colors.length];
 }
@@ -335,10 +336,12 @@ export const SeancesGridSection: React.FC = () => {
                         className={`timeline__seances_movie ${getColorIdx(
                           movies.findIndex((m) => m.id === movie.id),
                         )}`}
-                        style={{
-                          '--left-percent': `${leftPercent}%`,
-                          '--time-value': `"${seance.seance_time}"`
-                        } as React.CSSProperties}
+                        style={
+                          {
+                            '--left-percent': `${leftPercent}%`,
+                            '--time-value': `"${seance.seance_time}"`,
+                          } as React.CSSProperties
+                        }
                         data-time={seance.seance_time}
                         draggable
                         onDragStart={() => onDragSeanceStart(seance.id, hall.id)}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHalls } from '../../../../context/HallsContext';
 import { api } from '../../../../utils/api';
-import { HallsList } from '../HallsList';
+import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import './HallOpen.scss';
 
 export const HallOpenSection: React.FC = () => {
@@ -25,18 +25,18 @@ export const HallOpenSection: React.FC = () => {
       setLoading(false);
     }
     check();
-  }, [hall, dataVersion]); 
+  }, [hall, dataVersion]);
 
   const refreshData = async () => {
     await update();
-    setDataVersion(v => v + 1); 
+    setDataVersion((v) => v + 1);
   };
 
   async function handleToggleSellStatus() {
     if (!hall) return;
     if (status === 0 && !hasSeances) return;
     await api.updateHallStatus(hall.id, status === 1 ? 0 : 1);
-    await refreshData(); 
+    await refreshData();
     setStatus(status === 1 ? 0 : 1);
   }
 

@@ -116,16 +116,16 @@ export const GuestPage = () => {
 
       <div className="container">
         {movies.map((movie) => (
-          <MovieCard 
-            key={movie.id} 
+          <MovieCard
+            key={movie.id}
             movie={{
               ...movie,
-              halls: movie.halls.map(hallData => ({
+              halls: movie.halls.map((hallData) => ({
                 name: hallData.hall.hall_name,
                 open: hallData.hall.hall_open === 1,
-                sessions: hallData.sessions
-              }))
-            }} 
+                sessions: hallData.sessions,
+              })),
+            }}
           />
         ))}
       </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HallsList } from '../HallsList';
+import { HallsList } from './HallsList/HallsList';
 import { useHalls } from '../../../../context/HallsContext';
 import { api } from '../../../../utils/api';
 import { AddHallPopup } from './HallPopup/AddHallPopup';

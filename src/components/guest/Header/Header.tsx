@@ -27,4 +27,3 @@ export const Header = ({ showLoginButton = true }: HeaderProps) => {
     </header>
   );
 };
-

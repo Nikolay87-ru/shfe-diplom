@@ -37,7 +37,7 @@ export const GuestProvider = ({ children }: { children: ReactNode }) => {
             description: film.film_description,
             duration: film.film_duration,
             country: film.film_origin,
-            poster: film.film_poster
+            poster: film.film_poster,
           }));
           setMovies(films);
         }

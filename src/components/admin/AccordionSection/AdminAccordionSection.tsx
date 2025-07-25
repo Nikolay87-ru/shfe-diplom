@@ -18,7 +18,9 @@ export function AdminAccordionSection({
   return (
     <section className="admin__section">
       <div className="admin__header" onClick={() => setOpen((o) => !o)}>
-        <div className={`admin__header_text ${isFirst ? 'admin__header_text-first' : ''} ${isLast ? 'admin__header_text-last' : ''}`}>
+        <div
+          className={`admin__header_text ${isFirst ? 'admin__header_text-first' : ''} ${isLast ? 'admin__header_text-last' : ''}`}
+        >
           {title}
         </div>
         <IoIosArrowDown
@@ -26,7 +28,9 @@ export function AdminAccordionSection({
           style={{ strokeWidth: 40 }}
         />
       </div>
-      <div className={`admin__wrapper ${isLast ? 'admin__wrapper-last' : ''} ${!open ? 'admin__wrapper-hide' : ''}`}>
+      <div
+        className={`admin__wrapper ${isLast ? 'admin__wrapper-last' : ''} ${!open ? 'admin__wrapper-hide' : ''}`}
+      >
         {open && children}
       </div>
     </section>

@@ -36,14 +36,14 @@ function App() {
             <Route path="/hall/:id" element={<HallPage />} />
             <Route path="/ticket/:id" element={<TicketPage />} />
             <Route path="/admin/login" element={<Login />} />
-            <Route 
-              path="/admin/*" 
+            <Route
+              path="/admin/*"
               element={
                 <ProtectedRoute>
                   <AdminPanel />
                 </ProtectedRoute>
-              } 
-            /> 
+              }
+            />
           </Routes>
         </BrowserRouter>
       </GuestProvider>

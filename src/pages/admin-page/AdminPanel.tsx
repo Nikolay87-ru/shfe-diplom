@@ -10,8 +10,6 @@ import { HallsProvider } from '../../context/HallsContext';
 
 import '../../styles/admin.scss';
 
-
-
 export const AdminPanel: React.FC = () => (
   <HallsProvider>
     <div className="admin__container">

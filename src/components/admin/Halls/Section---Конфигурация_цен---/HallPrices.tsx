@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHalls } from '../../../../context/HallsContext';
 import { api } from '../../../../utils/api';
-import { HallsList } from '../HallsList';
+import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import './HallPrices.scss';
 
 export const HallPrices: React.FC = () => {
@@ -27,7 +27,7 @@ export const HallPrices: React.FC = () => {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>, which: 'st' | 'vip') {
     const value = e.target.value;
-    
+
     if (value === '') {
       if (which === 'st') setPriceSt(0);
       else setPriceVip(0);
@@ -37,7 +37,6 @@ export const HallPrices: React.FC = () => {
       );
       return;
     }
-
 
     const numValue = parseInt(value, 10);
     if (isNaN(numValue)) return;
@@ -83,7 +82,7 @@ export const HallPrices: React.FC = () => {
                 type="number"
                 min={0}
                 className="admin_input price-config__input_standart"
-                value={priceSt === 0 ? '' : priceSt} 
+                value={priceSt === 0 ? '' : priceSt}
                 onChange={(e) => handleChange(e, 'st')}
                 required
               />
@@ -99,7 +98,7 @@ export const HallPrices: React.FC = () => {
                 type="number"
                 min={0}
                 className="admin_input price-config__input_vip"
-                value={priceVip === 0 ? '' : priceVip} 
+                value={priceVip === 0 ? '' : priceVip}
                 onChange={(e) => handleChange(e, 'vip')}
                 required
               />

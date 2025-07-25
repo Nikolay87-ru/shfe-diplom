@@ -25,14 +25,14 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
         setSelectedHallId(res.result.halls[0]?.id);
       }
 
-      subscribers.forEach(cb => cb());
+      subscribers.forEach((cb) => cb());
     }
   }, [selectedHallId, subscribers]);
 
   const subscribe = useCallback((callback: () => void) => {
-    setSubscribers(subs => [...subs, callback]);
+    setSubscribers((subs) => [...subs, callback]);
     return () => {
-      setSubscribers(subs => subs.filter(cb => cb !== callback));
+      setSubscribers((subs) => subs.filter((cb) => cb !== callback));
     };
   }, []);
 

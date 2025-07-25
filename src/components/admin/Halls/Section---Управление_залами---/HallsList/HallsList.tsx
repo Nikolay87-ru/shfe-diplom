@@ -1,5 +1,5 @@
 import './HallsList.scss';
-import { MdDelete } from "react-icons/md";
+import { MdDelete } from 'react-icons/md';
 
 interface Hall {
   id: number;
@@ -14,12 +14,12 @@ interface Props {
   className?: string;
 }
 
-export const HallsList: React.FC<Props> = ({ 
-  halls, 
-  selectedId, 
-  onSelect, 
-  onDelete, 
-  className = '' 
+export const HallsList: React.FC<Props> = ({
+  halls,
+  selectedId,
+  onSelect,
+  onDelete,
+  className = '',
 }) => (
   <ul className={`halls__list ${className}`}>
     {halls.map((hall) => (

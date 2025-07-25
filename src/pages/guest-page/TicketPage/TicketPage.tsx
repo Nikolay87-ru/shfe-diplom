@@ -62,46 +62,51 @@ export const TicketPage = () => {
     try {
       const seanceId = id || '';
       const ticketDate = new Date().toISOString().split('T')[0];
-      const ticketsData = tickets.map(ticket => ({
+      const ticketsData = tickets.map((ticket) => ({
         row: ticket.row,
         place: ticket.place,
-        coast: ticket.coast
+        coast: ticket.coast,
       }));
-  
+
       const formData = new FormData();
       formData.append('seanceId', seanceId);
       formData.append('ticketDate', ticketDate);
       formData.append('tickets', JSON.stringify(ticketsData));
-  
+
       const response = await fetch('https://shfe-diplom.neto-server.ru/ticket', {
         method: 'POST',
         body: formData,
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
-  
+
       const data = await response.json();
-      
+
       if (data.success) {
         const storedHall = localStorage.getItem('hall');
         if (storedHall) {
           const hall = JSON.parse(storedHall);
           const updatedConfig = [...hall.hall_config];
-          tickets.forEach(ticket => {
+          tickets.forEach((ticket) => {
             updatedConfig[ticket.row - 1][ticket.place - 1] = 'disabled';
           });
-          localStorage.setItem('hall', JSON.stringify({
-            ...hall,
-            hall_config: updatedConfig
-          }));
+          localStorage.setItem(
+            'hall',
+            JSON.stringify({
+              ...hall,
+              hall_config: updatedConfig,
+            }),
+          );
         }
-  
+
         setQrCode(data.qrCode || 'booking-code:' + Math.random().toString(36).substring(2, 10));
-        setBookingCode(data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+        setBookingCode(
+          data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
+        );
       } else {
         toast.error(data.error || 'Места недоступны для бронирования!', {
-          position: "top-center",
+          position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -113,7 +118,7 @@ export const TicketPage = () => {
     } catch (error) {
       console.error('Booking error:', error);
       toast.error('Ошибка соединения с сервера', {
-        position: "top-center",
+        position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
