@@ -95,7 +95,7 @@
       height: 48px;
       top: 35px;
     }
-  
+
     &.admin__header_text-last::before {
       height: 48px;
       top: -35px;
@@ -164,15 +164,15 @@
 
     .admin__header_text {
       margin-left: 64px;
-  
+
       &::before {
         display: none;
       }
-  
+
       &.admin__header_text-first::before {
         display: none;
       }
-    
+
       &.admin__header_text-last::before {
         display: none;
       }
