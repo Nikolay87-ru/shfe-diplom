@@ -1,4 +1,9 @@
-@import './bootstrap-custom.scss';
+@use "sass:color";
+@use "sass:math";
+
+@use "./bootstrap-custom";
+@use "./admin";
+@use "./guest";
 
 body {
   font-family: 'Segoe UI', Arial, sans-serif;

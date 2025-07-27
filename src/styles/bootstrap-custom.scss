@@ -1,4 +1,7 @@
-@use 'bootstrap/scss/bootstrap' with (
+@use "sass:color";
+@use "sass:math";
+
+@forward 'bootstrap/scss/bootstrap' with (
   $primary: #6c63ff,
   $font-family-base: 'Roboto'
 );

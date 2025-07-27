@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .guest-header {
   max-width: 1028px;
   margin: 0 auto;
@@ -46,7 +48,7 @@
     font-size: 16px;
 
     &:hover {
-      background: darken(#16a6af, 10%);
+      background: color.adjust(#16a6af, $lightness: -10%);
     }
   }
 }
@@ -177,7 +179,7 @@
   font-size: 16px;
 
   &:hover {
-    background: darken(#16a6af, 10%);
+    background: color.adjust(#16a6af, $lightness: -10%);
   }
 }
 
