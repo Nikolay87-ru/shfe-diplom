@@ -16,7 +16,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
+  server: process.env.NODE_ENV === 'test' ? undefined : {
     proxy: {
       '/api': {
         target: 'https://shfe-diplom.neto-server.ru',
