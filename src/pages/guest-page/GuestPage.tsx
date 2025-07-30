@@ -1,59 +1,31 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Header } from '../../components/guest/Header/Header';
 import { Calendar } from '../../components/guest/Calendar/Calendar';
 import { MovieCard } from '../../components/guest/MovieCard/MovieCard';
-import { api } from '../../utils/api';
+import { useGuest } from '../../context/GuestContext';
 import './GuestPage.scss';
-import { Hall, Seance, Film } from '../../types';
 
-export const GuestPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [moviesData, setMoviesData] = useState<{
-    films: Film[];
-    halls: Hall[];
-    seances: Seance[];
-  }>({ films: [], halls: [], seances: [] });
-  const [loading, setLoading] = useState(true);
+export const GuestPage = React.memo(() => {
+  const { movies, halls, seances, loading, selectedDate, setSelectedDate } = useGuest();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await api.getAllData();
-        
-        if (data.success && data.result) {
-          setMoviesData({
-            films: data.result.films || [],
-            halls: data.result.halls || [],
-            seances: data.result.seances || []
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const movies = useMemo(() => {
+  const filteredMovies = useMemo(() => {
+    if (loading) return [];
+    
     const currentDate = new Date();
-    const isToday =
+    const isToday = 
       selectedDate.getDate() === currentDate.getDate() &&
       selectedDate.getMonth() === currentDate.getMonth() &&
       selectedDate.getFullYear() === currentDate.getFullYear();
 
-    return moviesData.films.map((film: Film) => {
-      const filmSeances = moviesData.seances.filter((s: Seance) => s.seance_filmid === film.id);
+    return movies.map((movie) => {
+      const filmSeances = seances.filter((s) => s.seance_filmid === movie.id);
 
-      const hallsData = moviesData.halls
-        .filter((hall: Hall) => hall.hall_open === 1)
-        .map((hall: Hall) => {
+      const hallsData = halls
+        .filter((hall) => hall.hall_open === 1)
+        .map((hall) => {
           const hallSeances = filmSeances
-            .filter((s: Seance) => s.seance_hallid === hall.id)
-            .map((seance: Seance) => {
+            .filter((s) => s.seance_hallid === hall.id)
+            .map((seance) => {
               let disabled = false;
               if (isToday) {
                 const [hours, minutes] = seance.seance_time.split(':').map(Number);
@@ -82,16 +54,11 @@ export const GuestPage = () => {
         .filter((hallData) => hallData.sessions.length > 0);
 
       return {
-        id: film.id,
-        title: film.film_name,
-        description: film.film_description,
-        duration: film.film_duration,
-        country: film.film_origin,
-        poster: film.film_poster,
+        ...movie,
         halls: hallsData,
       };
     }).filter((movie) => movie.halls.length > 0);
-  }, [moviesData, selectedDate]);
+  }, [movies, halls, seances, loading, selectedDate]);
 
   if (loading) {
     return <div className="loading">Загрузка...</div>;
@@ -103,7 +70,7 @@ export const GuestPage = () => {
       <Calendar selectedDate={selectedDate} onChange={setSelectedDate} />
 
       <div className="container">
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <MovieCard 
             key={movie.id} 
             movie={{
@@ -119,4 +86,4 @@ export const GuestPage = () => {
       </div>
     </div>
   );
-};
+});

@@ -1,67 +1,34 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../../../components/guest/Header/Header';
 import { HallScheme } from './HallPage-component/HallScheme';
-import { api } from '../../../utils/api';
+import { useGuest } from '../../../context/GuestContext';
 import './HallPage.scss';
 
-interface Film {
-  id: number;
-  film_name: string;
-  film_poster: string;
-}
-
-interface Hall {
-  id: number;
-  hall_name: string;
-}
-
-interface Seance {
-  id: number;
-  seance_time: string;
-  seance_filmid: number;
-  seance_hallid: number;
-}
-
-export const HallPage = () => {
+export const HallPage = React.memo(() => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState<Film | null>(null);
-  const [hall, setHall] = useState<Hall | null>(null);
-  const [seance, setSeance] = useState<Seance | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const { movies, halls, seances, loading } = useGuest();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await api.getAllData();
+  const { movie, hall, seance } = useMemo(() => {
+    if (loading || !id) return { movie: null, hall: null, seance: null };
 
-        const currentSeance = data.result?.seances?.find((s: Seance) => s.id === Number(id));
-        if (!currentSeance) {
-          navigate('/');
-          return;
-        }
+    const currentSeance = seances.find((s) => s.id === Number(id));
+    if (!currentSeance) {
+      navigate('/');
+      return { movie: null, hall: null, seance: null };
+    }
 
-        const film = data.result?.films?.find((f: Film) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result?.halls?.find(
-          (h: Hall) => h.id === currentSeance.seance_hallid,
-        );
+    const film = movies.find((f) => f.id === currentSeance.seance_filmid);
+    const hallData = halls.find((h) => h.id === currentSeance.seance_hallid);
 
-        setMovie(film || null);
-        setHall(hallData || null);
-        setSeance(currentSeance);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        navigate('/');
-      } finally {
-        setLoading(false);
-      }
+    return {
+      movie: film || null,
+      hall: hallData || null,
+      seance: currentSeance
     };
-
-    fetchData();
-  }, [id, navigate]);
+  }, [id, movies, halls, seances, loading, navigate]);
 
   const handleDoubleClick = () => {
     if (window.innerWidth <= 1200) {
@@ -87,7 +54,7 @@ export const HallPage = () => {
       <div className="buying-info">
         <div className="buying-container">
           <div className="movie-info">
-            <h2 className="title">{movie.film_name}</h2>
+            <h2 className="title">{movie.title}</h2>
             <p className="start">Начало сеанса: {seance.seance_time}</p>
             <h3 className="hall-name">{hall.hall_name}</h3>
           </div>
@@ -101,4 +68,4 @@ export const HallPage = () => {
       <HallScheme />
     </div>
   );
-};
+});
