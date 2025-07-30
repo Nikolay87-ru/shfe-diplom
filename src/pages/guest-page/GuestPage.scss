@@ -70,3 +70,9 @@
     padding-right: 15px !important;
   }
 }
+
+@media (max-width: 430px) {
+  .day-item.nav__day-checked {
+      padding: 12px 5px;
+  }
+}

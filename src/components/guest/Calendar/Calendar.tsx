@@ -12,7 +12,7 @@ export const Calendar = memo(({ selectedDate, onChange }: CalendarProps) => {
   const [daysOffset, setDaysOffset] = useState(0);
   
   const today = new Date();
-  const days = Array.from({ length: 7 }, (_, i) => addDays(today, i + daysOffset));
+  const days = Array.from({ length: 6 }, (_, i) => addDays(today, i + daysOffset));
 
   const handlePrevClick = () => {
     if (daysOffset + 7 > 0) {
