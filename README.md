@@ -36,7 +36,7 @@
 
   - **Адаптивный дизайн** для работы на мобильных устройствах.
 
-## Ссылки на условия работы и готовый проект
+## Ссылки на задачи к проекту и развернутый проект
 
 - [x] [Условия дипломной работы](https://github.com/netology-code/shfe-diplom 'Ссылка на задание по дипломному проекту')<br>
 - [x] [Развернутый проект на GitHub - Гостевая страница](https://nikolay87-ru.github.io/js-advanced-diploma/ 'Ссылка на проект')<br>
@@ -141,25 +141,27 @@
 npm install
 ```
 
-2. **Запуск клиентской части**:
+2. **Запуск клиентской части** (http://localhost:5173):
 
 ```bash
 npm run dev
 ```
 
-3. **Сборка проекта**:
+3. **Сборка проекта** (в корневой папке dist):
 
 ```bash
 npx vite build
 ```
 
-4. **Просмотр собранной версии** (адрес: http://localhost:5173):
+1. **Просмотр собранной версии** (http://localhost:4173):
 
 ```bash
 npm run preview
 ```
 
-## Юнит тест и валидация
+## Мок тест и валидация
+
+- [x] **Мок-тест** (`api.mock.test`):
 
 1. Создает mock данные для фильмов, залов и сеансов
 
@@ -185,11 +187,11 @@ npm run preview
 npm test
 ```
 
-**Валидация** (одновременный запуск проверок кода с помощью lint, type-check, и мок-теста jest):
+**Валидация** (комплексный запуск проверок кода проекта с помощью lint, type-check, и мок-теста jest):
 
 ```bash
 npm run validate
 ```
 
-###### Статус прокрытия кода тестами:
+###### Статус прокрытия модуля тестами:
 [![Build status](https://ci.appveyor.com/api/projects/status/oxgi3txswpn3b95l/branch/main?svg=true)](https://ci.appveyor.com/project/Nikolay87-ru/shfe-diplom/branch/main)

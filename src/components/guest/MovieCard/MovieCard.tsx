@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MovieCard.scss';
 
@@ -27,7 +27,7 @@ interface MovieCardProps {
   };
 }
 
-export const MovieCard = ({ movie }: MovieCardProps) => {
+export const MovieCard = memo(({ movie }: MovieCardProps) => {
   const navigate = useNavigate();
 
   const handleSessionClick = (session: Session) => {
@@ -82,4 +82,4 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       </div>
     </div>
   );
-};
+});

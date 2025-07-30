@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { format, addDays, isToday, isSameDay, isBefore, isWeekend } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import './Calendar.scss';
@@ -8,23 +8,23 @@ interface CalendarProps {
   onChange: (date: Date) => void;
 }
 
-export const Calendar = ({ selectedDate, onChange }: CalendarProps) => {
+export const Calendar = memo(({ selectedDate, onChange }: CalendarProps) => {
   const [daysOffset, setDaysOffset] = useState(0);
-
+  
   const today = new Date();
   const days = Array.from({ length: 7 }, (_, i) => addDays(today, i + daysOffset));
 
   const handlePrevClick = () => {
     if (daysOffset + 7 > 0) {
-      setDaysOffset((prev) => Math.max(prev - 7, -6));
+      setDaysOffset(prev => Math.max(prev - 7, -6));
     }
   };
 
   const handleNextClick = () => {
-    setDaysOffset((prev) => prev + 7);
+    setDaysOffset(prev => prev + 7);
   };
 
-  const hasPastDays = days.some((day) => isBefore(day, today));
+  const hasPastDays = days.some(day => isBefore(day, today));
   const isCurrentWeek = daysOffset === 0;
 
   return (
@@ -32,13 +32,16 @@ export const Calendar = ({ selectedDate, onChange }: CalendarProps) => {
       <div className="container">
         <ul className="days-list">
           {hasPastDays && (
-            <li className="day-item nav__arrow left" onClick={handlePrevClick}>
+            <li 
+              className="day-item nav__arrow left"
+              onClick={handlePrevClick}
+            >
               <span className="nav__arrow-text">&lt;</span>
             </li>
           )}
 
           {!isCurrentWeek && (
-            <li
+            <li 
               className="day-item"
               onClick={() => {
                 setDaysOffset(0);
@@ -88,11 +91,14 @@ export const Calendar = ({ selectedDate, onChange }: CalendarProps) => {
             );
           })}
 
-          <li className="day-item nav__arrow right" onClick={handleNextClick}>
+          <li 
+            className="day-item nav__arrow right"
+            onClick={handleNextClick}
+          >
             <span className="nav__arrow-text">&gt;</span>
           </li>
         </ul>
       </div>
     </nav>
   );
-};
+});
