@@ -5,7 +5,7 @@ import { TicketPage } from './pages/guest-page/TicketPage/TicketPage';
 import { AdminPanel } from './pages/admin-page/AdminPanel';
 import { Login } from '../src/pages/admin-page/Login/LoginPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { GuestProvider } from './context/GuestContext';
+import { GuestProvider } from './context/provider/GuestProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { JSX } from 'react';

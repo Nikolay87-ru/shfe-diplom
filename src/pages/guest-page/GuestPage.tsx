@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Header } from '../../components/guest/Header/Header';
 import { Calendar } from '../../components/guest/Calendar/Calendar';
 import { MovieCard } from '../../components/guest/MovieCard/MovieCard';
-import { useGuest } from '../../context/GuestContext';
+import { useGuest } from '../../context/hooks/useGuest';
 import './GuestPage.scss';
 
 export const GuestPage = React.memo(() => {

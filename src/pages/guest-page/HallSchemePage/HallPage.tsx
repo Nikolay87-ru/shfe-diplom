@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../../../components/guest/Header/Header';
 import { HallScheme } from './HallPage-component/HallScheme';
-import { useGuest } from '../../../context/GuestContext';
+import { useGuest } from '../../../context/hooks/useGuest';
 import './HallPage.scss';
 
 export const HallPage = React.memo(() => {
