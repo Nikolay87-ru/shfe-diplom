@@ -119,7 +119,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               required
             />
           </label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="admin_poster" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {posterPreview && (
               <img className="popup__poster_preview" src={posterPreview} alt="preview" />
             )}

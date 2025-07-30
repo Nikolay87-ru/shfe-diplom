@@ -17,6 +17,10 @@
   resize: none;
 }
 
+.admin_poster {
+  margin-left: 85px;
+}
+
 .popup__add-poster_button {
   padding: 12px 30px;
   background: #16a6af;
@@ -45,4 +49,10 @@
   object-fit: cover;
   border-radius: 2px;
   border: 1px solid #b7b7b7;
+}
+
+@media (max-width: 1000px) {
+  .admin_poster {
+    margin-left: 0px;
+  }
 }
