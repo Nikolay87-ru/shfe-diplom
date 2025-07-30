@@ -21,7 +21,7 @@ export const Calendar = memo(({ selectedDate, onChange }: CalendarProps) => {
   };
 
   const handleNextClick = () => {
-    setDaysOffset(prev => prev + 7);
+    setDaysOffset(prev => prev + 6);
   };
 
   const hasPastDays = days.some(day => isBefore(day, today));
