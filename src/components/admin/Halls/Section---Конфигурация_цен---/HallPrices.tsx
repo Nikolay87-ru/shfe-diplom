@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHalls } from '../../../../context/HallsContext';
+import { useHalls } from '../../../../context/hooks/useHalls';
 import { api } from '../../../../utils/api';
 import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import './HallPrices.scss';

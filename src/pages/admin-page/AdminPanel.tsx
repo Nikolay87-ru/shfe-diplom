@@ -6,7 +6,7 @@ import { HallPrices } from '../../components/admin/Halls/Section---Конфиг�
 import { SeancesGridSection } from '../../components/admin/Halls/Section---Сетка_сеансов---/SeancesGridSection';
 import { HallOpenSection } from '../../components/admin/Halls/Section---Открыть_продажи---/HallOpen';
 import { AdminAccordionSection } from '../../components/admin/AccordionSection/AdminAccordionSection';
-import { HallsProvider } from '../../context/HallsContext';
+import { HallsProvider } from '../../context/provider/HallsProvider'
 
 import '../../styles/admin.scss';
 

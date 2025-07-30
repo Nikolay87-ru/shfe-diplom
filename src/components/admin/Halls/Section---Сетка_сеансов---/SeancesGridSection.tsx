@@ -3,7 +3,7 @@ import { api } from '../../../../utils/api';
 import { Film, Hall, Seance } from '../../../../types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
-import { useHalls } from '../../../../context/HallsContext';
+import { useHalls } from '../../../../context/hooks/useHalls';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MdDelete } from 'react-icons/md';

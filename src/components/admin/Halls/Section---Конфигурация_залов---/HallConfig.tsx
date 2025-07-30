@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './HallConfig.scss';
-import { useHalls } from '../../../../context/HallsContext';
+import { useHalls } from '../../../../context/hooks/useHalls';
 import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import { api } from '../../../../utils/api';
 

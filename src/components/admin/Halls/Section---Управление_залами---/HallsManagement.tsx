@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HallsList } from './HallsList/HallsList';
-import { useHalls } from '../../../../context/HallsContext';
+import { useHalls } from '../../../../context/hooks/useHalls';
 import { api } from '../../../../utils/api';
 import { AddHallPopup } from './HallPopup/AddHallPopup';
 import { toast } from 'react-toastify';
