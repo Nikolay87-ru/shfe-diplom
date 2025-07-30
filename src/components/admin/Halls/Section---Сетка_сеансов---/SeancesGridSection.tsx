@@ -11,7 +11,6 @@ import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
-
 function getColorIdx(i: number) {
   return colors[i % colors.length];
 }
@@ -52,37 +51,80 @@ export const SeancesGridSection: React.FC = () => {
   }, [halls]);
 
   async function handleDeleteMovie(movieId: number) {
-    if (window.confirm('Удалить фильм? Все связанные сеансы также будут удалены.')) {
-      try {
-        console.log('Попытка удаления фильма ID:', movieId);
-        const response = await api.deleteMovie(movieId);
+    const ConfirmToast = () => (
+      <div>
+        <p style={{ display: 'flex' }}>Удалить фильм? Все связанные сеансы также будут удалены.</p>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '10px', justifyContent: 'center' }}>
+          <button 
+            onClick={() => {
+              toast.dismiss();
+              confirmDeleteMovie(movieId);
+            }}
+            style={{
+              padding: '5px 10px',
+              background: '#16a6af',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            Удалить
+          </button>
+          <button 
+            onClick={() => toast.dismiss()}
+            style={{
+              padding: '5px 10px',
+              background: '#63536c',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    );
 
-        if (response.success) {
-          console.log('Фильм удалён. Обновление данных...');
-          const res = await api.getAllData();
+    toast(<ConfirmToast />, {
+      position: 'top-center',
+      autoClose: false,
+      closeButton: false,
+      closeOnClick: false,
+      draggable: false,
+      style: {
+        width: '350px',
+        justifyContent: 'center'
+      }
+    });
+  }
 
-          console.log('Новые фильмы:', res.result?.films);
-          console.log('Новые сеансы:', res.result?.seances);
+  async function confirmDeleteMovie(movieId: number) {
+    try {
+      console.log('Попытка удаления фильма ID:', movieId);
+      const response = await api.deleteMovie(movieId);
 
-          setMovies(res.result?.films || []);
-          setSeances(res.result?.seances || []);
-          setLocalSeances(res.result?.seances || []);
-          setHasChanges(false);
-        } else {
-          console.error('Ошибка сервера:', response.error);
-          toast.error('Не удалось удалить фильм: ' + (response.error || 'Неизвестная ошибка'), {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        }
-      } catch (error) {
-        console.error('Ошибка при удалении:', error);
-        toast.error('Ошибка при удалении фильма', {
+      if (response.success) {
+        console.log('Фильм удалён. Обновление данных...');
+        const res = await api.getAllData();
+
+        console.log('Новые фильмы:', res.result?.films);
+        console.log('Новые сеансы:', res.result?.seances);
+
+        setMovies(res.result?.films || []);
+        setSeances(res.result?.seances || []);
+        setLocalSeances(res.result?.seances || []);
+        setHasChanges(false);
+        
+        toast.success('Фильм успешно удалён', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      } else {
+        console.error('Ошибка сервера:', response.error);
+        toast.error('Не удалось удалить фильм: ' + (response.error || 'Неизвестная ошибка'), {
           position: 'top-center',
           autoClose: 5000,
           hideProgressBar: false,
@@ -92,6 +134,17 @@ export const SeancesGridSection: React.FC = () => {
           progress: undefined,
         });
       }
+    } catch (error) {
+      console.error('Ошибка при удалении:', error);
+      toast.error('Ошибка при удалении фильма', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
