@@ -55,7 +55,7 @@ export const SeancesGridSection: React.FC = () => {
       <div>
         <p style={{ display: 'flex' }}>Удалить фильм? Все связанные сеансы также будут удалены.</p>
         <div style={{ display: 'flex', gap: '10px', marginTop: '10px', justifyContent: 'center' }}>
-          <button 
+          <button
             onClick={() => {
               toast.dismiss();
               confirmDeleteMovie(movieId);
@@ -66,12 +66,12 @@ export const SeancesGridSection: React.FC = () => {
               color: 'white',
               border: 'none',
               borderRadius: '3px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             Удалить
           </button>
-          <button 
+          <button
             onClick={() => toast.dismiss()}
             style={{
               padding: '5px 10px',
@@ -79,7 +79,7 @@ export const SeancesGridSection: React.FC = () => {
               color: 'white',
               border: 'none',
               borderRadius: '3px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             Отмена
@@ -96,8 +96,8 @@ export const SeancesGridSection: React.FC = () => {
       draggable: false,
       style: {
         width: '350px',
-        justifyContent: 'center'
-      }
+        justifyContent: 'center',
+      },
     });
   }
 
@@ -117,7 +117,7 @@ export const SeancesGridSection: React.FC = () => {
         setSeances(res.result?.seances || []);
         setLocalSeances(res.result?.seances || []);
         setHasChanges(false);
-        
+
         toast.success('Фильм успешно удалён', {
           position: 'top-center',
           autoClose: 3000,

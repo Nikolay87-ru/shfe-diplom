@@ -1,3 +1,14 @@
+.add-seance__static-value {
+  margin-top: 2px;
+  padding: 8px 9px;
+  color: #757575;
+  font-size: 16px;
+  background: #f5f5f5;
+  border: 1px solid #b7b7b7;
+  font-family: 'Roboto', Arial, sans-serif;
+  width: 720px;
+}
+
 .select__add-seance {
   width: 730px;
   height: 36px;
@@ -19,6 +30,11 @@
 }
 
 @media (max-width: 1000px) {
+  .add-seance__static-value {
+    width: 100%;
+    padding: 8px 6px;
+  }
+
   .select__add-seance {
     width: 100%;
   }

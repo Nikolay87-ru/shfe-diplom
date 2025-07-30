@@ -14,27 +14,33 @@ interface Props {
   initialMovie?: Film;
 }
 
-export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, movies }) => {
-  const [selectedHall, setSelectedHall] = useState<number | undefined>();
-  const [selectedMovie, setSelectedMovie] = useState<number | undefined>();
+export const AddSeancePopup: React.FC<Props> = ({ 
+  show, 
+  onClose, 
+  onSave, 
+  halls, 
+  movies,
+  initialHall,
+  initialMovie
+}) => {
+  const [selectedHall, setSelectedHall] = useState<number | undefined>(initialHall?.id);
+  const [selectedMovie, setSelectedMovie] = useState<number | undefined>(initialMovie?.id);
   const [time, setTime] = useState('00:00');
   const [conflicts, setConflicts] = useState<string[]>([]);
 
   useEffect(() => {
     if (show) {
-      setSelectedHall(halls[0]?.id);
-      setSelectedMovie(movies[0]?.id);
+      setSelectedHall(initialHall?.id || halls[0]?.id);
+      setSelectedMovie(initialMovie?.id || movies[0]?.id);
       setTime('00:00');
       setConflicts([]);
     }
-  }, [halls, movies, show]);
+  }, [halls, movies, show, initialHall, initialMovie]);
 
   async function checkConflicts(): Promise<string[]> {
     if (!selectedHall || !selectedMovie) return [];
     const data = await api.getAllData();
-    const hallSeances = (data.result?.seances || []).filter(
-      (s) => s.seance_hallid === selectedHall,
-    );
+    const hallSeances = (data.result?.seances || []).filter((s) => s.seance_hallid === selectedHall);
     const movie = movies.find((m) => m.id === selectedMovie);
     if (!movie) return [];
     const [h, m] = time.split(':').map(Number);
@@ -70,46 +76,34 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
   }
 
   if (!show) return null;
+  
+  const currentHall = halls.find(h => h.id === selectedHall);
+  const currentMovie = movies.find(m => m.id === selectedMovie);
+
   return (
     <div className="popup">
       <div className="popup__container">
         <div className="popup__header">
           <div className="popup__header_text">Добавление сеанса</div>
           <div className="popup__close" onClick={onClose}>
-            <IoClose size={35} style={{ strokeWidth: 40 }} />
+            <IoClose size={35} style={{ strokeWidth: 40 }}/>
           </div>
         </div>
         <form className="popup__form" onSubmit={handleSubmit}>
           <label className="admin_label add-seance_label">
             Название зала
-            <select
-              className="select__add-seance select__add-seance_hall"
-              value={selectedHall}
-              onChange={(e) => setSelectedHall(Number(e.target.value))}
-              required
-            >
-              {halls.map((hall) => (
-                <option key={hall.id} value={hall.id}>
-                  {hall.hall_name}
-                </option>
-              ))}
-            </select>
+            <div className="add-seance__static-value">
+              {currentHall?.hall_name || 'Не выбран'}
+            </div>
           </label>
+
           <label className="admin_label add-seance_label">
             Название фильма
-            <select
-              className="select__add-seance select__add-seance_movie"
-              value={selectedMovie}
-              onChange={(e) => setSelectedMovie(Number(e.target.value))}
-              required
-            >
-              {movies.map((movie) => (
-                <option key={movie.id} value={movie.id}>
-                  {movie.film_name} ({movie.film_duration} мин)
-                </option>
-              ))}
-            </select>
+            <div className="add-seance__static-value">
+              {currentMovie?.film_name || 'Не выбран'}
+            </div>
           </label>
+
           <label className="admin_label add-seance_label" id="seance_time">
             Время начала
             <input
@@ -132,6 +126,9 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
           )}
 
           <div className="popup__buttons">
+            <button type="button" className="button popup__button_cancel" onClick={onClose}>
+              Отменить
+            </button>
             <button
               type="submit"
               className={
@@ -140,9 +137,6 @@ export const AddSeancePopup: React.FC<Props> = ({ show, onClose, onSave, halls, 
               disabled={!(selectedHall && selectedMovie && time)}
             >
               Добавить сеанс
-            </button>
-            <button type="button" className="button popup__button_cancel" onClick={onClose}>
-              Отменить
             </button>
           </div>
         </form>
