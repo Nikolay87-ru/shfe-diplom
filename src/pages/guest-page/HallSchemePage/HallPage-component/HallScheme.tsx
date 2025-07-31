@@ -119,41 +119,42 @@ export const HallScheme = () => {
 
       if (!hall) return;
 
+      localStorage.setItem('tickets', JSON.stringify(tickets));
+      localStorage.setItem('seanceId', id || '');
+      localStorage.setItem('movie', JSON.stringify(movie));
+      localStorage.setItem('hall', JSON.stringify(hall));
+      localStorage.setItem('seance', JSON.stringify(seance));
+
       const updatedConfig = [...hall.hall_config];
       selectedSeats.forEach(([row, seat]) => {
         updatedConfig[row][seat] = 'disabled';
       });
 
-      await api.updateHallConfig(hall.id, {
+      const updateResponse = await api.updateHallConfig(hall.id, {
         rowCount: hall.hall_rows,
         placeCount: hall.hall_places,
         config: updatedConfig,
       });
 
-      localStorage.setItem('tickets', JSON.stringify(tickets));
-      localStorage.setItem('seanceId', id || '');
-      localStorage.setItem('movie', JSON.stringify(movie));
-      localStorage.setItem(
-        'hall',
-        JSON.stringify({
-          ...hall,
-          hall_config: updatedConfig,
-        }),
-      );
-      localStorage.setItem('seance', JSON.stringify(seance));
+      if (!updateResponse.success) {
+        throw new Error(updateResponse.error || 'Не удалось обновить конфигурацию зала');
+      }
 
       navigate(`/ticket/${id}`);
     } catch (error) {
       console.error('Error booking seats:', error);
-      toast.error('Произошла ошибка при бронировании мест', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(
+        error instanceof Error ? error.message : 'Произошла ошибка при бронировании мест',
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        },
+      );
     }
   }
 

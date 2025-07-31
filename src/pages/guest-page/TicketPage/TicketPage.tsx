@@ -5,6 +5,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './TicketPage.scss';
+import { api } from '../../../utils/api';
 
 interface Ticket {
   row: number;
@@ -68,6 +69,28 @@ export const TicketPage = () => {
         coast: ticket.coast,
       }));
 
+      const hallConfigResponse = await api.getHallConfig(seanceId, ticketDate);
+
+      if (!hallConfigResponse.success) {
+        throw new Error('Не удалось проверить доступность мест');
+      }
+
+      const hallConfig = hallConfigResponse.result as string[][];
+
+      const invalidSeats = ticketsData.filter((ticket) => {
+        const row = ticket.row - 1;
+        const seat = ticket.place - 1;
+        return (
+          row >= hallConfig.length ||
+          seat >= hallConfig[row].length ||
+          hallConfig[row][seat] === 'disabled'
+        );
+      });
+
+      if (invalidSeats.length > 0) {
+        throw new Error('Некоторые места уже заняты');
+      }
+
       const formData = new FormData();
       formData.append('seanceId', seanceId);
       formData.append('ticketDate', ticketDate);
@@ -84,40 +107,16 @@ export const TicketPage = () => {
       const data = await response.json();
 
       if (data.success) {
-        const storedHall = localStorage.getItem('hall');
-        if (storedHall) {
-          const hall = JSON.parse(storedHall);
-          const updatedConfig = [...hall.hall_config];
-          tickets.forEach((ticket) => {
-            updatedConfig[ticket.row - 1][ticket.place - 1] = 'disabled';
-          });
-          localStorage.setItem(
-            'hall',
-            JSON.stringify({
-              ...hall,
-              hall_config: updatedConfig,
-            }),
-          );
-        }
-
         setQrCode(data.qrCode || 'booking-code:' + Math.random().toString(36).substring(2, 10));
         setBookingCode(
           data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
         );
       } else {
-        toast.error(data.error || 'Места недоступны для бронирования!', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        throw new Error(data.error || 'Места недоступны для бронирования!');
       }
     } catch (error) {
       console.error('Booking error:', error);
-      toast.error('Ошибка соединения с сервера', {
+      toast.error(error instanceof Error ? error.message : 'Ошибка соединения с сервером', {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -126,6 +125,8 @@ export const TicketPage = () => {
         draggable: true,
         progress: undefined,
       });
+
+      navigate(`/hall/${id}`);
     }
   };
 

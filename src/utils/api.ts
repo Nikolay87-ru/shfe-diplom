@@ -76,7 +76,26 @@ export const api = {
       return response.data;
     } catch (error) {
       console.error('Error updating hall config:', error);
-      throw error;
+      return {
+        success: false,
+        error: 'Не удалось обновить конфигурацию зала',
+      };
+    }
+  },
+
+  getHallConfig: async (seanceId: string, date: string): Promise<ApiResponse> => {
+    try {
+      const response = await axios.get(`${API_URL}/hallconfig?seanceId=${seanceId}&date=${date}`);
+      return {
+        success: true,
+        result: response.data.result,
+      };
+    } catch (error) {
+      console.error('Error fetching hall config:', error);
+      return {
+        success: false,
+        error: 'Не удалось получить конфигурацию зала',
+      };
     }
   },
 
@@ -121,7 +140,6 @@ export const api = {
     }
   },
 
-  // Фильмы
   getMovies: async (): Promise<ApiResponse> => {
     try {
       const response = await axios.get(`${API_URL}/alldata`);
@@ -194,7 +212,6 @@ export const api = {
     }
   },
 
-  // Сеансы
   getSeances: async (): Promise<ApiResponse> => {
     try {
       const response = await axios.get(`${API_URL}/alldata`);

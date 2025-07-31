@@ -61,14 +61,14 @@
 ![Guest](assets/ReadmePics/guest-pic.png)
 
 - [x] **Главная страница** (`GuestPage`):
-  - Отображает список фильмов с постерами, описанием и сеансами.
+  - Отображает список фильмов с постерами, описанием и сеансами (`MovieCard`).
 
   - Позволяет выбрать дату с помощью календаря (`Calendar`).
 
   - Фильтрует сеансы по выбранной дате.
 
 - [x] **Страница зала** (`HallPage`):
-  - Показывает схему зала с местами (обычные, VIP, заблокированные).
+  - Показывает схему зала (`HallScheme`) с местами (обычные, VIP, заблокированные).
 
   - Позволяет выбрать места и перейти к бронированию.
 
@@ -124,10 +124,11 @@
 
 ### 3. Общие компоненты
 
-- [x] **Авторизация** (`AuthContext`):
+- [x] **Авторизация** (`AuthContext` → (`useAuth`, `AuthProvider`)):
   - Вход для администратора через логин/пароль.
 
-- [x] **Контексты** (`HallsContext`, `GuestContext`):
+- [x] **Контексты** (`HallsContext` → (`useHalls`, `HallsProvider`), 
+                     `GuestContext` → (`useGuest`, `GuestProvider`)):
   - Хранение и обновление данных о залах, фильмах и сеансах.
 
 - [x] **API** (`api.ts`):
@@ -153,7 +154,7 @@ npm run dev
 npx vite build
 ```
 
-1. **Просмотр собранной версии** (http://localhost:4173):
+4. **Просмотр собранной версии** (http://localhost:4173):
 
 ```bash
 npm run preview
@@ -193,5 +194,5 @@ npm test
 npm run validate
 ```
 
-###### Статус прокрытия модуля тестами:
+###### Статус прокрытия модуля api.ts тестами:
 [![Build status](https://ci.appveyor.com/api/projects/status/oxgi3txswpn3b95l/branch/main?svg=true)](https://ci.appveyor.com/project/Nikolay87-ru/shfe-diplom/branch/main)
