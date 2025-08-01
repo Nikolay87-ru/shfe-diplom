@@ -15,7 +15,7 @@ export const Header = ({ showLoginButton = true }: HeaderProps) => {
   return (
     <header className="guest-header">
       <div className="container">
-        <a href="/" className="logo">
+        <a href={import.meta.env.BASE_URL} className="logo">
           Идём<span className="logo-letter">в</span>кино
         </a>
         {showLoginButton && (
