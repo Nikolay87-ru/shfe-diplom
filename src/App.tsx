@@ -20,7 +20,7 @@ function App() {
   return (
     <AuthProvider>
       <GuestProvider>
-        <BrowserRouter basename="/shfe-diplom">
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ToastContainer
             position="top-center"
             autoClose={5000}

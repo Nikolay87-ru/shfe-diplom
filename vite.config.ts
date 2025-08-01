@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/shfe-diplom/', 
+  base: process.env.NODE_ENV === 'production' ? '/shfe-diplom/' : '/', 
   css: {
     preprocessorOptions: {
       scss: {
