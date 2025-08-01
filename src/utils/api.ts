@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { Film, Hall, Seance } from '../types';
 
-const API_URL = '/api';
+const API_URL = import.meta.env.PROD 
+  ? 'https://shfe-diplom.neto-server.ru' 
+  : '/api';
 
 export interface ApiResponse {
   success: boolean;

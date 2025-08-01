@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  base: "/shfe-diplom/",
   plugins: [react()],
+  base: '/shfe-diplom/', 
   css: {
     preprocessorOptions: {
       scss: {
@@ -17,18 +17,25 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: process.env.NODE_ENV === 'test' ? undefined : {
+  build: {
+    outDir: 'dist', 
+    emptyOutDir: true, 
+    sourcemap: false, 
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js'
+      }
+    }
+  },
+  server: {
     proxy: {
       '/api': {
         target: 'https://shfe-diplom.neto-server.ru',
         changeOrigin: true,
-        secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  },
-  build: {
-    outDir: path.resolve(__dirname, 'dist'), 
-    emptyOutDir: true,
   }
 });
