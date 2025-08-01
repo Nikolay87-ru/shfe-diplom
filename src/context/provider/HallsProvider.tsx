@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { api } from '../../utils/api';
-import { Hall } from '../../types';
+import { api } from '@/utils/api';
+import { Hall } from '@/types';
 import { HallsContext } from '../HallsContext'
 
 export const HallsProvider = ({ children }: { children: React.ReactNode }) => {

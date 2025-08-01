@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Hall, Seance } from '../types';
+import { Hall, Seance } from '@/types';
 
 interface Movie {
   id: number;

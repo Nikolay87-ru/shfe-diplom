@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import './AddSeancePopup.scss';
-import { Film, Hall } from '../../../../../types/index';
-import { api } from '../../../../../utils/api';
+import { Film, Hall } from '@/types/index';
+import { api } from '@/utils/api';
 
 interface Props {
   show: boolean;

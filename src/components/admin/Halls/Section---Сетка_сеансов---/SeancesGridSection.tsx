@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '@/utils/api';
-import { Film, Hall, Seance } from '../../../../types';
+import { Film, Hall, Seance } from '@/types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
-import { useHalls } from '../../../../context/hooks/useHalls';
+import { useHalls } from '@/context/hooks/useHalls';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import deleteImg from '@assets/delete.png';

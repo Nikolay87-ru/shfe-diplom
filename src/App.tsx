@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { GuestPage } from './pages/guest-page/GuestPage';
-import { HallPage } from './pages/guest-page/HallSchemePage/HallPage';
-import { TicketPage } from './pages/guest-page/TicketPage/TicketPage';
-import { AdminPanel } from './pages/admin-page/AdminPanel';
-import { Login } from '../src/pages/admin-page/Login/LoginPage';
-import { useAuth } from './context/hooks/useAuth';
-import { AuthProvider } from './context/provider/AuthProvider';
-import { GuestProvider } from './context/provider/GuestProvider';
+import { JSX } from 'react';
+import { GuestPage } from '@/pages/guest-page/GuestPage';
+import { HallPage } from '@/pages/guest-page/HallSchemePage/HallPage';
+import { TicketPage } from '@/pages/guest-page/TicketPage/TicketPage';
+import { AdminPanel } from '@/pages/admin-page/AdminPanel';
+import { Login } from '@/pages/admin-page/Login/LoginPage';
+import { useAuth } from '@/context/hooks/useAuth';
+import { AuthProvider } from '@/context/provider/AuthProvider';
+import { GuestProvider } from '@/context/provider/GuestProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { JSX } from 'react';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAdmin } = useAuth();

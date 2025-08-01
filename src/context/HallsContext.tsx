@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Hall } from '../types';
+import { Hall } from '@/types';
 
 export type Ctx = {
   halls: Hall[];

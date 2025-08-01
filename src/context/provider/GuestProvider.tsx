@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect, useMemo, useCallback } from 'react';
-import { api } from '../../utils/api';
-import { Film, Hall, Seance } from '../../types';
+import { api } from '@/utils/api';
+import { Film, Hall, Seance } from '@/types';
 import { GuestContext } from '../GuestContext';
 
 export const GuestProvider = ({ children }: { children: ReactNode }) => {

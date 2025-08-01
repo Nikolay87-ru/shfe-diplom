@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Film, Hall, Seance } from '../types';
+import { Film, Hall, Seance } from '@/types';
 
 const API_URL = import.meta.env.PROD ? 'https://shfe-diplom.neto-server.ru' : '/api';
 

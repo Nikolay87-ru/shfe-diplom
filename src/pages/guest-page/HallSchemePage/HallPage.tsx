@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Header } from '../../../components/guest/Header/Header';
+import { Header } from '@/components/guest/Header/Header';
 import { HallScheme } from './HallPage-component/HallScheme';
-import { useGuest } from '../../../context/hooks/useGuest';
+import { useGuest } from '@/context/hooks/useGuest';
 import hintImg from '@assets/hint.png';
 import './HallPage.scss';
 

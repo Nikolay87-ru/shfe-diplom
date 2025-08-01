@@ -1,14 +1,14 @@
 import React from 'react';
-import { AdminHeader } from '../../components/admin/AdminHeader/AdminHeader';
-import { HallsManagement } from '../../components/admin/Halls/Section---Управление_залами---/HallsManagement';
-import { HallConfig } from '../../components/admin/Halls/Section---Конфигурация_залов---/HallConfig';
-import { HallPrices } from '../../components/admin/Halls/Section---Конфигурация_цен---/HallPrices';
-import { SeancesGridSection } from '../../components/admin/Halls/Section---Сетка_сеансов---/SeancesGridSection';
-import { HallOpenSection } from '../../components/admin/Halls/Section---Открыть_продажи---/HallOpen';
-import { AdminAccordionSection } from '../../components/admin/AccordionSection/AdminAccordionSection';
-import { HallsProvider } from '../../context/provider/HallsProvider'
+import { AdminHeader } from '@/components/admin/AdminHeader/AdminHeader';
+import { HallsManagement } from '@/components/admin/Halls/Section---Управление_залами---/HallsManagement';
+import { HallConfig } from '@/components/admin/Halls/Section---Конфигурация_залов---/HallConfig';
+import { HallPrices } from '@/components/admin/Halls/Section---Конфигурация_цен---/HallPrices';
+import { SeancesGridSection } from '@/components/admin/Halls/Section---Сетка_сеансов---/SeancesGridSection';
+import { HallOpenSection } from '@/components/admin/Halls/Section---Открыть_продажи---/HallOpen';
+import { AdminAccordionSection } from '@/components/admin/AccordionSection/AdminAccordionSection';
+import { HallsProvider } from '@/context/provider/HallsProvider'
 
-import '../../styles/admin.scss';
+import '@/styles/admin.scss';
 
 export const AdminPanel: React.FC = () => (
   <HallsProvider>
