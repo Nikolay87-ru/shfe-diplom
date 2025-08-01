@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../../../components/guest/Header/Header';
 import { HallScheme } from './HallPage-component/HallScheme';
 import { useGuest } from '../../../context/hooks/useGuest';
+import hintImg from '@assets/hint.png';
 import './HallPage.scss';
 
 export const HallPage = React.memo(() => {
@@ -59,7 +60,7 @@ export const HallPage = React.memo(() => {
             <h3 className="hall-name">{hall.hall_name}</h3>
           </div>
           <div className="click-info">
-            <img src="/assets/hint.png" alt="Тап" className="hint-image" />
+            <img src={hintImg} alt="Тап" className="hint-image" />
             <div className="hint-text">Тапните дважды, чтобы увеличить</div>
           </div>
         </div>

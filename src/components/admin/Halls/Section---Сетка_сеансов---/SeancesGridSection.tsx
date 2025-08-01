@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../../../../utils/api';
+import { api } from '@/utils/api';
 import { Film, Hall, Seance } from '../../../../types';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
 import { useHalls } from '../../../../context/hooks/useHalls';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import deleteImg from '@assets/delete.png';
 import { MdDelete } from 'react-icons/md';
 import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
@@ -369,7 +370,7 @@ export const SeancesGridSection: React.FC = () => {
                       onDrop={() => onDropSeanceToTrash(hall.id)}
                     >
                       <img
-                        src="/assets/delete.png"
+                        src={deleteImg}
                         alt="Удалить"
                         className="timeline__delete_image"
                       />
