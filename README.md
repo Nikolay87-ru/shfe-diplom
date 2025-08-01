@@ -39,8 +39,8 @@
 ## Ссылки на задачи к проекту и развернутый проект
 
 - [x] [Условия дипломной работы](https://github.com/netology-code/shfe-diplom 'Ссылка на задание по дипломному проекту')<br>
-- [x] [Развернутый проект на GitHub - Гостевая страница](https://nikolay87-ru.github.io/js-advanced-diploma/ 'Ссылка на проект')<br>
-- [x] [Развернутый проект на GitHub - Страница администратора](https://nikolay87-ru.github.io/js-advanced-diploma/ 'Ссылка на проект')
+- [x] [Развернутый проект на GitHub - Гостевая страница](https://nikolay87-ru.github.io/shfe-diplom/ 'Ссылка на проект')<br>
+- [x] [Развернутый проект на GitHub - Страница администратора](https://nikolay87-ru.github.io/shfe-diplom/admin 'Ссылка на проект')
 
 ## Основные модули и их функционал
 
