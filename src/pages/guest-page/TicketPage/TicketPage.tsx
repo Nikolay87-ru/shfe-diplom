@@ -20,10 +20,14 @@ interface Movie {
 
 interface Hall {
   hall_name: string;
+  id: number;
+  hall_config: string[][];
 }
 
 interface Seance {
   seance_time: string;
+  id: number;
+  seance_hallid: number;
 }
 
 export const TicketPage = () => {
@@ -61,7 +65,11 @@ export const TicketPage = () => {
 
   const handleGetBookingCode = async () => {
     try {
-      const seanceId = id || '';
+      if (!seance || !hall) {
+        throw new Error('Недостаточно данных для бронирования');
+      }
+
+      const seanceId = seance.id.toString();
       const ticketDate = new Date().toISOString().split('T')[0];
       const ticketsData = tickets.map((ticket) => ({
         row: ticket.row,
@@ -70,12 +78,11 @@ export const TicketPage = () => {
       }));
 
       const hallConfigResponse = await api.getHallConfig(seanceId, ticketDate);
-
-      if (!hallConfigResponse.success) {
-        throw new Error('Не удалось проверить доступность мест');
+      if (!hallConfigResponse.success || !Array.isArray(hallConfigResponse.result)) {
+        throw new Error('Не удалось получить конфигурацию зала');
       }
 
-      const hallConfig = hallConfigResponse.result as string[][];
+      const hallConfig = hallConfigResponse.result;
 
       const invalidSeats = ticketsData.filter((ticket) => {
         const row = ticket.row - 1;
@@ -83,13 +90,23 @@ export const TicketPage = () => {
         return (
           row >= hallConfig.length ||
           seat >= hallConfig[row].length ||
-          hallConfig[row][seat] === 'disabled'
+          hallConfig[row][seat] === 'disabled' ||
+          hallConfig[row][seat] === 'taken'
         );
       });
 
       if (invalidSeats.length > 0) {
         throw new Error('Некоторые места уже заняты');
       }
+
+      const updatedConfig = [...hallConfig];
+      ticketsData.forEach((ticket) => {
+        const row = ticket.row - 1;
+        const seat = ticket.place - 1;
+        if (row < updatedConfig.length && seat < updatedConfig[row].length) {
+          updatedConfig[row][seat] = 'taken';
+        }
+      });
 
       const formData = new FormData();
       formData.append('seanceId', seanceId);
@@ -111,6 +128,12 @@ export const TicketPage = () => {
         setBookingCode(
           data.bookingCode || 'CODE-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
         );
+
+        await api.updateHallConfig(hall.id, {
+          rowCount: updatedConfig.length,
+          placeCount: updatedConfig[0]?.length || 0,
+          config: updatedConfig,
+        });
       } else {
         throw new Error(data.error || 'Места недоступны для бронирования!');
       }

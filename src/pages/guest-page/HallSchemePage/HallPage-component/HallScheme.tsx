@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './HallScheme.scss';
 
 interface Seat {
-  type: 'standart' | 'vip' | 'disabled';
+  type: 'standart' | 'vip' | 'disabled' | 'taken';
   selected: boolean;
   occupied: boolean;
 }
@@ -48,14 +48,26 @@ export const HallScheme = () => {
         setSeance(currentSeance);
 
         if (hallData) {
-          const rowsData = hallData.hall_config.map((row: string[]) => ({
+          const hallConfigResponse = await api.getHallConfig(
+            currentSeance.id.toString(),
+            new Date().toISOString().split('T')[0]
+          );
+          
+          let configToUse: string[][] = hallData.hall_config;
+          
+          if (hallConfigResponse.success && Array.isArray(hallConfigResponse.result)) {
+            configToUse = hallConfigResponse.result;
+          } else if (!hallConfigResponse.success) {
+            console.error('Failed to get hall config:', hallConfigResponse.error);
+          }
+
+          const rowsData = configToUse.map((row: string[]) => ({
             seats: row.map((seatType) => {
-              const type =
-                seatType === 'disabled' ? 'disabled' : seatType === 'vip' ? 'vip' : 'standart';
+              const type = seatType as 'standart' | 'vip' | 'disabled' | 'taken';
               return {
-                type: type as 'standart' | 'vip' | 'disabled',
+                type,
                 selected: false,
-                occupied: seatType === 'disabled',
+                occupied: type === 'disabled' || type === 'taken',
               };
             }),
           }));
@@ -110,35 +122,19 @@ export const HallScheme = () => {
     }
 
     try {
+      if (!hall || !seance) return;
+
       const tickets = selectedSeats.map(([row, seat]) => ({
         row: row + 1,
         place: seat + 1,
-        coast:
-          rows[row].seats[seat].type === 'vip' ? hall?.hall_price_vip : hall?.hall_price_standart,
+        coast: rows[row].seats[seat].type === 'vip' ? hall.hall_price_vip : hall.hall_price_standart,
       }));
-
-      if (!hall) return;
 
       localStorage.setItem('tickets', JSON.stringify(tickets));
       localStorage.setItem('seanceId', id || '');
       localStorage.setItem('movie', JSON.stringify(movie));
       localStorage.setItem('hall', JSON.stringify(hall));
       localStorage.setItem('seance', JSON.stringify(seance));
-
-      const updatedConfig = [...hall.hall_config];
-      selectedSeats.forEach(([row, seat]) => {
-        updatedConfig[row][seat] = 'disabled';
-      });
-
-      const updateResponse = await api.updateHallConfig(hall.id, {
-        rowCount: hall.hall_rows,
-        placeCount: hall.hall_places,
-        config: updatedConfig,
-      });
-
-      if (!updateResponse.success) {
-        throw new Error(updateResponse.error || 'Не удалось обновить конфигурацию зала');
-      }
 
       navigate(`/ticket/${id}`);
     } catch (error) {
@@ -205,7 +201,6 @@ export const HallScheme = () => {
       </div>
 
       <div className="container-button">
-        {' '}
         <button className="buy-button" onClick={handleBuy}>
           Забронировать ({selectedSeats.length})
         </button>

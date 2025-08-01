@@ -10,6 +10,7 @@ export interface ApiResponse {
     halls?: Hall[];
     seances?: Seance[];
     film?: Film;
+    config?: string[][];
   };
   error?: string;
 }
@@ -59,30 +60,6 @@ export const api = {
     }
   },
 
-  updateHallConfig: async (
-    hallId: number,
-    config: {
-      rowCount: number;
-      placeCount: number;
-      config: string[][];
-    },
-  ): Promise<ApiResponse> => {
-    const formData = new FormData();
-    formData.set('rowCount', config.rowCount.toString());
-    formData.set('placeCount', config.placeCount.toString());
-    formData.set('config', JSON.stringify(config.config));
-    try {
-      const response = await axios.post(`${API_URL}/hall/${hallId}`, formData);
-      return response.data;
-    } catch (error) {
-      console.error('Error updating hall config:', error);
-      return {
-        success: false,
-        error: 'Не удалось обновить конфигурацию зала',
-      };
-    }
-  },
-
   getHallConfig: async (seanceId: string, date: string): Promise<ApiResponse> => {
     try {
       const response = await axios.get(`${API_URL}/hallconfig?seanceId=${seanceId}&date=${date}`);
@@ -95,6 +72,35 @@ export const api = {
       return {
         success: false,
         error: 'Не удалось получить конфигурацию зала',
+      };
+    }
+  },
+
+  updateHallConfig: async (
+    hallId: number,
+    config: {
+      rowCount: number;
+      placeCount: number;
+      config: string[][];
+    },
+  ): Promise<ApiResponse> => {
+    const formData = new FormData();
+    formData.append('rowCount', config.rowCount.toString());
+    formData.append('placeCount', config.placeCount.toString());
+    formData.append('config', JSON.stringify(config.config));
+
+    try {
+      const response = await axios.post(`${API_URL}/hall/${hallId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating hall config:', error);
+      return {
+        success: false,
+        error: 'Не удалось обновить конфигурацию зала',
       };
     }
   },
