@@ -10,6 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
     "baseUrl": ".",
     "paths": {

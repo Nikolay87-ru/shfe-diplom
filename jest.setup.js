@@ -1,4 +1,15 @@
-global.TextEncoder = require('util').TextEncoder;
-global.TextDecoder = require('util').TextDecoder;
+import '@testing-library/jest-dom';
 
-require('whatwg-fetch');
+import { TextEncoder, TextDecoder } from 'util';
+import { ReadableStream, TransformStream } from 'web-streams-polyfill';
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
+if (typeof global.ReadableStream === 'undefined') {
+  global.ReadableStream = ReadableStream;
+}
+
+if (typeof global.TransformStream === 'undefined') {
+  global.TransformStream = TransformStream;
+}

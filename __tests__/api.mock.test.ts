@@ -2,7 +2,7 @@ import { setupServer } from 'msw/node'
 import { http, HttpResponse } from 'msw'
 import { api } from '../src/utils/api'
 import { Film, Hall, Seance } from '../src/types'
-import { beforeAll, afterEach, afterAll, describe, test, expect } from '@jest/globals'
+import { expect, test, describe, beforeAll, afterEach, afterAll } from '@jest/globals';
 import axios from 'axios'
 
 interface MockData {
@@ -225,7 +225,6 @@ beforeAll(() => {
 
 afterEach(() => {
   server.resetHandlers()
-  jest.clearAllMocks()
 })
 
 afterAll(() => server.close())

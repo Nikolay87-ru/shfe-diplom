@@ -8,6 +8,10 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
+interface FormData {
+  entries(): IterableIterator<[string, FormDataEntryValue]>;
+}
+
 declare module '*.png' {
   const src: string;
   export default src;
