@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "isolatedModules": true
   },
   "exclude": ["dist", "node_modules"]
 }

@@ -2,7 +2,7 @@
   "name": "shfe-diplom",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -11,7 +11,7 @@
     "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json}\"",
     "type-check": "tsc --noEmit",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "validate": "npm run lint && npm run type-check && npm run test"
@@ -63,7 +63,7 @@
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "lint-staged": "^16.1.2",
-    "msw": "^2.10.4",
+    "msw": "^2.2.14",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",

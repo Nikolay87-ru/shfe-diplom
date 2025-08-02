@@ -1,8 +1,8 @@
-export default {
+module.exports = {
   process() {
-    return { code: 'export default {};' }; 
+    return { code: 'module.exports = {};' };
   },
   getCacheKey() {
     return 'fileTransformer';
-  },
+  }
 };
