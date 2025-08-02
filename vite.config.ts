@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/shfe-diplom/' : '/', 
+  base: process.env.NODE_ENV === 'production' ? '/shfe-diplom/' : '/',
   css: {
     preprocessorOptions: {
       scss: {
@@ -37,11 +37,11 @@ export default defineConfig({
       '/api': {
         target: 'https://shfe-diplom.neto-server.ru',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path: string) => path.replace(/^\/api/, '')
       }
     }
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
   }
-});
+})

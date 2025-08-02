@@ -2,7 +2,11 @@ import axios from 'axios';
 import { Film, Hall, Seance } from '@/types';
 
 const API_URL =
-  process.env.NODE_ENV === 'production' ? 'https://shfe-diplom.neto-server.ru' : '/api';
+  process.env.NODE_ENV === 'test'
+    ? 'https://shfe-diplom.neto-server.ru'
+    : process.env.NODE_ENV === 'production'
+      ? 'https://shfe-diplom.neto-server.ru'
+      : '/api';
 
 export interface ApiResponse {
   success: boolean;
