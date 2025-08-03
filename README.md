@@ -205,5 +205,11 @@ npm test
 npm run validate
 ```
 
+*PS. Если валидация запускается с ошибками, попробуйте сначало установить fix для линтинга*:
+
+```bash
+npm run lint:fix
+```
+
 ###### Статус прокрытия модуля api.ts тестами:
 [![Build status](https://ci.appveyor.com/api/projects/status/oxgi3txswpn3b95l/branch/main?svg=true)](https://ci.appveyor.com/project/Nikolay87-ru/shfe-diplom/branch/main)
