@@ -136,7 +136,7 @@
 npm install
 ```
 
-1. **Запуск клиентской части** (localhost:5173):
+2. **Запуск клиентской части** (localhost:5173):
 
 ```bash
 npm run dev
@@ -148,7 +148,7 @@ npm run dev
 npx vite build
 ```
 
-1. **Просмотр собранной версии** (localhost:4173):
+4. **Просмотр собранной версии** (localhost:4173):
 
 ```bash
 npm run preview
