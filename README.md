@@ -32,9 +32,9 @@
 
 ## Особенности проекта
 
-  - **Валидация** данных (к примеру, проверка конфликтов сеансов).
+- **Валидация** данных (к примеру, проверка конфликтов сеансов).
 
-  - **Адаптивный дизайн** для работы на мобильных устройствах.
+- **Адаптивный дизайн** для работы на мобильных устройствах.
 
 ## Ссылки на задачи к проекту и развернутый проект
 
@@ -89,15 +89,21 @@
 
 - [x] **Страница авторизации** (`LoginPage`):
   - Отображает форму авторизации для доступа к админ-панели.
-  - **Логин** - `shfe-diplom@netology.ru`.
-  - **Пароль** - `shfe-diplom`.
+  - **Логин**:
+  ```bash
+   shfe-diplom@netology.ru
+  ```
+  - **Пароль**:
+  - ```bash
+    shfe-diplom
+    ```
 
 - [x] **Страница администратора** (`AdminPanel`):
-  Содержит нижеперечисленные компоненты, обернутые в компонент (аккордеон-панель) с функцией раскрытия/закрытия (`AdminAccordionSection`) ⬇️.
+      Содержит нижеперечисленные компоненты, обернутые в компонент (аккордеон-панель) с функцией раскрытия/закрытия (`AdminAccordionSection`) ⬇️.
   - **Управление залами** (`HallsManagement`):
     - Добавление залов с помощью попапа (`AddHallPopup`).
     - Удаление и выбор залов.
-    - Компонент выбора залов (`HallsList`) является общим и для других секции (**HallConfig**, **HallPrices**, **HallOpen**), 
+    - Компонент выбора залов (`HallsList`) является общим и для других секции (**HallConfig**, **HallPrices**, **HallOpen**),
       обеспечивая тем самым работу с одним залом во всей админ-панели, без необходимости переключения зала в каждой секции.
 
   - **Конфигурация залов** (`HallConfig`):
@@ -121,8 +127,8 @@
 - [x] **Авторизация** (`AuthContext` → (`useAuth`, `AuthProvider`)):
   - Вход для администратора через логин/пароль.
 
-- [x] **Контексты** (`HallsContext` → (`useHalls`, `HallsProvider`), 
-                     `GuestContext` → (`useGuest`, `GuestProvider`)):
+- [x] **Контексты** (`HallsContext` → (`useHalls`, `HallsProvider`),
+      `GuestContext` → (`useGuest`, `GuestProvider`)):
   - Хранение и обновление данных о залах, фильмах и сеансах.
 
 - [x] **API** (`api.ts`):
@@ -163,25 +169,24 @@ npm run preview
 2. Настраивает mock сервер с обработчиками для всех endpoints API
 
 3. Реализует тесты для всех основных функций API:
+   - Получение всех данных
+     - should fetch all data
+     - should get hall config
 
-    - Получение всех данных
-      - should fetch all data
-      - should get hall config
+   - Работа с залами (добавление, удаление, обновление конфигурации)
+     - should add a new hall
+     - should update hall config
+     - should update hall prices
+     - should update hall status
+     - should delete a hall
 
-    - Работа с залами (добавление, удаление, обновление конфигурации)
-      - should add a new hall
-      - should update hall config
-      - should update hall prices
-      - should update hall status
-      - should delete a hall
+   - Работа с фильмами (добавление, удаление)
+     - should add a new film
+     - should delete a film
 
-    - Работа с фильмами (добавление, удаление)
-      - should add a new film
-      - should delete a film
-
-    - Работа с сеансами (добавление, удаление)
-      - should add a new seance
-      - should delete a seance
+   - Работа с сеансами (добавление, удаление)
+     - should add a new seance
+     - should delete a seance
 
 4. Включает тесты для обработки ошибок
 
@@ -199,11 +204,12 @@ npm test
 npm run validate
 ```
 
-*PS. Если валидация запускается с ошибками, попробуйте установить fix для линтинга*:
+_PS. Если валидация запускается с ошибками, попробуйте установить fix для линтинга_:
 
 ```bash
 npm run lint:fix
 ```
 
 ###### Статус прокрытия модуля api.ts тестами:
+
 [![Build status](https://ci.appveyor.com/api/projects/status/oxgi3txswpn3b95l/branch/main?svg=true)](https://ci.appveyor.com/project/Nikolay87-ru/shfe-diplom/branch/main)
