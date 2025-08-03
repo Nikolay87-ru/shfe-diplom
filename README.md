@@ -171,12 +171,23 @@ npm run preview
 3. Реализует тесты для всех основных функций API:
 
     - Получение всех данных
+      - should fetch all data
+      - should get hall config
 
     - Работа с залами (добавление, удаление, обновление конфигурации)
+      - should add a new hall
+      - should update hall config
+      - should update hall prices
+      - should update hall status
+      - should delete a hall
 
     - Работа с фильмами (добавление, удаление)
+      - should add a new film
+      - should delete a film
 
     - Работа с сеансами (добавление, удаление)
+      - should add a new seance
+      - should delete a seance
 
 4. Включает тесты для обработки ошибок
 
