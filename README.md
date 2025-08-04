@@ -171,10 +171,10 @@ npm run preview
 3. Реализует тесты для всех основных функций API:
    - Получение всех данных
      - should fetch all data
-     - should get hall config
 
    - Работа с залами (добавление, удаление, обновление конфигурации)
      - should add a new hall
+     - should get hall config
      - should update hall config
      - should update hall prices
      - should update hall status
