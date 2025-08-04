@@ -102,7 +102,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
           </label>
           <label className="admin_label">
             Описание фильма
-            <textarea
+            <input
               className="admin_input add-movie_synopsis_input"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
