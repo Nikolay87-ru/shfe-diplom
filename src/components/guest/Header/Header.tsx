@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Header.scss';
 
 interface HeaderProps {
@@ -15,9 +15,9 @@ export const Header = ({ showLoginButton = true }: HeaderProps) => {
   return (
     <header className="guest-header">
       <div className="container">
-        <a href={import.meta.env.BASE_URL} className="logo">
+        <Link to="/" className="logo">
           Идём<span className="logo-letter">в</span>кино
-        </a>
+        </Link>
         {showLoginButton && (
           <button className="login-button" onClick={handleLoginClick}>
             Войти
