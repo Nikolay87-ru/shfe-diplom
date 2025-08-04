@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/hooks/useAuth';
 import './LoginPage.scss';
 
@@ -29,9 +29,9 @@ export const Login: React.FC = () => {
   return (
     <div className="admin__container">
       <header className="header login__header">
-        <h1 className="header__logo">
+        <Link to="/" className="header__logo">
           Идём<span className="header__logo_letter">в</span>кино
-        </h1>
+        </Link>
         <p className="header__subtitle">Администраторская</p>
       </header>
 

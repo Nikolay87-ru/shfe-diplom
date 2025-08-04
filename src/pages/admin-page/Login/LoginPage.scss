@@ -5,10 +5,12 @@
   color: #ffffff;
 
   .header__logo {
+    color: white;
     font-size: 34px;
     font-weight: 900;
     line-height: 39px;
     text-transform: uppercase;
+    text-decoration: none;
     margin: 0;
 
     &_letter {
