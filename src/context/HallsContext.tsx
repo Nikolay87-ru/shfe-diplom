@@ -10,6 +10,10 @@ export type Ctx = {
   selectedHallId: number | undefined;
   setSelectedHallId: (id: number) => void;
   update: () => Promise<void>;
+  updateLocalData: <T extends Film[] | Hall[] | Seance[]>(
+    type: 'films' | 'halls' | 'seances', 
+    newData: T
+  ) => void;
   subscribe: (callback: () => void) => () => void;
   isLoading: boolean;
 };

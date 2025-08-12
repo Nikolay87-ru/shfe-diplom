@@ -5,7 +5,12 @@ import { HallsList } from '../Section---Управление_залами---/Hal
 import './HallOpen.scss';
 
 export const HallOpenSection: React.FC = () => {
-  const { allData: { halls = [], seances = [] }, selectedHallId, setSelectedHallId, update, isLoading } = useHalls();
+  const { 
+    allData: { halls = [], seances = [] }, 
+    selectedHallId, 
+    setSelectedHallId, 
+    updateLocalData 
+  } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
   const [hasSeances, setHasSeances] = useState(false);
@@ -27,14 +32,16 @@ export const HallOpenSection: React.FC = () => {
   async function handleToggleSellStatus() {
     if (!hall) return;
     if (status === 0 && !hasSeances) return;
-    await api.updateHallStatus(hall.id, status === 1 ? 0 : 1);
-    await update();
-    setStatus(status === 1 ? 0 : 1);
+    const response = await api.updateHallStatus(hall.id, status === 1 ? 0 : 1);
+    if (response.success && response.result?.halls) {
+      updateLocalData('halls', response.result.halls);
+      setStatus(status === 1 ? 0 : 1);
+    }
   }
 
-  if (isLoading) {
-    return <div style={{ padding: '1em' }}>Загрузка данных...</div>;
-  }
+  // if (isLoading) {
+  //   return <div style={{ padding: '1em' }}>Загрузка данных...</div>;
+  // }
 
   if (!hall) {
     return <div style={{ padding: '1em' }}>Нет залов или не выбран зал</div>;

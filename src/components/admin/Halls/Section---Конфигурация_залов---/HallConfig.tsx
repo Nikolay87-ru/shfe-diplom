@@ -14,7 +14,7 @@ export const HallConfig: React.FC = () => {
     allData: { halls = [] },
     selectedHallId,
     setSelectedHallId,
-    update,
+    updateLocalData,
     isLoading,
   } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
@@ -33,10 +33,8 @@ export const HallConfig: React.FC = () => {
     if (hall) {
       setRows(hall.hall_rows);
       setPlaces(hall.hall_places);
-
       const updatedConfig = hall.hall_config.map((row) => [...row]);
       setConfig(updatedConfig);
-
       setInitial({
         rows: hall.hall_rows,
         places: hall.hall_places,
@@ -118,13 +116,16 @@ export const HallConfig: React.FC = () => {
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
     if (!hall || rows === '' || places === '') return;
-    await api.updateHallConfig(hall.id, {
+    const response = await api.updateHallConfig(hall.id, {
       rowCount: rows,
       placeCount: places,
       config,
     });
-    await update();
-    setChanged(false);
+    
+    if (response.success && response.result?.halls) {
+      updateLocalData('halls', response.result.halls);
+      setChanged(false);
+    }
   }
 
   if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;

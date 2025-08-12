@@ -38,6 +38,16 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [subscribers]);
 
+  const updateLocalData = useCallback(
+    <T extends Film[] | Hall[] | Seance[]>(type: "films" | "halls" | "seances", newData: T) => {
+      setAllData(prev => ({
+        ...prev,
+        [type]: newData
+      }));
+    }, 
+    []
+  );
+
   const subscribe = useCallback((callback: () => void) => {
     setSubscribers(subs => [...subs, callback]);
     return () => {
@@ -55,6 +65,7 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
       selectedHallId, 
       setSelectedHallId, 
       update, 
+      updateLocalData,
       subscribe,
       isLoading
     }}>

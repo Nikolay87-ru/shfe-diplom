@@ -9,7 +9,7 @@ export const HallPrices: React.FC = () => {
     allData: { halls = [] },
     selectedHallId,
     setSelectedHallId,
-    update,
+    updateLocalData,
     isLoading,
   } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
@@ -67,9 +67,15 @@ export const HallPrices: React.FC = () => {
   async function handleSave(e: React.MouseEvent) {
     e.preventDefault();
     if (!hall) return;
-    await api.updateHallPrices(hall.id, { standartPrice: priceSt, vipPrice: priceVip });
-    await update();
-    setChanged(false);
+    const response = await api.updateHallPrices(hall.id, { 
+      standartPrice: priceSt, 
+      vipPrice: priceVip 
+    });
+    
+    if (response.success && response.result?.halls) {
+      updateLocalData('halls', response.result.halls);
+      setChanged(false);
+    }
   }
 
   if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;

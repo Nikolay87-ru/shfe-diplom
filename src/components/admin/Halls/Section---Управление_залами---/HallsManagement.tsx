@@ -8,16 +8,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import './HallsManagement.scss';
 
 export const HallsManagement: React.FC = () => {
-  const { allData: { halls = [] }, selectedHallId, setSelectedHallId, update } = useHalls();
+  const { 
+    allData: { halls = [] }, 
+    selectedHallId, 
+    setSelectedHallId, 
+    updateLocalData 
+  } = useHalls();
   const [showAddPopup, setShowAddPopup] = useState(false);
 
   async function addHall(name: string) {
     try {
-      await api.addHall(name);
-      await update();
+      const response = await api.addHall(name);
+      if (response.success && response.result?.halls) {
+        updateLocalData('halls', response.result.halls);
+        toast.success('Зал успешно добавлен', {
+          position: 'top-center',
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
       console.error('Error adding hall:', error);
-      toast.error('Не удалось добавить зал');
+      toast.error('Не удалось добавить зал', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
     }
   }
 
@@ -74,12 +88,14 @@ export const HallsManagement: React.FC = () => {
 
   async function confirmDeleteHall(id: number) {
     try {
-      await api.deleteHall(id);
-      await update();
-      toast.success('Зал успешно удалён', {
-        position: 'top-center',
-        autoClose: 3000,
-      });
+      const response = await api.deleteHall(id);
+      if (response.success && response.result?.halls) {
+        updateLocalData('halls', response.result.halls);
+        toast.success('Зал успешно удалён', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      }
     } catch (error) {
       console.error('Ошибка при удалении зала:', error);
       toast.error('Не удалось удалить зал', {

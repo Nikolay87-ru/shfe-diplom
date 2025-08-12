@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AddMoviePopup } from './MoviePopup/AddMoviePopup';
 import { AddSeancePopup } from './SeancePopup/AddSeancePopup';
 import { useHalls } from '@/context/hooks/useHalls';
@@ -9,7 +9,7 @@ import { MdDelete } from 'react-icons/md';
 import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 import { api } from '@/utils/api';
-import { Film, Hall } from '@/types';
+import { Film, Hall, Seance } from '@/types';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
 function getColorIdx(i: number) {
@@ -18,10 +18,8 @@ function getColorIdx(i: number) {
 
 export const SeancesGridSection: React.FC = () => {
   const { 
-    allData: { films: movies, halls, seances }, 
-    selectedHallId, 
-    setSelectedHallId, 
-    update 
+    allData: { films: movies = [], halls = [], seances = [] }, 
+    updateLocalData,
   } = useHalls();
   
   const [showMoviePopup, setShowMoviePopup] = useState(false);
@@ -33,6 +31,13 @@ export const SeancesGridSection: React.FC = () => {
   const [deleteTargetSeanceId, setDeleteTargetSeanceId] = useState<number | undefined>();
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [activeTrashHallId, setActiveTrashHallId] = useState<number | null>(null);
+  const [localSeances, setLocalSeances] = useState<Seance[]>(seances);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    setLocalSeances(seances);
+    setHasChanges(false);
+  }, [seances]);
 
   function getMinutesFromTime(time: string): number {
     const [hh, mm] = time.split(':').map(Number);
@@ -57,13 +62,14 @@ export const SeancesGridSection: React.FC = () => {
   }
 
   async function addSeance(hallId: number, movieId: number, time: string) {
-    try {
-      await api.addSeance({ hallId, movieId, time });
-      await update();
-    } catch (error) {
-      console.error('Error adding seance:', error);
-      toast.error('Не удалось добавить сеанс');
-    }
+    const newSeance = {
+      id: Date.now(),
+      seance_hallid: hallId,
+      seance_filmid: movieId,
+      seance_time: time
+    };
+    setLocalSeances(prev => [...prev, newSeance]);
+    setHasChanges(true);
   }
 
   function onDragSeanceStart(seanceId: number, hallId: number) {
@@ -99,13 +105,20 @@ export const SeancesGridSection: React.FC = () => {
     if (!deleteTargetSeanceId) return;
     
     try {
-      await api.deleteSeance(deleteTargetSeanceId);
-      await update();
-      setShowDeletePopup(false);
+      const response = await api.deleteSeance(deleteTargetSeanceId);
+      if (response.success && response.result?.seances) {
+        updateLocalData('seances', response.result.seances);
+        setLocalSeances(response.result.seances);
+        setHasChanges(false);
+      }
     } catch (error) {
       console.error('Error deleting seance:', error);
-      toast.error('Не удалось удалить сеанс');
+      toast.error('Не удалось удалить сеанс', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
     } finally {
+      setShowDeletePopup(false);
       setDeleteTargetSeanceId(undefined);
       setActiveTrashHallId(null);
     }
@@ -117,16 +130,172 @@ export const SeancesGridSection: React.FC = () => {
     setActiveTrashHallId(null);
   }
 
-  async function handleDeleteMovie(movieId: number) {
+  function handleCancel() {
+    setLocalSeances(seances);
+    setHasChanges(false);
+  }
+
+  async function handleSave() {
     try {
-      await api.deleteMovie(movieId);
-      await update();
-      toast.success('Фильм успешно удалён');
+      const newSeances = localSeances.filter(ls => !seances.some(s => s.id === ls.id));
+      for (const seance of newSeances) {
+        await api.addSeance({
+          hallId: seance.seance_hallid,
+          movieId: seance.seance_filmid,
+          time: seance.seance_time
+        });
+      }
+
+      const deletedSeances = seances.filter(s => !localSeances.some(ls => ls.id === s.id));
+      for (const seance of deletedSeances) {
+        await api.deleteSeance(seance.id);
+      }
+
+      const response = await api.getAllData();
+      if (response.success && response.result) {
+        updateLocalData('seances', response.result.seances || []);
+        setLocalSeances(response.result.seances || []);
+        setHasChanges(false);
+        toast.success('Изменения успешно сохранены!', {
+          position: 'top-center',
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
-      console.error('Error deleting movie:', error);
-      toast.error('Не удалось удалить фильм');
+      console.error('Error saving changes:', error);
+      toast.error('Ошибка при сохранении изменений', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
     }
   }
+
+  async function handleDeleteMovie(movieId: number) {
+    const ConfirmToast = () => (
+      <div>
+        <p style={{ display: 'flex', justifyContent: 'center' }}>Удалить фильм?</p>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+          <button 
+            onClick={() => {
+              toast.dismiss();
+              confirmDeleteMovie(movieId);
+            }}
+            style={{
+              padding: '5px 10px',
+              background: '#16a6af',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            Удалить
+          </button>
+          <button 
+            onClick={() => toast.dismiss()}
+            style={{
+              padding: '5px 10px',
+              background: '#63536c',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor: 'pointer'
+            }}
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    );
+
+    toast(<ConfirmToast />, {
+      position: 'top-center',
+      autoClose: false,
+      closeButton: false,
+      closeOnClick: false,
+      draggable: false,
+      style: {
+        width: '300px',
+        justifyContent: 'center'
+      }
+    });
+  }
+
+  async function confirmDeleteMovie(movieId: number) {
+    try {
+      const response = await api.deleteMovie(movieId);
+      if (response.success && response.result?.films) {
+        updateLocalData('films', response.result.films);
+        toast.success('Фильм успешно удалён', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting movie:', error);
+      toast.error('Не удалось удалить фильм', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
+    }
+  }
+
+  const renderTimelines = () => {
+    return halls.map((hall) => {
+      const hallSeances = localSeances.filter((s) => s.seance_hallid === hall.id);
+      
+      return (
+        <div className="movie-seances__timeline" key={hall.id}>
+          <div className="timeline__hall_title">{hall.hall_name}</div>
+
+          <div className="timeline__seances-container">
+            <div
+              className="timeline__seances"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={() => onDropMovieToHall(hall.id)}
+            >
+              {activeTrashHallId === hall.id && (
+                <div
+                  className={`timeline__delete ${activeTrashHallId === hall.id ? 'active' : ''}`}
+                  onDragOver={(e) => onDragOverTrash(e, hall.id)}
+                  onDrop={() => onDropSeanceToTrash(hall.id)}
+                >
+                  <img src={deleteImg} alt="Удалить" className="timeline__delete_image" />
+                </div>
+              )}
+
+              {hallSeances.map((seance) => {
+                const movie = movies.find((m) => m.id === seance.seance_filmid);
+                if (!movie) return null;
+
+                const minutes = getMinutesFromTime(seance.seance_time);
+                const leftPercent = (minutes / (24 * 60)) * 100;
+
+                return (
+                  <div
+                    key={seance.id}
+                    className={`timeline__seances_movie ${getColorIdx(
+                      movies.findIndex((m) => m.id === movie.id),
+                    )}`}
+                    style={{
+                      left: `${leftPercent}%`,
+                      '--time-value': `"${seance.seance_time}"`,
+                    } as React.CSSProperties}
+                    data-time={seance.seance_time}
+                    draggable
+                    onDragStart={() => onDragSeanceStart(seance.id, hall.id)}
+                    onDragEnd={onDragSeanceEnd}
+                  >
+                    <div className="timeline__seances_title">{movie.film_name}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    });
+  };
 
   return (
     <div>
@@ -170,65 +339,30 @@ export const SeancesGridSection: React.FC = () => {
       </div>
 
       <div className="movie-seances__timelines">
-        {halls.map((hall) => {
-          const hallSeances = seances.filter((s) => s.seance_hallid === hall.id);
-          return (
-            <div className="movie-seances__timeline" key={hall.id}>
-              <div className="timeline__hall_title">{hall.hall_name}</div>
+        {renderTimelines()}
+      </div>
 
-              <div className="timeline__seances-container">
-                <div
-                  className="timeline__seances"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => onDropMovieToHall(hall.id)}
-                >
-                  {activeTrashHallId === hall.id && (
-                    <div
-                      className={`timeline__delete ${activeTrashHallId === hall.id ? 'active' : ''}`}
-                      onDragOver={(e) => onDragOverTrash(e, hall.id)}
-                      onDrop={() => onDropSeanceToTrash(hall.id)}
-                    >
-                      <img
-                        src={deleteImg}
-                        alt="Удалить"
-                        className="timeline__delete_image"
-                      />
-                    </div>
-                  )}
-
-                  {hallSeances.map((seance) => {
-                    const movie = movies.find((m) => m.id === seance.seance_filmid);
-                    if (!movie) return null;
-
-                    const minutes = getMinutesFromTime(seance.seance_time);
-                    const leftPercent = (minutes / (24 * 60)) * 100;
-
-                    return (
-                      <div
-                        key={seance.id}
-                        className={`timeline__seances_movie ${getColorIdx(
-                          movies.findIndex((m) => m.id === movie.id),
-                        )}`}
-                        style={
-                          {
-                            '--left-percent': `${leftPercent}%`,
-                            '--time-value': `"${seance.seance_time}"`,
-                          } as React.CSSProperties
-                        }
-                        data-time={seance.seance_time}
-                        draggable
-                        onDragStart={() => onDragSeanceStart(seance.id, hall.id)}
-                        onDragEnd={onDragSeanceEnd}
-                      >
-                        <div className="timeline__seances_title">{movie.film_name}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <div className="movie-seances__buttons">
+        <button
+          className={
+            'admin__button_cancel movie-seances__batton_cancel button' +
+            (hasChanges ? '' : ' button_disabled')
+          }
+          disabled={!hasChanges}
+          onClick={handleCancel}
+        >
+          Отмена
+        </button>
+        <button
+          className={
+            'admin__button_save movie-seances__batton_save button' +
+            (hasChanges ? '' : ' button_disabled')
+          }
+          disabled={!hasChanges}
+          onClick={handleSave}
+        >
+          Сохранить
+        </button>
       </div>
 
       <AddMoviePopup
@@ -236,10 +370,16 @@ export const SeancesGridSection: React.FC = () => {
         onClose={() => setShowMoviePopup(false)}
         onSave={async (movie) => {
           try {
-            await api.addMovie(movie);
-            await update();
+            const response = await api.addMovie(movie);
+            if (response.success && response.result?.films) {
+              updateLocalData('films', response.result.films);
+            }
           } catch (error) {
             console.error('Error adding movie:', error);
+            toast.error('Не удалось добавить фильм', {
+              position: 'top-center',
+              autoClose: 5000,
+            });
           }
         }}
       />
