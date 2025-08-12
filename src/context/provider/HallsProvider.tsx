@@ -1,23 +1,42 @@
 import { useEffect, useState, useCallback } from 'react';
 import { api } from '@/utils/api';
-import { Hall } from '@/types';
-import { HallsContext } from '../HallsContext'
+import { HallsContext } from '../HallsContext';
+import { Film, Hall, Seance } from '@/types';
 
 export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [halls, setHalls] = useState<Hall[]>([]);
+  const [allData, setAllData] = useState<{
+    films: Film[];
+    halls: Hall[];
+    seances: Seance[];
+  }>({ films: [], halls: [], seances: [] });
   const [selectedHallId, setSelectedHallId] = useState<number | undefined>();
   const [subscribers, setSubscribers] = useState<(() => void)[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const update = useCallback(async () => {
-    const res = await api.getAllData();
-    if (res.result?.halls) {
-      setHalls(res.result.halls);
-      if (!res.result.halls.some((h) => h.id === selectedHallId)) {
-        setSelectedHallId(res.result.halls[0]?.id);
+    try {
+      setIsLoading(true);
+      const res = await api.getAllData();
+      if (res.result) {
+        setAllData({
+          films: res.result.films || [],
+          halls: res.result.halls || [],
+          seances: res.result.seances || [],
+        });
+        
+        setSelectedHallId(prevId => {
+          const hallExists = res.result?.halls?.some(h => h.id === prevId);
+          return hallExists ? prevId : res.result?.halls?.[0]?.id;
+        });
+        
+        subscribers.forEach(cb => cb());
       }
-      subscribers.forEach(cb => cb());
+    } catch (error) {
+      console.error('Error updating data:', error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [selectedHallId, subscribers]);
+  }, [subscribers]);
 
   const subscribe = useCallback((callback: () => void) => {
     setSubscribers(subs => [...subs, callback]);
@@ -31,7 +50,14 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
   }, [update]);
 
   return (
-    <HallsContext.Provider value={{ halls, selectedHallId, setSelectedHallId, update, subscribe }}>
+    <HallsContext.Provider value={{ 
+      allData, 
+      selectedHallId, 
+      setSelectedHallId, 
+      update, 
+      subscribe,
+      isLoading
+    }}>
       {children}
     </HallsContext.Provider>
   );

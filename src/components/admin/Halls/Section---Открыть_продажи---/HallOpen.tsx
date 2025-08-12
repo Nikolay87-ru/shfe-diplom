@@ -5,42 +5,40 @@ import { HallsList } from '../Section---Управление_залами---/Hal
 import './HallOpen.scss';
 
 export const HallOpenSection: React.FC = () => {
-  const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
+  const { allData: { halls = [], seances = [] }, selectedHallId, setSelectedHallId, update, isLoading } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
   const [hasSeances, setHasSeances] = useState(false);
   const [status, setStatus] = useState<0 | 1>(0);
   const [loading, setLoading] = useState(false);
 
-  const [dataVersion, setDataVersion] = useState(0);
-
   useEffect(() => {
     async function check() {
       setLoading(true);
       if (!hall) return;
       setStatus(hall.hall_open);
-      const res = await api.getAllData();
-      const seances = (res.result?.seances || []).filter((s) => s.seance_hallid === hall.id);
-      setHasSeances(seances.length > 0);
+      const hallSeances = seances.filter((s) => s.seance_hallid === hall.id);
+      setHasSeances(hallSeances.length > 0);
       setLoading(false);
     }
     check();
-  }, [hall, dataVersion]);
-
-  const refreshData = async () => {
-    await update();
-    setDataVersion((v) => v + 1);
-  };
+  }, [hall, seances]);
 
   async function handleToggleSellStatus() {
     if (!hall) return;
     if (status === 0 && !hasSeances) return;
     await api.updateHallStatus(hall.id, status === 1 ? 0 : 1);
-    await refreshData();
+    await update();
     setStatus(status === 1 ? 0 : 1);
   }
 
-  if (!hall) return <div style={{ padding: '1em' }}>Нет залов</div>;
+  if (isLoading) {
+    return <div style={{ padding: '1em' }}>Загрузка данных...</div>;
+  }
+
+  if (!hall) {
+    return <div style={{ padding: '1em' }}>Нет залов или не выбран зал</div>;
+  }
 
   return (
     <section className="admin__section open">

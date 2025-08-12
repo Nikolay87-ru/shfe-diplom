@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '@/utils/api';
-import { Hall, Seance, Film } from '@/types/index';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './HallScheme.scss';
+import { useGuest } from '@/context/hooks/useGuest';
 
 interface Seat {
   type: 'standart' | 'vip' | 'disabled' | 'taken';
@@ -19,70 +19,54 @@ interface Row {
 export const HallScheme = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState<Film | null>(null);
-  const [hall, setHall] = useState<Hall | null>(null);
-  const [seance, setSeance] = useState<Seance | null>(null);
+  const { movies, halls, seances } = useGuest();
   const [rows, setRows] = useState<Row[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const seance = seances.find(s => s.id === Number(id));
+  const movie = movies.find(m => m.id === seance?.seance_filmid);
+  const hall = halls.find(h => h.id === seance?.seance_hallid);
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!seance || !hall) {
+      navigate('/');
+      return;
+    }
+
+    const fetchHallConfig = async () => {
       try {
-        setLoading(true);
-        const data = await api.getAllData();
-
-        const currentSeance = data.result?.seances?.find((s: Seance) => s.id === Number(id));
-        if (!currentSeance) {
-          navigate('/');
-          return;
-        }
-
-        const film = data.result?.films?.find((f: Film) => f.id === currentSeance.seance_filmid);
-        const hallData = data.result?.halls?.find(
-          (h: Hall) => h.id === currentSeance.seance_hallid,
+        const hallConfigResponse = await api.getHallConfig(
+          seance.id.toString(),
+          new Date().toISOString().split('T')[0]
         );
+        
+        const configToUse = hallConfigResponse.success && Array.isArray(hallConfigResponse.result) 
+          ? hallConfigResponse.result 
+          : hall.hall_config;
 
-        setMovie(film || null);
-        setHall(hallData || null);
-        setSeance(currentSeance);
-
-        if (hallData) {
-          const hallConfigResponse = await api.getHallConfig(
-            currentSeance.id.toString(),
-            new Date().toISOString().split('T')[0]
-          );
-          
-          let configToUse: string[][] = hallData.hall_config;
-          
-          if (hallConfigResponse.success && Array.isArray(hallConfigResponse.result)) {
-            configToUse = hallConfigResponse.result;
-          } else if (!hallConfigResponse.success) {
-            console.error('Failed to get hall config:', hallConfigResponse.error);
-          }
-
-          const rowsData = configToUse.map((row: string[]) => ({
-            seats: row.map((seatType) => {
-              const type = seatType as 'standart' | 'vip' | 'disabled' | 'taken';
-              return {
-                type,
-                selected: false,
-                occupied: type === 'disabled' || type === 'taken',
-              };
-            }),
-          }));
-          setRows(rowsData);
-        }
+        const rowsData = configToUse.map((row: string[]) => ({
+          seats: row.map((seatType) => {
+            const type = seatType as 'standart' | 'vip' | 'disabled' | 'taken';
+            return {
+              type,
+              selected: false,
+              occupied: type === 'disabled' || type === 'taken',
+            };
+          }),
+        }));
+        
+        setRows(rowsData);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        navigate('/');
+        console.error('Error fetching hall config:', error);
+        toast.error('Ошибка загрузки схемы зала');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [id, navigate]);
+    fetchHallConfig();
+  }, [seance, hall, navigate]);
 
   const handleSeatSelect = (rowIndex: number, seatIndex: number) => {
     if (rows[rowIndex]?.seats[seatIndex]?.occupied) return;
@@ -121,9 +105,9 @@ export const HallScheme = () => {
       return;
     }
 
-    try {
-      if (!hall || !seance) return;
+    if (!hall || !seance || !movie) return;
 
+    try {
       const tickets = selectedSeats.map(([row, seat]) => ({
         row: row + 1,
         place: seat + 1,

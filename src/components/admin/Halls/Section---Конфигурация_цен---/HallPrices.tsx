@@ -5,7 +5,13 @@ import { HallsList } from '../Section---Управление_залами---/Hal
 import './HallPrices.scss';
 
 export const HallPrices: React.FC = () => {
-  const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
+  const {
+    allData: { halls = [] },
+    selectedHallId,
+    setSelectedHallId,
+    update,
+    isLoading,
+  } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
   const [priceSt, setPriceSt] = useState(0);
@@ -67,6 +73,14 @@ export const HallPrices: React.FC = () => {
   }
 
   if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;
+
+  if (isLoading) {
+    return <div style={{ padding: '2em' }}>Загрузка данных...</div>;
+  }
+
+  if (!hall) {
+    return <div style={{ padding: '2em' }}>Залы не найдены или не выбраны</div>;
+  }
 
   return (
     <section className="admin__section price-config">

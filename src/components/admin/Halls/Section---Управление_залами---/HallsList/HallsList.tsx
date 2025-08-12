@@ -7,7 +7,7 @@ interface Hall {
 }
 
 interface Props {
-  halls: Hall[];
+  halls?: Hall[];
   selectedId: number | undefined;
   onSelect: (id: number) => void;
   onDelete?: (id: number) => void;
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const HallsList: React.FC<Props> = ({
-  halls,
+  halls = [],
   selectedId,
   onSelect,
   onDelete,

@@ -8,12 +8,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import './HallsManagement.scss';
 
 export const HallsManagement: React.FC = () => {
-  const { halls, selectedHallId, setSelectedHallId, update } = useHalls();
+  const { allData: { halls = [] }, selectedHallId, setSelectedHallId, update } = useHalls();
   const [showAddPopup, setShowAddPopup] = useState(false);
 
   async function addHall(name: string) {
-    await api.addHall(name);
-    await update();
+    try {
+      await api.addHall(name);
+      await update();
+    } catch (error) {
+      console.error('Error adding hall:', error);
+      toast.error('Не удалось добавить зал');
+    }
   }
 
   async function deleteHall(id: number) {
@@ -101,3 +106,4 @@ export const HallsManagement: React.FC = () => {
     </section>
   );
 };
+
