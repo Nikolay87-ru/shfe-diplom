@@ -1,5 +1,5 @@
-import { createContext } from 'react';
 import { Film, Hall, Seance } from '@/types';
+import { createContext } from 'react';
 
 export type Ctx = {
   allData: {
@@ -13,7 +13,8 @@ export type Ctx = {
   updateLocalData: <T extends Film[] | Hall[] | Seance[]>(
     type: 'films' | 'halls' | 'seances', 
     newData: T
-  ) => void;
+  ) => Promise<void>;
+  updateSeances: (newSeances: Seance[]) => Promise<void>; 
   subscribe: (callback: () => void) => () => void;
   isLoading: boolean;
 };

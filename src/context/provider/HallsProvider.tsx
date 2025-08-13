@@ -23,12 +23,10 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
           halls: res.result.halls || [],
           seances: res.result.seances || [],
         });
-        
         setSelectedHallId(prevId => {
           const hallExists = res.result?.halls?.some(h => h.id === prevId);
           return hallExists ? prevId : res.result?.halls?.[0]?.id;
         });
-        
         subscribers.forEach(cb => cb());
       }
     } catch (error) {
@@ -44,9 +42,17 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
         ...prev,
         [type]: newData
       }));
+      return Promise.resolve(); 
     }, 
     []
   );
+
+  const updateSeances = useCallback(async (newSeances: Seance[]) => {
+    setAllData(prev => ({
+      ...prev,
+      seances: newSeances
+    }));
+  }, []);
 
   const subscribe = useCallback((callback: () => void) => {
     setSubscribers(subs => [...subs, callback]);
@@ -66,6 +72,7 @@ export const HallsProvider = ({ children }: { children: React.ReactNode }) => {
       setSelectedHallId, 
       update, 
       updateLocalData,
+      updateSeances, 
       subscribe,
       isLoading
     }}>

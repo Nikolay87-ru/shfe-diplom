@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import './AddSeancePopup.scss';
-import { Film, Hall } from '@/types/index';
-import { api } from '@/utils/api';
+import { Film, Hall } from '@/types';
 
 interface Props {
   show: boolean;
@@ -12,6 +11,12 @@ interface Props {
   movies: Film[];
   initialHall?: Hall;
   initialMovie?: Film;
+  seances: Array<{
+    id: number;
+    seance_filmid: number;
+    seance_hallid: number;
+    seance_time: string;
+  }>;
 }
 
 export const AddSeancePopup: React.FC<Props> = ({ 
@@ -20,6 +25,7 @@ export const AddSeancePopup: React.FC<Props> = ({
   onSave, 
   halls, 
   movies,
+  seances,
   initialHall,
   initialMovie
 }) => {
@@ -37,22 +43,28 @@ export const AddSeancePopup: React.FC<Props> = ({
     }
   }, [halls, movies, show, initialHall, initialMovie]);
 
-  async function checkConflicts(): Promise<string[]> {
+  function checkConflicts(): string[] {
     if (!selectedHall || !selectedMovie) return [];
-    const data = await api.getAllData();
-    const hallSeances = (data.result?.seances || []).filter((s) => s.seance_hallid === selectedHall);
+    
     const movie = movies.find((m) => m.id === selectedMovie);
     if (!movie) return [];
+    
     const [h, m] = time.split(':').map(Number);
-    const start = h * 60 + m,
-      end = start + movie.film_duration;
+    const start = h * 60 + m;
+    const end = start + movie.film_duration;
+      
     const conflicts: string[] = [];
+    
+    const hallSeances = seances.filter(s => s.seance_hallid === selectedHall);
+      
     for (const s of hallSeances) {
       const mo = movies.find((m) => m.id === s.seance_filmid);
       if (!mo) continue;
+      
       const [sh, sm] = s.seance_time.split(':').map(Number);
-      const sStart = sh * 60 + sm,
-        sEnd = sStart + mo.film_duration;
+      const sStart = sh * 60 + sm;
+      const sEnd = sStart + mo.film_duration;
+        
       if (
         (start >= sStart && start < sEnd) ||
         (end > sStart && end <= sEnd) ||
@@ -61,13 +73,14 @@ export const AddSeancePopup: React.FC<Props> = ({
         conflicts.push(`Конфликт с "${mo.film_name}" в ${s.seance_time}`);
       }
     }
+    
     return conflicts;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!selectedHall || !selectedMovie || !time) return;
-    const found = await checkConflicts();
+    const found = checkConflicts();
     setConflicts(found);
     if (found.length === 0) {
       onSave(selectedHall, selectedMovie, time);

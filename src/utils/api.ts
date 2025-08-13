@@ -43,15 +43,15 @@ export const api = {
   },
 
   // Залы
-  getHalls: async (): Promise<ApiResponse> => {
-    try {
-      const response = await axios.get(`${API_URL}/alldata`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching halls:', error);
-      throw error;
-    }
-  },
+  // getHalls: async (): Promise<ApiResponse> => {
+  //   try {
+  //     const response = await axios.get(`${API_URL}/alldata`);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error fetching halls:', error);
+  //     throw error;
+  //   }
+  // },
 
   addHall: async (name: string): Promise<ApiResponse> => {
     const formData = new FormData();
@@ -151,15 +151,15 @@ export const api = {
     }
   },
 
-  getMovies: async (): Promise<ApiResponse> => {
-    try {
-      const response = await axios.get(`${API_URL}/alldata`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      throw error;
-    }
-  },
+  // getMovies: async (): Promise<ApiResponse> => {
+  //   try {
+  //     const response = await axios.get(`${API_URL}/alldata`);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error fetching movies:', error);
+  //     throw error;
+  //   }
+  // },
 
   addMovie: async (movieData: {
     name: string;
@@ -223,15 +223,15 @@ export const api = {
     }
   },
 
-  getSeances: async (): Promise<ApiResponse> => {
-    try {
-      const response = await axios.get(`${API_URL}/alldata`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching seances:', error);
-      throw error;
-    }
-  },
+  // getSeances: async (): Promise<ApiResponse> => {
+  //   try {
+  //     const response = await axios.get(`${API_URL}/alldata`);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error fetching seances:', error);
+  //     throw error;
+  //   }
+  // },
 
   addSeance: async (seanceData: {
     hallId: number;

@@ -107,10 +107,17 @@ export const SeancesGridSection: React.FC = () => {
 
     try {
       const response = await api.deleteSeance(deleteTargetSeanceId);
-      if (response.success && response.result?.seances) {
-        updateLocalData('seances', response.result.seances);
-        setLocalSeances(response.result.seances);
-        setHasChanges(false);
+      if (response.success) {
+        const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
+        setLocalSeances(updatedSeances);
+        setHasChanges(true);
+        
+        await updateLocalData('seances', updatedSeances);
+        
+        toast.success('Сеанс успешно удалён', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
       }
     } catch (error) {
       console.error('Error deleting seance:', error);
@@ -139,29 +146,35 @@ export const SeancesGridSection: React.FC = () => {
   async function handleSave() {
     try {
       const newSeances = localSeances.filter((ls) => !seances.some((s) => s.id === ls.id));
-      for (const seance of newSeances) {
-        await api.addSeance({
-          hallId: seance.seance_hallid,
-          movieId: seance.seance_filmid,
-          time: seance.seance_time,
-        });
-      }
-
       const deletedSeances = seances.filter((s) => !localSeances.some((ls) => ls.id === s.id));
-      for (const seance of deletedSeances) {
-        await api.deleteSeance(seance.id);
+
+      // Выполняем все операции с API
+      const operations = [];
+      
+      for (const seance of newSeances) {
+        operations.push(
+          api.addSeance({
+            hallId: seance.seance_hallid,
+            movieId: seance.seance_filmid,
+            time: seance.seance_time,
+          })
+        );
       }
 
-      const response = await api.getAllData();
-      if (response.success && response.result) {
-        updateLocalData('seances', response.result.seances || []);
-        setLocalSeances(response.result.seances || []);
-        setHasChanges(false);
-        toast.success('Изменения успешно сохранены!', {
-          position: 'top-center',
-          autoClose: 5000,
-        });
+      for (const seance of deletedSeances) {
+        operations.push(api.deleteSeance(seance.id));
       }
+
+      // Ждем завершения всех операций
+      await Promise.all(operations);
+      
+      // Обновляем данные в контексте
+      await updateLocalData('seances', localSeances);
+      
+      toast.success('Изменения успешно сохранены!', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
     } catch (error) {
       console.error('Error saving changes:', error);
       toast.error('Ошибка при сохранении изменений', {
@@ -196,7 +209,7 @@ export const SeancesGridSection: React.FC = () => {
     try {
       const response = await api.deleteMovie(movieId);
       if (response.success && response.result?.films) {
-        updateLocalData('films', response.result.films);
+        await updateLocalData('films', response.result.films);
         toast.success('Фильм успешно удалён', {
           position: 'top-center',
           autoClose: 3000,
@@ -361,6 +374,7 @@ export const SeancesGridSection: React.FC = () => {
         onSave={addSeance}
         halls={halls}
         movies={movies}
+        seances={seances}
         initialHall={popupSeanceHall || undefined}
         initialMovie={popupSeanceMovie || undefined}
       />
