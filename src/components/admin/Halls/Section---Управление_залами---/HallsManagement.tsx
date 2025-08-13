@@ -6,13 +6,14 @@ import { AddHallPopup } from './HallPopup/AddHallPopup';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './HallsManagement.scss';
+import { ConfirmDeleteModal } from '@/components/modal/confirmDeleteModal';
 
 export const HallsManagement: React.FC = () => {
-  const { 
-    allData: { halls = [] }, 
-    selectedHallId, 
-    setSelectedHallId, 
-    updateLocalData 
+  const {
+    allData: { halls = [] },
+    selectedHallId,
+    setSelectedHallId,
+    updateLocalData,
   } = useHalls();
   const [showAddPopup, setShowAddPopup] = useState(false);
 
@@ -36,54 +37,24 @@ export const HallsManagement: React.FC = () => {
   }
 
   async function deleteHall(id: number) {
-    const ConfirmToast = () => (
-      <div>
-        <p style={{ display: 'flex', justifyContent: 'center' }}>Удалить зал?</p>
-        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-          <button 
-            onClick={() => {
-              toast.dismiss();
-              confirmDeleteHall(id);
-            }}
-            style={{
-              padding: '5px 10px',
-              background: '#16a6af',
-              color: 'white',
-              border: 'none',
-              borderRadius: '3px',
-              cursor: 'pointer'
-            }}
-          >
-            Удалить
-          </button>
-          <button 
-            onClick={() => toast.dismiss()}
-            style={{
-              padding: '5px 10px',
-              background: '#63536c',
-              color: 'white',
-              border: 'none',
-              borderRadius: '3px',
-              cursor: 'pointer'
-            }}
-          >
-            Отмена
-          </button>
-        </div>
-      </div>
+    toast(
+      <ConfirmDeleteModal
+        title="Удалить зал?"
+        onConfirm={() => confirmDeleteHall(id)}
+        onCancel={() => toast.dismiss()}
+      />,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        draggable: false,
+        style: {
+          width: '300px',
+          justifyContent: 'center',
+        },
+      },
     );
-
-    toast(<ConfirmToast />, {
-      position: 'top-center',
-      autoClose: false,
-      closeButton: false,
-      closeOnClick: false,
-      draggable: false,
-      style: {
-        width: '300px',
-        justifyContent: 'center'
-      }
-    });
   }
 
   async function confirmDeleteHall(id: number) {
@@ -122,4 +93,3 @@ export const HallsManagement: React.FC = () => {
     </section>
   );
 };
-

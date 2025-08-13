@@ -10,6 +10,7 @@ import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 import { api } from '@/utils/api';
 import { Film, Hall, Seance } from '@/types';
+import { ConfirmDeleteModal } from '@/components/modal/confirmDeleteModal';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
 function getColorIdx(i: number) {
@@ -17,11 +18,11 @@ function getColorIdx(i: number) {
 }
 
 export const SeancesGridSection: React.FC = () => {
-  const { 
-    allData: { films: movies = [], halls = [], seances = [] }, 
+  const {
+    allData: { films: movies = [], halls = [], seances = [] },
     updateLocalData,
   } = useHalls();
-  
+
   const [showMoviePopup, setShowMoviePopup] = useState(false);
   const [showAddSeancePopup, setShowAddSeancePopup] = useState(false);
   const [popupSeanceHall, setPopupSeanceHall] = useState<Hall | null>(null);
@@ -66,9 +67,9 @@ export const SeancesGridSection: React.FC = () => {
       id: Date.now(),
       seance_hallid: hallId,
       seance_filmid: movieId,
-      seance_time: time
+      seance_time: time,
     };
-    setLocalSeances(prev => [...prev, newSeance]);
+    setLocalSeances((prev) => [...prev, newSeance]);
     setHasChanges(true);
   }
 
@@ -103,7 +104,7 @@ export const SeancesGridSection: React.FC = () => {
 
   async function confirmDeleteSeance() {
     if (!deleteTargetSeanceId) return;
-    
+
     try {
       const response = await api.deleteSeance(deleteTargetSeanceId);
       if (response.success && response.result?.seances) {
@@ -137,16 +138,16 @@ export const SeancesGridSection: React.FC = () => {
 
   async function handleSave() {
     try {
-      const newSeances = localSeances.filter(ls => !seances.some(s => s.id === ls.id));
+      const newSeances = localSeances.filter((ls) => !seances.some((s) => s.id === ls.id));
       for (const seance of newSeances) {
         await api.addSeance({
           hallId: seance.seance_hallid,
           movieId: seance.seance_filmid,
-          time: seance.seance_time
+          time: seance.seance_time,
         });
       }
 
-      const deletedSeances = seances.filter(s => !localSeances.some(ls => ls.id === s.id));
+      const deletedSeances = seances.filter((s) => !localSeances.some((ls) => ls.id === s.id));
       for (const seance of deletedSeances) {
         await api.deleteSeance(seance.id);
       }
@@ -171,54 +172,24 @@ export const SeancesGridSection: React.FC = () => {
   }
 
   async function handleDeleteMovie(movieId: number) {
-    const ConfirmToast = () => (
-      <div>
-        <p style={{ display: 'flex', justifyContent: 'center' }}>Удалить фильм?</p>
-        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-          <button 
-            onClick={() => {
-              toast.dismiss();
-              confirmDeleteMovie(movieId);
-            }}
-            style={{
-              padding: '5px 10px',
-              background: '#16a6af',
-              color: 'white',
-              border: 'none',
-              borderRadius: '3px',
-              cursor: 'pointer'
-            }}
-          >
-            Удалить
-          </button>
-          <button 
-            onClick={() => toast.dismiss()}
-            style={{
-              padding: '5px 10px',
-              background: '#63536c',
-              color: 'white',
-              border: 'none',
-              borderRadius: '3px',
-              cursor: 'pointer'
-            }}
-          >
-            Отмена
-          </button>
-        </div>
-      </div>
+    toast(
+      <ConfirmDeleteModal
+        title="Удалить фильм?"
+        onConfirm={() => confirmDeleteMovie(movieId)}
+        onCancel={() => toast.dismiss()}
+      />,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        draggable: false,
+        style: {
+          width: '300px',
+          justifyContent: 'center',
+        },
+      },
     );
-
-    toast(<ConfirmToast />, {
-      position: 'top-center',
-      autoClose: false,
-      closeButton: false,
-      closeOnClick: false,
-      draggable: false,
-      style: {
-        width: '300px',
-        justifyContent: 'center'
-      }
-    });
   }
 
   async function confirmDeleteMovie(movieId: number) {
@@ -243,7 +214,7 @@ export const SeancesGridSection: React.FC = () => {
   const renderTimelines = () => {
     return halls.map((hall) => {
       const hallSeances = localSeances.filter((s) => s.seance_hallid === hall.id);
-      
+
       return (
         <div className="movie-seances__timeline" key={hall.id}>
           <div className="timeline__hall_title">{hall.hall_name}</div>
@@ -277,10 +248,12 @@ export const SeancesGridSection: React.FC = () => {
                     className={`timeline__seances_movie ${getColorIdx(
                       movies.findIndex((m) => m.id === movie.id),
                     )}`}
-                    style={{
-                      left: `${leftPercent}%`,
-                      '--time-value': `"${seance.seance_time}"`,
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        left: `${leftPercent}%`,
+                        '--time-value': `"${seance.seance_time}"`,
+                      } as React.CSSProperties
+                    }
                     data-time={seance.seance_time}
                     draggable
                     onDragStart={() => onDragSeanceStart(seance.id, hall.id)}
@@ -306,7 +279,7 @@ export const SeancesGridSection: React.FC = () => {
       >
         Добавить фильм
       </button>
-      
+
       <div className="movie-seances__wrapper">
         {movies.map((movie, i) => (
           <div
@@ -338,9 +311,7 @@ export const SeancesGridSection: React.FC = () => {
         ))}
       </div>
 
-      <div className="movie-seances__timelines">
-        {renderTimelines()}
-      </div>
+      <div className="movie-seances__timelines">{renderTimelines()}</div>
 
       <div className="movie-seances__buttons">
         <button
@@ -383,7 +354,7 @@ export const SeancesGridSection: React.FC = () => {
           }
         }}
       />
-      
+
       <AddSeancePopup
         show={showAddSeancePopup}
         onClose={() => setShowAddSeancePopup(false)}
