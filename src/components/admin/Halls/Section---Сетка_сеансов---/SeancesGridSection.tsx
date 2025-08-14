@@ -106,11 +106,9 @@ export const SeancesGridSection: React.FC = () => {
     if (!deleteTargetSeanceId) return;
 
     try {
-      // Проверяем, является ли сеанс сохраненным (есть в seances)
       const isSavedSeance = seances.some(s => s.id === deleteTargetSeanceId);
       
       if (isSavedSeance) {
-        // Для сохраненных сеансов - отправляем запрос на сервер
         const response = await api.deleteSeance(deleteTargetSeanceId);
         if (response.success) {
           const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
@@ -125,7 +123,6 @@ export const SeancesGridSection: React.FC = () => {
           });
         }
       } else {
-        // Для несохраненных сеансов просто удаляем из локального состояния
         const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
         setLocalSeances(updatedSeances);
         setHasChanges(true);

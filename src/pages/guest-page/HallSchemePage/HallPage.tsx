@@ -4,9 +4,10 @@ import { Header } from '@/components/guest/Header/Header';
 import { HallScheme } from './HallPage-component/HallScheme';
 import { useGuest } from '@/context/hooks/useGuest';
 import hintImg from '@assets/hint.png';
+import { GuestProvider } from '@/context/provider/GuestProvider';
 import './HallPage.scss';
 
-export const HallPage = React.memo(() => {
+const HallPageContent = React.memo(() => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isZoomed, setIsZoomed] = useState(false);
@@ -70,3 +71,9 @@ export const HallPage = React.memo(() => {
     </div>
   );
 });
+
+export const HallPage = () => (
+  <GuestProvider>
+    <HallPageContent />
+  </GuestProvider>
+);

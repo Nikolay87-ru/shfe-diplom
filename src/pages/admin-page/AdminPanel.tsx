@@ -7,7 +7,6 @@ import { SeancesGridSection } from '@/components/admin/Halls/Section---Сетк�
 import { HallOpenSection } from '@/components/admin/Halls/Section---Открыть_продажи---/HallOpen';
 import { AdminAccordionSection } from '@/components/admin/AccordionSection/AdminAccordionSection';
 import { HallsProvider } from '@/context/provider/HallsProvider'
-
 import '@/styles/admin.scss';
 
 export const AdminPanel: React.FC = () => (

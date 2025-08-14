@@ -7,7 +7,6 @@ import { AdminPanel } from '@/pages/admin-page/AdminPanel';
 import { Login } from '@/pages/admin-page/Login/LoginPage';
 import { useAuth } from '@/context/hooks/useAuth';
 import { AuthProvider } from '@/context/provider/AuthProvider';
-import { GuestProvider } from '@/context/provider/GuestProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,35 +18,33 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 function App() {
   return (
     <AuthProvider>
-      <GuestProvider>
-        <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <Routes>
+          <Route path="/" element={<GuestPage />} />
+          <Route path="/hall/:id" element={<HallPage />} />
+          <Route path="/ticket/:id" element={<TicketPage />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
           />
-          <Routes>
-            <Route path="/" element={<GuestPage />} />
-            <Route path="/hall/:id" element={<HallPage />} />
-            <Route path="/ticket/:id" element={<TicketPage />} />
-            <Route path="/admin/login" element={<Login />} />
-            <Route
-              path="/admin/*"
-              element={
-                <ProtectedRoute>
-                  <AdminPanel />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </GuestProvider>
+        </Routes>
+      </BrowserRouter>
     </AuthProvider>
   );
 }
