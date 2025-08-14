@@ -6,7 +6,7 @@ import { AddHallPopup } from './HallPopup/AddHallPopup';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './HallsManagement.scss';
-import { ConfirmDeleteModal } from '@/components/modal/confirmDeleteModal';
+import { ConfirmDeleteModal } from '@/components/modal/ConfirmDeleteModal';
 
 export const HallsManagement: React.FC = () => {
   const {

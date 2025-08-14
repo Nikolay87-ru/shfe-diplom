@@ -10,7 +10,7 @@ import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 import { api } from '@/utils/api';
 import { Film, Hall, Seance } from '@/types';
-import { ConfirmDeleteModal } from '@/components/modal/confirmDeleteModal';
+import { ConfirmDeleteModal } from '@/components/modal/ConfirmDeleteModal';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
 function getColorIdx(i: number) {
@@ -106,15 +106,31 @@ export const SeancesGridSection: React.FC = () => {
     if (!deleteTargetSeanceId) return;
 
     try {
-      const response = await api.deleteSeance(deleteTargetSeanceId);
-      if (response.success) {
+      // Проверяем, является ли сеанс сохраненным (есть в seances)
+      const isSavedSeance = seances.some(s => s.id === deleteTargetSeanceId);
+      
+      if (isSavedSeance) {
+        // Для сохраненных сеансов - отправляем запрос на сервер
+        const response = await api.deleteSeance(deleteTargetSeanceId);
+        if (response.success) {
+          const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
+          setLocalSeances(updatedSeances);
+          setHasChanges(true);
+          
+          await updateLocalData('seances', updatedSeances);
+          
+          toast.success('Сеанс успешно удалён', {
+            position: 'top-center',
+            autoClose: 3000,
+          });
+        }
+      } else {
+        // Для несохраненных сеансов просто удаляем из локального состояния
         const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
         setLocalSeances(updatedSeances);
         setHasChanges(true);
         
-        await updateLocalData('seances', updatedSeances);
-        
-        toast.success('Сеанс успешно удалён', {
+        toast.success('Несохраненный сеанс удалён', {
           position: 'top-center',
           autoClose: 3000,
         });
@@ -148,7 +164,6 @@ export const SeancesGridSection: React.FC = () => {
       const newSeances = localSeances.filter((ls) => !seances.some((s) => s.id === ls.id));
       const deletedSeances = seances.filter((s) => !localSeances.some((ls) => ls.id === s.id));
 
-      // Выполняем все операции с API
       const operations = [];
       
       for (const seance of newSeances) {
@@ -165,10 +180,8 @@ export const SeancesGridSection: React.FC = () => {
         operations.push(api.deleteSeance(seance.id));
       }
 
-      // Ждем завершения всех операций
       await Promise.all(operations);
       
-      // Обновляем данные в контексте
       await updateLocalData('seances', localSeances);
       
       toast.success('Изменения успешно сохранены!', {

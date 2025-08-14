@@ -43,15 +43,6 @@ export const api = {
   },
 
   // Залы
-  // getHalls: async (): Promise<ApiResponse> => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/alldata`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error fetching halls:', error);
-  //     throw error;
-  //   }
-  // },
 
   addHall: async (name: string): Promise<ApiResponse> => {
     const formData = new FormData();
@@ -151,16 +142,6 @@ export const api = {
     }
   },
 
-  // getMovies: async (): Promise<ApiResponse> => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/alldata`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error fetching movies:', error);
-  //     throw error;
-  //   }
-  // },
-
   addMovie: async (movieData: {
     name: string;
     duration: number;
@@ -223,16 +204,6 @@ export const api = {
     }
   },
 
-  // getSeances: async (): Promise<ApiResponse> => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/alldata`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error fetching seances:', error);
-  //     throw error;
-  //   }
-  // },
-
   addSeance: async (seanceData: {
     hallId: number;
     movieId: number;
@@ -244,34 +215,36 @@ export const api = {
     formData.set('seanceTime', seanceData.time);
     try {
       const response = await axios.post(`${API_URL}/seance`, formData);
-      return response.data;
+      return {
+        success: true,
+        result: {
+          seances: response.data.result?.seances || []
+        }
+      };
     } catch (error) {
       console.error('Error adding seance:', error);
-      throw error;
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to add seance'
+      };
     }
   },
 
   deleteSeance: async (seanceId: number): Promise<ApiResponse> => {
     try {
       const response = await axios.delete(`${API_URL}/seance/${seanceId}`);
-      if (!response.data?.success) {
-        return {
-          success: false,
-          error: response.data?.error || 'Failed to delete seance',
-        };
-      }
       return {
         success: true,
         result: {
-          seances: response.data.result?.seances || [],
-        },
+          seances: response.data.result?.seances || []
+        }
       };
     } catch (error) {
       console.error('Error deleting seance:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Network error',
+        error: error instanceof Error ? error.message : 'Failed to delete seance'
       };
     }
-  },
+  }
 };
