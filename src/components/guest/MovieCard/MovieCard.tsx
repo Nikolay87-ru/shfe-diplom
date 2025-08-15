@@ -18,11 +18,11 @@ interface HallData {
 interface MovieCardProps {
   movie: {
     id: number;
-    title: string;
-    description: string;
-    duration: number;
-    country: string;
-    poster: string;
+    film_name: string;
+    film_description: string;
+    film_duration: number;
+    film_origin: string;
+    film_poster: string;
     halls: HallData[];
   };
 }
@@ -41,18 +41,14 @@ export const MovieCard = memo(({ movie }: MovieCardProps) => {
     <div className="movie-card">
       <div className="movie-info">
         <div className="poster-container">
-          <img src={movie.poster} alt={movie.title} className="poster" />
+        <img src={movie.film_poster} alt={movie.film_name} className="poster" />
         </div>
         <div className="description">
-          <h3 className="title">{movie.title}</h3>
-          <p className="synopsis">{movie.description}</p>
+        <h3 className="title">{movie.film_name}</h3>
+        <p className="synopsis">{movie.film_description}</p>
           <div className="meta">
-            <span className="duration" key="duration">
-              {movie.duration} мин
-            </span>
-            <span className="country" key="country">
-              {movie.country}
-            </span>
+          <div className="duration">{movie.film_duration} мин</div>
+          <div className="country">{movie.film_origin}</div>
           </div>
         </div>
       </div>

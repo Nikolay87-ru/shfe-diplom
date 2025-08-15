@@ -73,13 +73,18 @@ export const GuestPage = React.memo(() => {
           <MovieCard 
             key={movie.id} 
             movie={{
-              ...movie,
+              id: movie.id,
+              film_name: movie.film_name,
+              film_description: movie.film_description,
+              film_duration: movie.film_duration,
+              film_origin: movie.film_origin,
+              film_poster: movie.film_poster,
               halls: movie.halls.map(hallData => ({
                 name: hallData.hall.hall_name,
                 open: hallData.hall.hall_open === 1,
                 sessions: hallData.sessions
               }))
-            }} 
+            }}
           />
         ))}
       </div>

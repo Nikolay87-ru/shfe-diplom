@@ -39,10 +39,6 @@ export const HallOpenSection: React.FC = () => {
     }
   }
 
-  // if (isLoading) {
-  //   return <div style={{ padding: '1em' }}>Загрузка данных...</div>;
-  // }
-
   if (!hall) {
     return <div style={{ padding: '1em' }}>Нет залов или не выбран зал</div>;
   }

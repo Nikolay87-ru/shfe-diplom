@@ -37,11 +37,11 @@ export const GuestProvider = ({ children }: { children: ReactNode }) => {
   const movies = useMemo(() => {
     return moviesData.films.map((film: Film) => ({
       id: film.id,
-      title: film.film_name,
-      description: film.film_description,
-      duration: film.film_duration,
-      country: film.film_origin,
-      poster: film.film_poster
+      film_name: film.film_name, 
+      film_description: film.film_description,
+      film_duration: film.film_duration,
+      film_origin: film.film_origin,
+      film_poster: film.film_poster
     }));
   }, [moviesData.films]);
 

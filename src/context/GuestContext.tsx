@@ -2,13 +2,12 @@ import { createContext } from 'react';
 import { Hall, Seance } from '@/types';
 
 interface Movie {
-  film_name: ReactNode;
   id: number;
-  title: string;
-  description: string;
-  duration: number;
-  country: string;
-  poster: string;
+  film_name: string;
+  film_description: string;
+  film_duration: number;
+  film_origin: string;
+  film_poster: string;
 }
 
 export interface GuestContextType {
