@@ -3,10 +3,9 @@ import { Header } from '@/components/guest/Header/Header';
 import { Calendar } from '@/components/guest/Calendar/Calendar';
 import { MovieCard } from '@/components/guest/MovieCard/MovieCard';
 import { useGuest } from '@/context/hooks/useGuest';
-import { GuestProvider } from '@/context/provider/GuestProvider';
 import './GuestPage.scss';
 
-const GuestPageContent = React.memo(() => {
+export const GuestPage = React.memo(() => {
   const { movies, halls, seances, loading, selectedDate, setSelectedDate } = useGuest();
 
   const filteredMovies = useMemo(() => {
@@ -69,7 +68,6 @@ const GuestPageContent = React.memo(() => {
     <div className="guest-page">
       <Header />
       <Calendar selectedDate={selectedDate} onChange={setSelectedDate} />
-
       <div className="container">
         {filteredMovies.map((movie) => (
           <MovieCard 
@@ -88,9 +86,3 @@ const GuestPageContent = React.memo(() => {
     </div>
   );
 });
-
-export const GuestPage = () => (
-  <GuestProvider>
-    <GuestPageContent />
-  </GuestProvider>
-);

@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { Hall, Seance } from '@/types';
 
 interface Movie {
+  film_name: ReactNode;
   id: number;
   title: string;
   description: string;

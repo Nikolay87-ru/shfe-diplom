@@ -9,6 +9,7 @@ import { useAuth } from '@/context/hooks/useAuth';
 import { AuthProvider } from '@/context/provider/AuthProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GuestProvider } from '@/context/provider/GuestProvider';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { isAdmin } = useAuth();
@@ -31,9 +32,9 @@ function App() {
           pauseOnHover
         />
         <Routes>
-          <Route path="/" element={<GuestPage />} />
-          <Route path="/hall/:id" element={<HallPage />} />
-          <Route path="/ticket/:id" element={<TicketPage />} />
+          <Route path="/" element={<GuestProvider><GuestPage /></GuestProvider>} />
+          <Route path="/hall/:id" element={<GuestProvider><HallPage /></GuestProvider>} />
+          <Route path="/ticket/:id" element={<GuestProvider><TicketPage /></GuestProvider>} />
           <Route path="/admin/login" element={<Login />} />
           <Route
             path="/admin/*"
