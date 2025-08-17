@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '@/utils/api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './HallScheme.scss';
 import { useGuest } from '@/context/hooks/useGuest';
+import './HallScheme.scss';
 
 interface Seat {
   type: 'standart' | 'vip' | 'disabled' | 'taken';
@@ -19,7 +19,7 @@ interface Row {
 export const HallScheme = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { movies, halls, seances } = useGuest();
+  const { movies, halls, seances, selectedDate } = useGuest();
   const [rows, setRows] = useState<Row[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,9 +36,10 @@ export const HallScheme = () => {
 
     const fetchHallConfig = async () => {
       try {
+        const ticketDate = selectedDate.toISOString().split('T')[0];
         const hallConfigResponse = await api.getHallConfig(
           seance.id.toString(),
-          new Date().toISOString().split('T')[0]
+          ticketDate
         );
         
         const configToUse = hallConfigResponse.success && Array.isArray(hallConfigResponse.result) 
@@ -66,7 +67,7 @@ export const HallScheme = () => {
     };
 
     fetchHallConfig();
-  }, [seance, hall, navigate]);
+  }, [seance, hall, navigate, selectedDate]);
 
   const handleSeatSelect = (rowIndex: number, seatIndex: number) => {
     if (rows[rowIndex]?.seats[seatIndex]?.occupied) return;
@@ -119,6 +120,7 @@ export const HallScheme = () => {
       localStorage.setItem('movie', JSON.stringify(movie));
       localStorage.setItem('hall', JSON.stringify(hall));
       localStorage.setItem('seance', JSON.stringify(seance));
+      localStorage.setItem('seanceDate', selectedDate.toISOString());
 
       navigate(`/ticket/${id}`);
     } catch (error) {

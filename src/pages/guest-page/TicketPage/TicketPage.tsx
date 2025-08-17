@@ -20,6 +20,7 @@ export const TicketPage = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [qrCode, setQrCode] = useState('');
   const [bookingCode, setBookingCode] = useState('');
+  const [seanceDate, setSeanceDate] = useState<string | null>(null);
   const { movies, halls, seances, loading } = useGuest();
 
   const seance = seances.find((s) => s.id === Number(id));
@@ -28,19 +29,24 @@ export const TicketPage = () => {
 
   useEffect(() => {
     const storedTickets = localStorage.getItem('tickets');
+    const storedDate = localStorage.getItem('seanceDate');
+    
     if (storedTickets) {
       setTickets(JSON.parse(storedTickets));
+    }
+    if (storedDate) {
+      setSeanceDate(storedDate);
     }
   }, []);
 
   const handleGetBookingCode = async () => {
     try {
-      if (!seance || !hall) {
+      if (!seance || !hall || !seanceDate) {
         throw new Error('Недостаточно данных для бронирования');
       }
 
       const seanceId = seance.id.toString();
-      const ticketDate = new Date().toISOString().split('T')[0];
+      const ticketDate = new Date(seanceDate).toISOString().split('T')[0];
       const ticketsData = tickets.map((ticket) => ({
         row: ticket.row,
         place: ticket.place,
@@ -171,6 +177,12 @@ export const TicketPage = () => {
               <p className="ticket__info-text">
                 Начало сеанса:{' '}
                 <span className="ticket__info-time ticket__info-bold">{seance.seance_time}</span>
+              </p>
+              <p className="ticket__info-text">
+                Дата сеанса:{' '}
+                <span className="ticket__info-date ticket__info-bold">
+                  {seanceDate ? new Date(seanceDate).toLocaleDateString('ru-RU') : 'Не указана'}
+                </span>
               </p>
               <p className="ticket__info-text">
                 Стоимость:{' '}
