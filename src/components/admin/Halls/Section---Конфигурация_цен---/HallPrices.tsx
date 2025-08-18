@@ -31,7 +31,7 @@ export const HallPrices: React.FC = () => {
     }
   }, [hall]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>, which: 'st' | 'vip') {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, which: 'st' | 'vip') => {
     const value = e.target.value;
 
     if (value === '') {
@@ -56,7 +56,13 @@ export const HallPrices: React.FC = () => {
     );
   }
 
-  function handleCancel(e: React.MouseEvent) {
+  const preventMinus = (e: { code: string; preventDefault: () => void; }) => {
+    if (e.code === 'Minus') {
+        e.preventDefault();
+    }
+};
+
+  const handleCancel = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!initial) return;
     setPriceSt(initial.standart);
@@ -64,7 +70,7 @@ export const HallPrices: React.FC = () => {
     setChanged(false);
   }
 
-  async function handleSave(e: React.MouseEvent) {
+  const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!hall) return;
     const response = await api.updateHallPrices(hall.id, { 
@@ -104,6 +110,7 @@ export const HallPrices: React.FC = () => {
                 className="admin_input price-config__input_standart"
                 value={priceSt === 0 ? '' : priceSt}
                 onChange={(e) => handleChange(e, 'st')}
+                onKeyPress={preventMinus}
                 required
               />
             </label>
@@ -120,6 +127,7 @@ export const HallPrices: React.FC = () => {
                 className="admin_input price-config__input_vip"
                 value={priceVip === 0 ? '' : priceVip}
                 onChange={(e) => handleChange(e, 'vip')}
+                onKeyPress={preventMinus}
                 required
               />
             </label>
