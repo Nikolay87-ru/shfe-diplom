@@ -54,13 +54,13 @@ export const HallPrices: React.FC = () => {
       (which === 'st' ? numValue : priceSt) !== (initial?.standart ?? 0) ||
         (which === 'vip' ? numValue : priceVip) !== (initial?.vip ?? 0),
     );
-  }
+  };
 
-  const preventMinus = (e: { code: string; preventDefault: () => void; }) => {
-    if (e.code === 'Minus') {
-        e.preventDefault();
+  const preventMathSigns = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '-' || e.key === '+') {
+      e.preventDefault();
     }
-};
+  };
 
   const handleCancel = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -68,21 +68,21 @@ export const HallPrices: React.FC = () => {
     setPriceSt(initial.standart);
     setPriceVip(initial.vip);
     setChanged(false);
-  }
+  };
 
   const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!hall) return;
-    const response = await api.updateHallPrices(hall.id, { 
-      standartPrice: priceSt, 
-      vipPrice: priceVip 
+    const response = await api.updateHallPrices(hall.id, {
+      standartPrice: priceSt,
+      vipPrice: priceVip,
     });
-    
+
     if (response.success && response.result?.halls) {
       updateLocalData('halls', response.result.halls);
       setChanged(false);
     }
-  }
+  };
 
   if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;
 
@@ -110,7 +110,7 @@ export const HallPrices: React.FC = () => {
                 className="admin_input price-config__input_standart"
                 value={priceSt === 0 ? '' : priceSt}
                 onChange={(e) => handleChange(e, 'st')}
-                onKeyPress={preventMinus}
+                onKeyDown={preventMathSigns}
                 required
               />
             </label>
@@ -127,7 +127,7 @@ export const HallPrices: React.FC = () => {
                 className="admin_input price-config__input_vip"
                 value={priceVip === 0 ? '' : priceVip}
                 onChange={(e) => handleChange(e, 'vip')}
-                onKeyPress={preventMinus}
+                onKeyDown={preventMathSigns}
                 required
               />
             </label>
