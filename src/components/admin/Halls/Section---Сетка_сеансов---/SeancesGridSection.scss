@@ -157,6 +157,24 @@
   }
 }
 
+.timeline__dragged_movie {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 7px 5px;
+  cursor: grabbing;
+  line-height: 15px;
+  max-width: 100px;
+  min-height: 45px;
+  max-height: 50px;
+  justify-content: center;
+}
+
 .timeline__seances_title {
   line-height: 16px;
 }

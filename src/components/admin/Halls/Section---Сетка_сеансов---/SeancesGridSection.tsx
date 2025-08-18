@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import deleteImg from '@assets/delete.png';
 import { MdDelete } from 'react-icons/md';
-import { IoClose } from 'react-icons/io5';
 import './SeancesGridSection.scss';
 import { api } from '@/utils/api';
 import { Film, Hall, Seance } from '@/types';
@@ -30,7 +29,6 @@ export const SeancesGridSection: React.FC = () => {
   const [draggedMovieId, setDraggedMovieId] = useState<number | undefined>();
   const [dragStartHallId, setDragStartHallId] = useState<number | undefined>();
   const [deleteTargetSeanceId, setDeleteTargetSeanceId] = useState<number | undefined>();
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [activeTrashHallId, setActiveTrashHallId] = useState<number | null>(null);
   const [localSeances, setLocalSeances] = useState<Seance[]>(seances);
   const [hasChanges, setHasChanges] = useState(false);
@@ -45,8 +43,29 @@ export const SeancesGridSection: React.FC = () => {
     return hh * 60 + mm;
   }
 
-  function onDragMovieStart(movieId: number) {
+  function onDragMovieStart(movieId: number, e: React.DragEvent<HTMLDivElement>) {
     setDraggedMovieId(movieId);
+
+    const movie = movies.find((m) => m.id === movieId);
+    if (!movie) return;
+
+    const elem = document.createElement('div');
+    elem.className = `timeline__dragged_movie ${getColorIdx(
+      movies.findIndex((m) => m.id === movieId),
+    )}`;
+    elem.textContent = movie.film_name;
+    // elem.style.position = 'fixed';
+    // elem.style.top = '-9999px';
+    // elem.style.left = '-9999px';
+    // elem.style.pointerEvents = 'none';
+    // elem.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+
+    document.body.appendChild(elem);
+
+    const rect = elem.getBoundingClientRect();
+    e.dataTransfer.setDragImage(elem, rect.width / 2, rect.height / 2);
+
+    setTimeout(() => document.body.removeChild(elem), 0);
   }
 
   function onDragMovieEnd() {
@@ -73,18 +92,33 @@ export const SeancesGridSection: React.FC = () => {
     setHasChanges(true);
   }
 
-  function onDragSeanceStart(seanceId: number, hallId: number) {
+  function onDragSeanceStart(seanceId: number, hallId: number, e: React.DragEvent<HTMLDivElement>) {
     setDragStartHallId(hallId);
     setDeleteTargetSeanceId(seanceId);
     setActiveTrashHallId(hallId);
+
+    const seance = localSeances.find((s) => s.id === seanceId);
+    const movie = movies.find((m) => m.id === seance?.seance_filmid);
+    if (!movie) return;
+
+    const elem = document.createElement('div');
+    elem.className = `timeline__dragged_movie ${getColorIdx(
+      movies.findIndex((m) => m.id === movie.id),
+    )}`;
+    elem.textContent = movie.film_name;
+
+    document.body.appendChild(elem);
+
+    const rect = elem.getBoundingClientRect();
+    e.dataTransfer.setDragImage(elem, rect.width / 2, rect.height / 2);
+
+    setTimeout(() => document.body.removeChild(elem), 0);
   }
 
   function onDragSeanceEnd() {
-    if (!showDeletePopup) {
-      setDeleteTargetSeanceId(undefined);
-      setDragStartHallId(undefined);
-      setActiveTrashHallId(null);
-    }
+    setDeleteTargetSeanceId(undefined);
+    setDragStartHallId(undefined);
+    setActiveTrashHallId(null);
   }
 
   function onDragOverTrash(e: React.DragEvent, hallId: number) {
@@ -96,37 +130,59 @@ export const SeancesGridSection: React.FC = () => {
 
   function onDropSeanceToTrash(hallId: number) {
     if (deleteTargetSeanceId && dragStartHallId === hallId) {
-      setShowDeletePopup(true);
-    } else {
-      setActiveTrashHallId(null);
+      showDeleteConfirmation();
     }
+    setActiveTrashHallId(null);
+  }
+
+  function showDeleteConfirmation() {
+    if (!deleteTargetSeanceId) return;
+
+    toast(
+      <ConfirmDeleteModal
+        title="Удалить сеанс?"
+        onConfirm={confirmDeleteSeance}
+        onCancel={() => toast.dismiss()}
+      />,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        draggable: false,
+        style: {
+          width: '300px',
+          justifyContent: 'center',
+        },
+      },
+    );
   }
 
   async function confirmDeleteSeance() {
     if (!deleteTargetSeanceId) return;
 
     try {
-      const isSavedSeance = seances.some(s => s.id === deleteTargetSeanceId);
-      
+      const isSavedSeance = seances.some((s) => s.id === deleteTargetSeanceId);
+
       if (isSavedSeance) {
         const response = await api.deleteSeance(deleteTargetSeanceId);
         if (response.success) {
-          const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
+          const updatedSeances = localSeances.filter((s) => s.id !== deleteTargetSeanceId);
           setLocalSeances(updatedSeances);
           setHasChanges(true);
-          
+
           await updateLocalData('seances', updatedSeances);
-          
+
           toast.success('Сеанс успешно удалён', {
             position: 'top-center',
             autoClose: 3000,
           });
         }
       } else {
-        const updatedSeances = localSeances.filter(s => s.id !== deleteTargetSeanceId);
+        const updatedSeances = localSeances.filter((s) => s.id !== deleteTargetSeanceId);
         setLocalSeances(updatedSeances);
         setHasChanges(true);
-        
+
         toast.success('Несохраненный сеанс удалён', {
           position: 'top-center',
           autoClose: 3000,
@@ -139,16 +195,10 @@ export const SeancesGridSection: React.FC = () => {
         autoClose: 5000,
       });
     } finally {
-      setShowDeletePopup(false);
       setDeleteTargetSeanceId(undefined);
       setActiveTrashHallId(null);
+      toast.dismiss();
     }
-  }
-
-  function cancelDeleteSeance() {
-    setShowDeletePopup(false);
-    setDeleteTargetSeanceId(undefined);
-    setActiveTrashHallId(null);
   }
 
   function handleCancel() {
@@ -162,14 +212,14 @@ export const SeancesGridSection: React.FC = () => {
       const deletedSeances = seances.filter((s) => !localSeances.some((ls) => ls.id === s.id));
 
       const operations = [];
-      
+
       for (const seance of newSeances) {
         operations.push(
           api.addSeance({
             hallId: seance.seance_hallid,
             movieId: seance.seance_filmid,
             time: seance.seance_time,
-          })
+          }),
         );
       }
 
@@ -178,9 +228,9 @@ export const SeancesGridSection: React.FC = () => {
       }
 
       await Promise.all(operations);
-      
+
       await updateLocalData('seances', localSeances);
-      
+
       toast.success('Изменения успешно сохранены!', {
         position: 'top-center',
         autoClose: 5000,
@@ -279,7 +329,7 @@ export const SeancesGridSection: React.FC = () => {
                     }
                     data-time={seance.seance_time}
                     draggable
-                    onDragStart={() => onDragSeanceStart(seance.id, hall.id)}
+                    onDragStart={(e) => onDragSeanceStart(seance.id, hall.id, e)}
                     onDragEnd={onDragSeanceEnd}
                   >
                     <div className="timeline__seances_title">{movie.film_name}</div>
@@ -310,7 +360,7 @@ export const SeancesGridSection: React.FC = () => {
             key={movie.id}
             draggable
             tabIndex={0}
-            onDragStart={() => onDragMovieStart(movie.id)}
+            onDragStart={(e) => onDragMovieStart(movie.id, e)}
             onDragEnd={onDragMovieEnd}
           >
             <img className="movie-seances__movie_poster" src={movie.film_poster} alt="постер" />
@@ -388,28 +438,6 @@ export const SeancesGridSection: React.FC = () => {
         initialHall={popupSeanceHall || undefined}
         initialMovie={popupSeanceMovie || undefined}
       />
-
-      {showDeletePopup && (
-        <div className="popup">
-          <div className="popup__container">
-            <div className="popup__header">
-              <div className="popup__header_text">Удаление сеанса</div>
-              <div className="popup__close" onClick={cancelDeleteSeance}>
-                <IoClose size={35} style={{ strokeWidth: 40 }} />
-              </div>
-            </div>
-            <div style={{ textAlign: 'center' }}>Вы действительно хотите удалить сеанс?</div>
-            <div className="popup__buttons" style={{ marginBlock: 20 }}>
-              <button className="button" onClick={confirmDeleteSeance}>
-                Удалить
-              </button>
-              <button className="button popup__button_cancel" onClick={cancelDeleteSeance}>
-                Отменить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
