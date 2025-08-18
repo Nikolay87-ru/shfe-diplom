@@ -62,6 +62,12 @@ export const HallsManagement: React.FC = () => {
       const response = await api.deleteHall(id);
       if (response.success && response.result?.halls) {
         updateLocalData('halls', response.result.halls);
+        
+        if (id === selectedHallId) {
+          const remainingHalls = response.result.halls;
+          setSelectedHallId(remainingHalls[0]?.id); 
+        }
+        
         toast.success('Зал успешно удалён', {
           position: 'top-center',
           autoClose: 3000,

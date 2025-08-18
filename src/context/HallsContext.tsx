@@ -7,8 +7,8 @@ export type Ctx = {
     halls: Hall[];
     seances: Seance[];
   };
-  selectedHallId: number | undefined;
-  setSelectedHallId: (id: number) => void;
+  selectedHallId: number | undefined; 
+  setSelectedHallId: (id: number | undefined) => void; 
   update: () => Promise<void>;
   updateLocalData: <T extends Film[] | Hall[] | Seance[]>(
     type: 'films' | 'halls' | 'seances', 

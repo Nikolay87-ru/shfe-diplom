@@ -15,8 +15,8 @@ export const ConfirmDeleteModal: React.FC<confirmDeleteModalProps> = ({
   onConfirm,
   onCancel,
   title = 'Подтвердите действие',
-  confirmText = 'Подтвердить',
-  cancelText = 'Отмена',
+  confirmText = 'Удалить',
+  cancelText = 'Отменить',
   confirmColor = '#16a6af',
   cancelColor = '#63536c',
 }) => {
