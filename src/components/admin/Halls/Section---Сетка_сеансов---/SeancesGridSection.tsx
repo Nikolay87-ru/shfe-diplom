@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import deleteImg from '@assets/delete.png';
 import { MdDelete } from 'react-icons/md';
+import { FcPlus } from 'react-icons/fc';
 import './SeancesGridSection.scss';
 import { api } from '@/utils/api';
 import { Film, Hall, Seance } from '@/types';
@@ -32,6 +33,7 @@ export const SeancesGridSection: React.FC = () => {
   const [activeTrashHallId, setActiveTrashHallId] = useState<number | null>(null);
   const [localSeances, setLocalSeances] = useState<Seance[]>(seances);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isDraggingMovie, setIsDraggingMovie] = useState(false); 
 
   useEffect(() => {
     setLocalSeances(seances);
@@ -45,21 +47,22 @@ export const SeancesGridSection: React.FC = () => {
 
   function onDragMovieStart(movieId: number, e: React.DragEvent<HTMLDivElement>) {
     setDraggedMovieId(movieId);
+    setIsDraggingMovie(true); 
 
     const movie = movies.find((m) => m.id === movieId);
     if (!movie) return;
 
     const elem = document.createElement('div');
-    elem.className = `timeline__dragged_movie ${getColorIdx(
-      movies.findIndex((m) => m.id === movieId),
-    )}`;
-    elem.textContent = movie.film_name;
-    // elem.style.position = 'fixed';
-    // elem.style.top = '-9999px';
-    // elem.style.left = '-9999px';
-    // elem.style.pointerEvents = 'none';
-    // elem.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-
+    elem.className = 'timeline__dragged_poster';
+    
+    const img = document.createElement('img');
+    img.src = movie.film_poster;
+    img.alt = movie.film_name;
+    img.style.width = '38px';
+    img.style.height = '50px';
+    img.style.objectFit = 'cover';
+    
+    elem.appendChild(img);
     document.body.appendChild(elem);
 
     const rect = elem.getBoundingClientRect();
@@ -71,6 +74,11 @@ export const SeancesGridSection: React.FC = () => {
   function onDragMovieEnd() {
     setDraggedMovieId(undefined);
     setActiveTrashHallId(null);
+    setIsDraggingMovie(false); 
+  }
+
+  function onDragOverTimeline(e: React.DragEvent) {
+    e.preventDefault();
   }
 
   function onDropMovieToHall(hallId: number) {
@@ -79,6 +87,7 @@ export const SeancesGridSection: React.FC = () => {
     setPopupSeanceMovie(movies.find((m) => m.id === draggedMovieId) || null);
     setShowAddSeancePopup(true);
     setDraggedMovieId(undefined);
+    setIsDraggingMovie(false);
   }
 
   async function addSeance(hallId: number, movieId: number, time: string) {
@@ -294,10 +303,16 @@ export const SeancesGridSection: React.FC = () => {
 
           <div className="timeline__seances-container">
             <div
-              className="timeline__seances"
-              onDragOver={(e) => e.preventDefault()}
+              className={`timeline__seances ${isDraggingMovie ? 'drag-over' : ''}`} 
+              onDragOver={onDragOverTimeline}
               onDrop={() => onDropMovieToHall(hall.id)}
             >
+              {isDraggingMovie && ( 
+                <div className="timeline__drop-indicator">
+                  <FcPlus size={24} />
+                </div>
+              )}
+
               {activeTrashHallId === hall.id && (
                 <div
                   className={`timeline__delete ${activeTrashHallId === hall.id ? 'active' : ''}`}
