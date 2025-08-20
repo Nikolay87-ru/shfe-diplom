@@ -137,6 +137,8 @@ export const HallPrices: React.FC = () => {
     }
   };
 
+  if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;
+
   return (
     <section className="admin__section price-config">
       <p className="admin__info">Выберите зал для конфигурации:</p>

@@ -3,6 +3,8 @@ import './HallConfig.scss';
 import { useHalls } from '@/context/hooks/useHalls';
 import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import { api } from '@/utils/api';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ROWS_MIN = 1,
   ROWS_MAX = 50,
@@ -15,7 +17,6 @@ export const HallConfig: React.FC = () => {
     selectedHallId,
     setSelectedHallId,
     updateLocalData,
-    isLoading,
   } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
@@ -44,7 +45,7 @@ export const HallConfig: React.FC = () => {
     }
   }, [hall]);
 
-  function handleRowsChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleRowsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === '') {
       setRows('');
@@ -68,7 +69,7 @@ export const HallConfig: React.FC = () => {
     setChanged(true);
   }
 
-  function handlePlacesChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handlePlacesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value === '') {
       setPlaces('');
@@ -92,7 +93,7 @@ export const HallConfig: React.FC = () => {
     setChanged(true);
   }
 
-  function handleChairClick(rowIdx: number, placeIdx: number) {
+  const handleChairClick = (rowIdx: number, placeIdx: number) => {
     if (!config[rowIdx]) return;
     const next = { standart: 'vip', vip: 'disabled', disabled: 'standart' };
     setConfig((prev) => {
@@ -104,7 +105,13 @@ export const HallConfig: React.FC = () => {
     setChanged(true);
   }
 
-  function handleCancel(e: React.MouseEvent) {
+  const preventMathSigns = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '-' || e.key === '+') {
+      e.preventDefault();
+    }
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!initial) return;
     setRows(initial.rows);
@@ -113,30 +120,46 @@ export const HallConfig: React.FC = () => {
     setChanged(false);
   }
 
-  async function handleSave(e: React.MouseEvent) {
+  const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!hall || rows === '' || places === '') return;
+
     const response = await api.updateHallConfig(hall.id, {
       rowCount: rows,
       placeCount: places,
       config,
     });
-    
-    if (response.success && response.result?.halls) {
-      updateLocalData('halls', response.result.halls);
+
+    if (response.success) {
+      await updateLocalData(
+        'halls',
+        halls.map((h) =>
+          h.id === hall.id
+            ? {
+                ...h,
+                hall_rows: Number(rows),
+                hall_places: Number(places),
+                hall_config: config,
+              }
+            : h,
+        ),
+      );
+
       setChanged(false);
+      setInitial({
+        rows: Number(rows),
+        places: Number(places),
+        config: JSON.parse(JSON.stringify(config)),
+      });
+
+      toast.success('Конфигурация зала успешно сохранена!', {
+        position: 'top-center',
+        autoClose: 3000,
+      });
     }
   }
 
   if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;
-
-  if (isLoading) {
-    return <div style={{ padding: '2em' }}>Загрузка данных...</div>;
-  }
-
-  if (!hall) {
-    return <div style={{ padding: '2em' }}>Залы не найдены или не выбраны</div>;
-  }
 
   return (
     <section className="admin__section hall-config">
@@ -150,6 +173,8 @@ export const HallConfig: React.FC = () => {
           <label className="admin_label">
             Рядов, шт
             <input
+              id="row"
+              name="row"
               type="number"
               min={ROWS_MIN}
               max={ROWS_MAX}
@@ -157,12 +182,15 @@ export const HallConfig: React.FC = () => {
               style={{ width: '100%' }}
               value={rows}
               onChange={handleRowsChange}
+              onKeyDown={preventMathSigns}
             />
           </label>
           <p className="hall-size">x</p>
           <label className="admin_label">
             Мест, шт
             <input
+              id="place"
+              name="place"
               type="number"
               min={PLACES_MIN}
               max={PLACES_MAX}
@@ -170,6 +198,7 @@ export const HallConfig: React.FC = () => {
               style={{ width: '100%' }}
               value={places}
               onChange={handlePlacesChange}
+              onKeyDown={preventMathSigns}
             />
           </label>
         </div>
