@@ -3,6 +3,8 @@ import { useHalls } from '@/context/hooks/useHalls';
 import { api } from '@/utils/api';
 import { HallsList } from '../Section---Управление_залами---/HallsList/HallsList';
 import './HallPrices.scss';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const HallPrices: React.FC = () => {
   const {
@@ -10,7 +12,6 @@ export const HallPrices: React.FC = () => {
     selectedHallId,
     setSelectedHallId,
     updateLocalData,
-    isLoading,
   } = useHalls();
   const hall = halls.find((h) => h.id === selectedHallId);
 
@@ -18,6 +19,7 @@ export const HallPrices: React.FC = () => {
   const [priceVip, setPriceVip] = useState(0);
   const [initial, setInitial] = useState<{ standart: number; vip: number } | null>(null);
   const [changed, setChanged] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (hall) {
@@ -37,10 +39,10 @@ export const HallPrices: React.FC = () => {
     if (value === '') {
       if (which === 'st') setPriceSt(0);
       else setPriceVip(0);
-      setChanged(
+      const newChanged =
         (which === 'st' ? 0 : priceSt) !== (initial?.standart ?? 0) ||
-          (which === 'vip' ? 0 : priceVip) !== (initial?.vip ?? 0),
-      );
+        (which === 'vip' ? 0 : priceVip) !== (initial?.vip ?? 0);
+      setChanged(newChanged);
       return;
     }
 
@@ -50,10 +52,11 @@ export const HallPrices: React.FC = () => {
     if (which === 'st') setPriceSt(numValue);
     else setPriceVip(numValue);
 
-    setChanged(
+    const newChanged =
       (which === 'st' ? numValue : priceSt) !== (initial?.standart ?? 0) ||
-        (which === 'vip' ? numValue : priceVip) !== (initial?.vip ?? 0),
-    );
+      (which === 'vip' ? numValue : priceVip) !== (initial?.vip ?? 0);
+
+    setChanged(newChanged);
   };
 
   const preventMathSigns = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -72,27 +75,67 @@ export const HallPrices: React.FC = () => {
 
   const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!hall) return;
-    const response = await api.updateHallPrices(hall.id, {
-      standartPrice: priceSt,
-      vipPrice: priceVip,
-    });
-
-    if (response.success && response.result?.halls) {
-      updateLocalData('halls', response.result.halls);
-      setChanged(false);
+  
+    if (priceSt === 0 || priceVip === 0) {
+      toast.error('Нельзя сохранить пустые поля ввода!', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+  
+    if (!hall || isSaving) {
+      return;
+    }
+  
+    setIsSaving(true);
+  
+    try {
+      const response = await api.updateHallPrices(hall.id, {
+        standartPrice: priceSt,
+        vipPrice: priceVip,
+      });
+  
+      if (response && response.success) {
+        await updateLocalData(
+          'halls',
+          halls.map((h) =>
+            h.id === hall.id
+              ? {
+                  ...h,
+                  hall_price_standart: priceSt,
+                  hall_price_vip: priceVip,
+                }
+              : h,
+          ),
+        );
+  
+        setChanged(false);
+        setInitial({
+          standart: priceSt,
+          vip: priceVip,
+        });
+        
+        toast.success('Цены успешно сохранены!', {
+          position: 'top-center',
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.error('handleSave:', error);
+      toast.error('Ошибка при сохранении цен', {
+        position: 'top-center',
+        autoClose: 5000,
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
-
-  if (!hall) return <div style={{ padding: '2em' }}>Залы не найдены</div>;
-
-  if (isLoading) {
-    return <div style={{ padding: '2em' }}>Загрузка данных...</div>;
-  }
-
-  if (!hall) {
-    return <div style={{ padding: '2em' }}>Залы не найдены или не выбраны</div>;
-  }
 
   return (
     <section className="admin__section price-config">
@@ -105,6 +148,8 @@ export const HallPrices: React.FC = () => {
             <label className="admin_label price-config__label">
               Цена, рублей
               <input
+                id="price-standart"
+                name="priceStandart"
                 type="number"
                 min={0}
                 className="admin_input price-config__input_standart"
@@ -122,6 +167,8 @@ export const HallPrices: React.FC = () => {
             <label className="admin_label price-config__label">
               Цена, рублей
               <input
+                id="price-vip"
+                name="priceVip"
                 type="number"
                 min={0}
                 className="admin_input price-config__input_vip"
@@ -139,7 +186,7 @@ export const HallPrices: React.FC = () => {
         <div className="price-config__buttons">
           <button
             className={
-              'admin__button_cancel price-config__batton_cancel button' +
+              'admin__button_cancel price-config__button_cancel button' +
               (changed ? '' : ' button_disabled')
             }
             onClick={handleCancel}
@@ -150,7 +197,7 @@ export const HallPrices: React.FC = () => {
           </button>
           <button
             className={
-              'admin__button_save price-config__batton_save button' +
+              'admin__button_save price-config__button_save button' +
               (changed ? '' : ' button_disabled')
             }
             onClick={handleSave}
