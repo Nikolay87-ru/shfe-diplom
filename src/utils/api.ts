@@ -156,11 +156,6 @@ export const api = {
     formData.append('filmOrigin', movieData.country);
     formData.append('filePoster', movieData.poster);
 
-    console.log('--- FormData содержимое перед отправкой ---');
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value instanceof File ? `File: ${value.name}` : `Text: ${value}`);
-    }
-
     try {
       const response = await axios.post(`${API_URL}/film`, formData, {
         headers: {
@@ -176,9 +171,7 @@ export const api = {
 
   deleteMovie: async (movieId: number): Promise<ApiResponse> => {
     try {
-      console.log(`Отправка запроса на удаление фильма с ID: ${movieId}`);
       const response = await axios.delete(`${API_URL}/film/${movieId}`);
-      console.log('Ответ сервера:', response.data);
 
       if (response.data.success) {
         return {
@@ -218,14 +211,14 @@ export const api = {
       return {
         success: true,
         result: {
-          seances: response.data.result?.seances || []
-        }
+          seances: response.data.result?.seances || [],
+        },
       };
     } catch (error) {
       console.error('Error adding seance:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to add seance'
+        error: error instanceof Error ? error.message : 'Failed to add seance',
       };
     }
   },
@@ -236,15 +229,15 @@ export const api = {
       return {
         success: true,
         result: {
-          seances: response.data.result?.seances || []
-        }
+          seances: response.data.result?.seances || [],
+        },
       };
     } catch (error) {
       console.error('Error deleting seance:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to delete seance'
+        error: error instanceof Error ? error.message : 'Failed to delete seance',
       };
     }
-  }
+  },
 };
