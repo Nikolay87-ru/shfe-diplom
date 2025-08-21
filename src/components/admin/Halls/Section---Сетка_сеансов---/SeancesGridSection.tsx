@@ -13,9 +13,9 @@ import { Film, Hall, Seance } from '@/types';
 import { ConfirmDeleteModal } from '@/components/modal/ConfirmDeleteModal';
 
 const colors = ['background_1', 'background_2', 'background_3', 'background_4', 'background_5'];
-function getColorIdx(i: number) {
+const getColorIdx = (i: number) => {
   return colors[i % colors.length];
-}
+};
 
 export const SeancesGridSection: React.FC = () => {
   const {
@@ -33,35 +33,35 @@ export const SeancesGridSection: React.FC = () => {
   const [activeTrashHallId, setActiveTrashHallId] = useState<number | null>(null);
   const [localSeances, setLocalSeances] = useState<Seance[]>(seances);
   const [hasChanges, setHasChanges] = useState(false);
-  const [isDraggingMovie, setIsDraggingMovie] = useState(false); 
+  const [isDraggingMovie, setIsDraggingMovie] = useState(false);
 
   useEffect(() => {
     setLocalSeances(seances);
     setHasChanges(false);
   }, [seances]);
 
-  function getMinutesFromTime(time: string): number {
+  const getMinutesFromTime = (time: string): number => {
     const [hh, mm] = time.split(':').map(Number);
     return hh * 60 + mm;
-  }
+  };
 
-  function onDragMovieStart(movieId: number, e: React.DragEvent<HTMLDivElement>) {
+  const onDragMovieStart = (movieId: number, e: React.DragEvent<HTMLDivElement>) => {
     setDraggedMovieId(movieId);
-    setIsDraggingMovie(true); 
+    setIsDraggingMovie(true);
 
     const movie = movies.find((m) => m.id === movieId);
     if (!movie) return;
 
     const elem = document.createElement('div');
     elem.className = 'timeline__dragged_poster';
-    
+
     const img = document.createElement('img');
     img.src = movie.film_poster;
     img.alt = movie.film_name;
     img.style.width = '38px';
     img.style.height = '50px';
     img.style.objectFit = 'cover';
-    
+
     elem.appendChild(img);
     document.body.appendChild(elem);
 
@@ -69,28 +69,28 @@ export const SeancesGridSection: React.FC = () => {
     e.dataTransfer.setDragImage(elem, rect.width / 2, rect.height / 2);
 
     setTimeout(() => document.body.removeChild(elem), 0);
-  }
+  };
 
-  function onDragMovieEnd() {
+  const onDragMovieEnd = () => {
     setDraggedMovieId(undefined);
     setActiveTrashHallId(null);
-    setIsDraggingMovie(false); 
-  }
+    setIsDraggingMovie(false);
+  };
 
-  function onDragOverTimeline(e: React.DragEvent) {
+  const onDragOverTimeline = (e: React.DragEvent) => {
     e.preventDefault();
-  }
+  };
 
-  function onDropMovieToHall(hallId: number) {
+  const onDropMovieToHall = (hallId: number) => {
     if (!draggedMovieId) return;
     setPopupSeanceHall(halls.find((h) => h.id === hallId) || null);
     setPopupSeanceMovie(movies.find((m) => m.id === draggedMovieId) || null);
     setShowAddSeancePopup(true);
     setDraggedMovieId(undefined);
     setIsDraggingMovie(false);
-  }
+  };
 
-  async function addSeance(hallId: number, movieId: number, time: string) {
+  const addSeance = async (hallId: number, movieId: number, time: string) => {
     const newSeance = {
       id: Date.now(),
       seance_hallid: hallId,
@@ -99,9 +99,13 @@ export const SeancesGridSection: React.FC = () => {
     };
     setLocalSeances((prev) => [...prev, newSeance]);
     setHasChanges(true);
-  }
+  };
 
-  function onDragSeanceStart(seanceId: number, hallId: number, e: React.DragEvent<HTMLDivElement>) {
+  const onDragSeanceStart = (
+    seanceId: number,
+    hallId: number,
+    e: React.DragEvent<HTMLDivElement>,
+  ) => {
     setDragStartHallId(hallId);
     setDeleteTargetSeanceId(seanceId);
     setActiveTrashHallId(hallId);
@@ -122,29 +126,29 @@ export const SeancesGridSection: React.FC = () => {
     e.dataTransfer.setDragImage(elem, rect.width / 2, rect.height / 2);
 
     setTimeout(() => document.body.removeChild(elem), 0);
-  }
+  };
 
-  function onDragSeanceEnd() {
+  const onDragSeanceEnd = () => {
     setDeleteTargetSeanceId(undefined);
     setDragStartHallId(undefined);
     setActiveTrashHallId(null);
-  }
+  };
 
-  function onDragOverTrash(e: React.DragEvent, hallId: number) {
+  const onDragOverTrash = (e: React.DragEvent, hallId: number) => {
     e.preventDefault();
     if (deleteTargetSeanceId) {
       setActiveTrashHallId(hallId);
     }
-  }
+  };
 
-  function onDropSeanceToTrash(hallId: number) {
+  const onDropSeanceToTrash = (hallId: number) => {
     if (deleteTargetSeanceId && dragStartHallId === hallId) {
       showDeleteConfirmation();
     }
     setActiveTrashHallId(null);
-  }
+  };
 
-  function showDeleteConfirmation() {
+  const showDeleteConfirmation = () => {
     if (!deleteTargetSeanceId) return;
 
     toast(
@@ -165,9 +169,9 @@ export const SeancesGridSection: React.FC = () => {
         },
       },
     );
-  }
+  };
 
-  async function confirmDeleteSeance() {
+  const confirmDeleteSeance = async () => {
     if (!deleteTargetSeanceId) return;
 
     try {
@@ -208,14 +212,14 @@ export const SeancesGridSection: React.FC = () => {
       setActiveTrashHallId(null);
       toast.dismiss();
     }
-  }
+  };
 
-  function handleCancel() {
+  const handleCancel = () => {
     setLocalSeances(seances);
     setHasChanges(false);
-  }
+  };
 
-  async function handleSave() {
+  const handleSave = async () => {
     try {
       const newSeances = localSeances.filter((ls) => !seances.some((s) => s.id === ls.id));
       const deletedSeances = seances.filter((s) => !localSeances.some((ls) => ls.id === s.id));
@@ -251,9 +255,9 @@ export const SeancesGridSection: React.FC = () => {
         autoClose: 5000,
       });
     }
-  }
+  };
 
-  async function handleDeleteMovie(movieId: number) {
+  const handleDeleteMovie = async (movieId: number) => {
     toast(
       <ConfirmDeleteModal
         title="Удалить фильм?"
@@ -272,9 +276,9 @@ export const SeancesGridSection: React.FC = () => {
         },
       },
     );
-  }
+  };
 
-  async function confirmDeleteMovie(movieId: number) {
+  const confirmDeleteMovie = async (movieId: number) => {
     try {
       const response = await api.deleteMovie(movieId);
       if (response.success && response.result?.films) {
@@ -291,7 +295,7 @@ export const SeancesGridSection: React.FC = () => {
         autoClose: 5000,
       });
     }
-  }
+  };
 
   const renderTimelines = () => {
     return halls.map((hall) => {
@@ -303,11 +307,11 @@ export const SeancesGridSection: React.FC = () => {
 
           <div className="timeline__seances-container">
             <div
-              className={`timeline__seances ${isDraggingMovie ? 'drag-over' : ''}`} 
+              className={`timeline__seances ${isDraggingMovie ? 'drag-over' : ''}`}
               onDragOver={onDragOverTimeline}
               onDrop={() => onDropMovieToHall(hall.id)}
             >
-              {isDraggingMovie && ( 
+              {isDraggingMovie && (
                 <div className="timeline__drop-indicator">
                   <FcPlus size={24} />
                 </div>

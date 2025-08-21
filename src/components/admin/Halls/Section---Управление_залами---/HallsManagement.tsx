@@ -17,7 +17,7 @@ export const HallsManagement: React.FC = () => {
   } = useHalls();
   const [showAddPopup, setShowAddPopup] = useState(false);
 
-  async function addHall(name: string) {
+  const addHall = async (name: string) => {
     try {
       const response = await api.addHall(name);
       if (response.success && response.result?.halls) {
@@ -34,9 +34,9 @@ export const HallsManagement: React.FC = () => {
         autoClose: 5000,
       });
     }
-  }
+  };
 
-  async function deleteHall(id: number) {
+  const deleteHall = async (id: number) => {
     toast(
       <ConfirmDeleteModal
         title="Удалить зал?"
@@ -55,19 +55,19 @@ export const HallsManagement: React.FC = () => {
         },
       },
     );
-  }
+  };
 
-  async function confirmDeleteHall(id: number) {
+  const confirmDeleteHall = async (id: number) => {
     try {
       const response = await api.deleteHall(id);
       if (response.success && response.result?.halls) {
         updateLocalData('halls', response.result.halls);
-        
+
         if (id === selectedHallId) {
           const remainingHalls = response.result.halls;
-          setSelectedHallId(remainingHalls[0]?.id); 
+          setSelectedHallId(remainingHalls[0]?.id);
         }
-        
+
         toast.success('Зал успешно удалён', {
           position: 'top-center',
           autoClose: 3000,
@@ -80,7 +80,7 @@ export const HallsManagement: React.FC = () => {
         autoClose: 5000,
       });
     }
-  }
+  };
 
   return (
     <section className="admin__section halls-management">

@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return isAdmin ? children : <Navigate to="/admin/login" replace />;
 };
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter basename={import.meta.env.BASE_URL}>

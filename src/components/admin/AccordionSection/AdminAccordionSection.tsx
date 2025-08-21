@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 
-export function AdminAccordionSection({
+export const AdminAccordionSection = ({
   title,
   children,
   defaultOpen = true,
@@ -13,7 +13,7 @@ export function AdminAccordionSection({
   defaultOpen?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
-}) {
+}) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <section className="admin__section">

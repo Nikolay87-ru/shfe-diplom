@@ -24,7 +24,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
   const [posterPreview, setPosterPreview] = useState<string | undefined>();
   const inputPosterRef = useRef<HTMLInputElement>(null);
 
-  function handlePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const handlePosterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
     const file = e.target.files[0];
     console.log('Selected file:', file);
@@ -41,9 +41,9 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
 
     setPoster(file);
     setPosterPreview(URL.createObjectURL(file));
-  }
+  };
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (!name || !duration || !description || !country || !poster) {
@@ -64,7 +64,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
     setPoster(null);
     setPosterPreview('');
     onClose();
-  }
+  };
 
   if (!show) return null;
 

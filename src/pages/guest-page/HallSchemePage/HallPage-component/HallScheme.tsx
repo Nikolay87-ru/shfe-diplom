@@ -24,9 +24,9 @@ export const HallScheme = () => {
   const [selectedSeats, setSelectedSeats] = useState<[number, number][]>([]);
   const [loading, setLoading] = useState(true);
 
-  const seance = seances.find(s => s.id === Number(id));
-  const movie = movies.find(m => m.id === seance?.seance_filmid);
-  const hall = halls.find(h => h.id === seance?.seance_hallid);
+  const seance = seances.find((s) => s.id === Number(id));
+  const movie = movies.find((m) => m.id === seance?.seance_filmid);
+  const hall = halls.find((h) => h.id === seance?.seance_hallid);
 
   useEffect(() => {
     if (!seance || !hall) {
@@ -37,14 +37,12 @@ export const HallScheme = () => {
     const fetchHallConfig = async () => {
       try {
         const ticketDate = selectedDate.toISOString().split('T')[0];
-        const hallConfigResponse = await api.getHallConfig(
-          seance.id.toString(),
-          ticketDate
-        );
-        
-        const configToUse = hallConfigResponse.success && Array.isArray(hallConfigResponse.result) 
-          ? hallConfigResponse.result 
-          : hall.hall_config;
+        const hallConfigResponse = await api.getHallConfig(seance.id.toString(), ticketDate);
+
+        const configToUse =
+          hallConfigResponse.success && Array.isArray(hallConfigResponse.result)
+            ? hallConfigResponse.result
+            : hall.hall_config;
 
         const rowsData = configToUse.map((row: string[]) => ({
           seats: row.map((seatType) => {
@@ -56,7 +54,7 @@ export const HallScheme = () => {
             };
           }),
         }));
-        
+
         setRows(rowsData);
       } catch (error) {
         console.error('Error fetching hall config:', error);
@@ -92,7 +90,7 @@ export const HallScheme = () => {
     });
   };
 
-  async function handleBuy() {
+  const handleBuy = async () => {
     if (selectedSeats.length === 0) {
       toast.info('Выберите хотя бы одно место!', {
         position: 'top-center',
@@ -112,7 +110,8 @@ export const HallScheme = () => {
       const tickets = selectedSeats.map(([row, seat]) => ({
         row: row + 1,
         place: seat + 1,
-        coast: rows[row].seats[seat].type === 'vip' ? hall.hall_price_vip : hall.hall_price_standart,
+        coast:
+          rows[row].seats[seat].type === 'vip' ? hall.hall_price_vip : hall.hall_price_standart,
       }));
 
       localStorage.setItem('tickets', JSON.stringify(tickets));
@@ -138,7 +137,7 @@ export const HallScheme = () => {
         },
       );
     }
-  }
+  };
 
   if (loading) {
     return <div className="loading">Загрузка...</div>;

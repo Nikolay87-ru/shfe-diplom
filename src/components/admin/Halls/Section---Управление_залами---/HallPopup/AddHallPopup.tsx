@@ -17,7 +17,7 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
     if (!show) setHallName('');
   }, [show]);
 
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!hallName.trim()) {
       setError('Введите название зала');
@@ -27,7 +27,7 @@ export const AddHallPopup: React.FC<Props> = ({ show, onClose, onSave }) => {
       .then(() => setHallName(''))
       .then(onClose)
       .catch(() => setError('Ошибка при добавлении зала'));
-  }
+  };
 
   if (!show) return null;
   return (
