@@ -1,8 +1,10 @@
-import { defineConfig } from 'vite'
+import { defineConfig, mergeConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { defineConfig as defineVitestConfig } from 'vitest/config'
 
-export default defineConfig({
+// Vite конфигурация
+const viteConfig = defineConfig({
   plugins: [react()],
   base: process.env.NODE_ENV === 'production' ? '/shfe-diplom/' : '/',
   css: {
@@ -45,3 +47,16 @@ export default defineConfig({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
   }
 })
+
+// Vitest конфигурация
+const vitestConfig = defineVitestConfig({
+  test: {
+    reporters: process.env.CI ? 'verbose' : 'default',
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/setupTests.ts']
+  }
+})
+
+// Объединение конфигураций
+export default mergeConfig(viteConfig, vitestConfig)

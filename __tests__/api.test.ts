@@ -210,10 +210,7 @@ const server = setupServer(
     return HttpResponse.json({ success: true, result: { seances: mockData.seances } })
   }),
 
-  http.get(`${API_URL}/hallconfig`, ({ request }) => {
-    const url = new URL(request.url)
-    const seanceId = url.searchParams.get('seanceId')
-    const date = url.searchParams.get('date')
+  http.get(`${API_URL}/hallconfig`, () => {
     
     const hall = mockData.halls[0]
     if (!hall) {
