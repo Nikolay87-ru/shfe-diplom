@@ -215,6 +215,8 @@
 }
 
 .timeline__seances_title {
+  display: table-cell;
+  vertical-align: middle;
   line-height: 16px;
 }
 

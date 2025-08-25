@@ -344,6 +344,7 @@ export const SeancesGridSection: React.FC = () => {
                       {
                         left: `${leftPercent}%`,
                         '--time-value': `"${seance.seance_time}"`,
+                        display: 'table',
                       } as React.CSSProperties
                     }
                     data-time={seance.seance_time}
