@@ -65,6 +65,12 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
     onClose();
   };
 
+  const preventMathSigns = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '-' || e.key === '+') {
+      e.preventDefault();
+    }
+  };
+
   if (!show) return null;
 
   return (
@@ -96,6 +102,7 @@ export const AddMoviePopup: React.FC<Props> = ({ show, onClose, onSave }) => {
               min={1}
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
+              onKeyDown={preventMathSigns}
               required
             />
           </label>
